@@ -170,15 +170,15 @@ function TareasenProceso() {
         <div className="tareas-proceso-stats-container mb-4">
           <div className="tareas-proceso-stat-card">
             <div className="stat-number">{totalProyectos}</div>
-            <div className="stat-label">Numero de proyectos</div>
+            <div className="stat-label-tp">Numero de proyectos</div>
           </div>
           <div className="tareas-proceso-stat-card">
             <div className="stat-number">{totalTareas}</div>
-            <div className="stat-label">Total de Tareas</div>
+            <div className="stat-label-tp">Total de Tareas</div>
           </div>
           <div className="tareas-proceso-stat-card">
             <div className="stat-number">{tareasCompletadas}</div>
-            <div className="stat-label">Tareas Completadas</div>
+            <div className="stat-label-tp">Tareas Completadas</div>
           </div>
         </div>
 

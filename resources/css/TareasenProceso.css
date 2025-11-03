@@ -127,7 +127,6 @@
   gap: 1rem;
 }
 
-
 .tareas-proceso-stat-card {
   background:#861542;
   z-index: 1;
@@ -148,9 +147,11 @@
   margin-bottom: 0.5rem;
 }
 
-.stat-label {
-  font-size: 0.9rem;
-  opacity: 0.9;
+.stat-label-tp {
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  margin: 0;
 }
 
 .tareas-proceso-subtitulo {

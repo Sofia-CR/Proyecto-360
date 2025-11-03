@@ -163,25 +163,23 @@ useEffect(() => {
       <FaAngleDown className={`eliminar-proyectos-filtro-icon ${open ? "open" : ""}`} />
     </div>
 
-    {open && (
-      <div className="eliminar-proyectos-filtro-options">
-        {opciones.map((o) => (
-          <div
-            key={o.value}
-            className="eliminar-proyectos-filtro-option"
-            onClick={() => {
-              setFiltro(o.value);
-              setOpen(false);
-            }}
-          >
-            {o.label}
-          </div>
-        ))}
-      </div>
-    )}
+    {/* Agregar clase 'open' condicional aquí */}
+    <div className={`eliminar-proyectos-filtro-options ${open ? "open" : ""}`}>
+      {opciones.map((o) => (
+        <div
+          key={o.value}
+          className="eliminar-proyectos-filtro-option"
+          onClick={() => {
+            setFiltro(o.value);
+            setOpen(false);
+          }}
+        >
+          {o.label}
+        </div>
+      ))}
+    </div>
   </div>
 )}
-
       </div>
 
       {/* Lista de proyectos */}
