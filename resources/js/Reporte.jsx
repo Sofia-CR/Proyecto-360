@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import React from "react";
 import Header from "./Header";
 import DatePicker from "react-datepicker";
-import { FaCalendarAlt, FaAngleDown } from "react-icons/fa";
+import { FaCalendarAlt, FaAngleDown,FaFilePdf } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
@@ -194,7 +194,6 @@ function Reporte() {
         <h1 className="mb-4 form-titulo">Generar reportes</h1>
            <div className="generar-reportes mt-4 mx-auto p-3">
         <div className="reportes-container">
-          {/* Select de tipo de reporte */}
           <div className="d-flex justify-content-center mb-4">
             <div className="position-relative" ref={selectRef}>
               <label className="form-label fw-bold mb-2">Tipo de reporte</label>
@@ -359,18 +358,27 @@ function Reporte() {
        </div>
           </div>
             <div className="mt-3">
-              <button 
-                type="button"
-                className="boton-form"
-                onClick={generarPDF}
-                disabled={cargando}
-              >
-                {cargando && (
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                )}
-                {cargando ? " Generando PDF..." : "Generar PDF"}
-              </button>
-          </div>
+                  <button 
+                    type="button"
+                     className="boton-form"
+                    onClick={generarPDF}
+                    disabled={cargando}
+                    onMouseEnter={() => setBotonHover(true)}
+                    onMouseLeave={() => setBotonHover(false)}
+                  >
+                    {cargando ? (
+                      <>
+ <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Generando PDF...
+                      </>
+                    ) : (
+                      <>
+                        <FaFilePdf className="me-2" />
+                        Generar PDF
+                      </>
+                    )}
+                  </button>
+                </div>
         </div>
         {mostrarVisor && pdfUrl && (
           <PdfViewer
@@ -385,7 +393,7 @@ function Reporte() {
 
 export default Reporte;
 
-
+ 
 
 
 
