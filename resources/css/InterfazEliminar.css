@@ -1,0 +1,51 @@
+/* Tarjetas normales */
+.tarjeta-tarea {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+
+/* Radio button al lado */
+.radio-tarea {
+  width: 20px;
+  height: 20px;
+  accent-color: #861542; /* color del círculo al seleccionarse */
+  cursor: pointer;
+}
+/* InterfazEliminar.css */
+
+/* Tarjeta de tarea */
+.tarjeta-tarea {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  max-width: 350px; /* ancho máximo */
+  width: 100%;      /* ocupa hasta el máximo */
+  margin: 0 auto;   /* centra la tarjeta */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tarjeta-tarea:hover {
+  border-color: #861542;
+  background-color: #f8e6ef;
+}
+
+/* Nombre de la tarea */
+.texto-detalle {
+  font-size: 14px;         /* más pequeño */
+  font-weight: 500;        /* un poco más grueso */
+  color: #333;
+  text-align: center;
+  white-space: nowrap;     /* evita que se rompa en varias líneas */
+  overflow: hidden;
+  text-overflow: ellipsis; /* muestra "..." si es muy largo */
+}
+
+

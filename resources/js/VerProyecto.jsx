@@ -1,0 +1,249 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "./Header";
+import logo3 from "../imagenes/logo3.png";
+import "../css/global.css";
+import "../css/VerProyecto.css";
+import { FaAngleDown, FaCalendarAlt, FaTasks, FaExclamationTriangle } from "react-icons/fa";
+import { FiSearch, FiX } from "react-icons/fi";
+
+function Proyectos() {
+  const [busqueda, setBusqueda] = useState("");
+  const [filtro, setFiltro] = useState("alfabetico");
+  const [proyectos, setProyectos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const cargarProyectos = async () => {
+      const usuario = JSON.parse(localStorage.getItem("usuario"));
+      const token = localStorage.getItem("jwt_token");
+      const idUsuario = usuario?.id_usuario;
+
+      if (!idUsuario) return alert("Usuario no encontrado.");
+      if (!token) return alert("No hay token de autenticación, inicia sesión.");
+
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `http://127.0.0.1:8000/api/proyectos/usuario?usuario=${idUsuario}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await res.json().catch(async () => ({ error: await res.text() }));
+
+        if (res.ok && data.success) {
+          setProyectos(data.proyectos || []);
+        } else {
+          console.error("Error al cargar proyectos:", data.mensaje || data);
+          setProyectos([]);
+        }
+      } catch (err) {
+        console.error("Error al cargar proyectos:", err);
+        alert("Ocurrió un error al cargar los proyectos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarProyectos();
+  }, []);
+
+  const agregarTarea = (idProyecto) => {
+    navigate("/agregarTareas", { state: { id_proyecto: idProyecto } });
+  };
+
+  const verTareas = (idProyecto) => {
+    localStorage.setItem("id_proyecto", idProyecto);
+    navigate("/vertareasusuario");
+  };
+
+  const proyectosFiltrados = proyectos
+    .filter((p) => p.p_nombre.toLowerCase().includes(busqueda.toLowerCase()))
+    .sort((a, b) => {
+      switch (filtro) {
+        case "alfabetico":
+          return a.p_nombre.localeCompare(b.p_nombre);
+        case "alfabetico_desc":
+          return b.p_nombre.localeCompare(a.p_nombre);
+        case "fecha_proxima":
+          return new Date(a.pf_fin) - new Date(b.pf_fin);
+        case "fecha_lejana":
+          return new Date(b.pf_fin) - new Date(a.pf_fin);
+        default:
+          return 0;
+      }
+    });
+
+  const opciones = [
+    { value: "alfabetico", label: "Nombre (A-Z)" },
+    { value: "alfabetico_desc", label: "Nombre (Z-A)" },
+    { value: "fecha_proxima", label: "Fecha más próxima" },
+    { value: "fecha_lejana", label: "Fecha más lejana" },
+  ];
+
+  const mostrarSelect = busqueda.length === 0 || proyectosFiltrados.length > 0;
+
+  return (
+    <div className="verproyectos-app">
+      <Header />
+      <h1 className="form-titulo">Proyectos</h1>
+
+      <div className="buscador-verproyectos-contenedor">
+        <div className="buscador-verproyectos-inner">
+          <FiSearch className="buscador-verproyectos-icono" />
+          <input
+            type="text"
+            placeholder="Buscar proyectos por nombre..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className="buscador-verproyectos-input"
+          />
+          {busqueda && (
+            <button
+              className="buscador-verproyectos-clear"
+              onClick={() => setBusqueda("")}
+            >
+              <FiX />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {busqueda && (
+        <div className="buscador-verproyectos-resultados-info">
+          {proyectos.filter((p) =>
+            p.p_nombre.toLowerCase().includes(busqueda.toLowerCase())
+          ).length} resultado(s) para "{busqueda}"
+        </div>
+      )}
+
+      {mostrarSelect && (
+        <div className="custom-select-container-inline">
+          <div className="custom-select" onClick={() => setOpen(!open)}>
+            {opciones.find((o) => o.value === filtro)?.label}
+            <FaAngleDown className={`dropdown-icon ${open ? "open" : ""}`} />
+          </div>
+
+          {open && (
+            <div className={`custom-options-inline ${open ? "open" : ""}`}>
+              {opciones.map((o) => (
+                <div
+                  key={o.value}
+                  onClick={() => {
+                    setFiltro(o.value);
+                    setOpen(false);
+                  }}
+                >
+                  {o.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="verproyectos-lista-proyectos">
+        {loading ? (
+          <div className="loader-container">
+            <div className="loader-logo">
+              <img src={logo3} alt="Cargando proyectos" />
+            </div>
+            <div className="loader-texto">CARGANDO...</div>
+            <div className="loader-spinner"></div>
+          </div>
+        ) : proyectosFiltrados.length > 0 ? (
+          proyectosFiltrados.map((p) => {
+            const fechaFin = new Date(p.pf_fin);
+            const hoy = new Date();
+            fechaFin.setHours(0, 0, 0, 0);
+            hoy.setHours(0, 0, 0, 0);
+
+            const diasRestantes = Math.floor((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+            const esProximo = diasRestantes >= 0;
+            const estaVencido = diasRestantes < 0;
+
+            return (
+              <div key={p.id_proyecto} className="verproyectos-card">
+                <h5 className="verproyecto-nombre">{p.p_nombre}</h5>
+
+                <div className="proyectos-info">
+                  <div className="verproyectos-info-item">
+                    <FaCalendarAlt className="verproyectos-info-icon" />
+                    <span>
+                      <strong>Fecha fin:</strong> {fechaFin.toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  <div className="verproyectos-info-item">
+                    <FaTasks className="verproyectos-info-icon" />
+                    <span>
+                      <strong>Tareas:</strong> {p.total_tareas || 0}
+                    </span>
+                  </div>
+
+                  {estaVencido && (
+                    <div className="verproyectos-info-item estado-alerta">
+                      <FaExclamationTriangle />
+                      <span><strong>¡Vencido!</strong></span>
+                    </div>
+                  )}
+
+                  {esProximo && !estaVencido && (
+                    <div className="verproyectos-info-item estado-advertencia">
+                      <FaExclamationTriangle />
+                      <span>
+                        <strong>
+                          {diasRestantes === 0
+                            ? "Vence hoy"
+                            : `Vence en ${diasRestantes} día${diasRestantes > 1 ? "s" : ""}`}
+                        </strong>
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="verproyectos-botones">
+                  {p.total_tareas === 0 ? (
+                    <button
+                      className="verproyectos-btn proyectos-btn-primary"
+                      onClick={() => agregarTarea(p.id_proyecto)}
+                    >
+                      <FaTasks style={{ marginRight: "8px" }} />
+                      Agregar primera tarea
+                    </button>
+                  ) : (
+                    <button
+                      className="verproyectos-btn proyectos-btn-secondary"
+                      onClick={() => verTareas(p.id_proyecto)}
+                    >
+                      <FaTasks style={{ marginRight: "8px" }} />
+                      Ver tareas
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        ) : busqueda.length === 0 ? (
+          <p className="form-titulo">No hay proyectos disponibles</p>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+export default Proyectos;
+
+
+
+
+
+
+

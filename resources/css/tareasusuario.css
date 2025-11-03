@@ -1,0 +1,595 @@
+/* =========================== Contenedor principal ============================ */
+.proyecto-header-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.proyecto-titulo {
+  color: #212529;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+
+.proyecto-subtitulo {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+/* =========================== Filtros con fondo gris ============================ */
+.filtros-container {
+  background: #f8f9fa;  /* fondo gris */
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center; /* centra el inner */
+}
+
+.filtros-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 700px; /* para no ocupar todo el ancho */
+  gap: 1rem;
+}
+
+.filtro-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filtro-label-inline {
+  display: inline-block;
+  font-weight: 600;
+  color: #222;
+}
+
+.custom-select-container-inline {
+  position: relative;
+}
+
+.custom-select {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: white;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 180px;
+}
+
+.custom-options-inline {
+  position: relative; /* ya no absoluto */
+  margin-top: 0.5rem;
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  z-index: 1;
+}
+.custom-options-inline div {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.custom-options-inline div:hover {
+  background: #f1f1f1;
+}
+
+.dropdown-icon {
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+/* Total de tareas */
+.tareas-stats {
+  font-weight: 600;
+  color: #861542;
+}
+
+.stat-total {
+  background: #861542;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* =========================== Responsive ============================ */
+@media (max-width: 768px) {
+  .filtros-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-left {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .tareas-stats {
+    margin-top: 0.5rem;
+    text-align: right;
+  }
+}
+
+.tareas-stats {
+  font-weight: 600;
+  color: #861542;
+}
+
+.stat-total {
+  background: #861542;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+/* =========================== Tarjetas de tareas ============================ */
+.tareas-contenedor {
+  width: 100%;
+}
+
+.tareas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tarea-card {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border-left: 4px solid #6c757d;
+  z-index: 10;
+}
+
+.tarea-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.tarea-card.en-proceso {
+  border-left-color: #ffc107;
+}
+
+.tarea-card.pendiente {
+  border-left-color: #861542;
+}
+
+.tarea-card.tarea-vencida {
+  border-left-color: #dc3545;
+  background: #fff5f5;
+}
+
+/* Header de tarea */
+.tarea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tarea-titulo-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.tarea-nombre {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #212529;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.tarea-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge-estado, .badge-urgencia {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-estado {
+  color: white;
+}
+
+.badge-urgencia {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+/* Botón subir */
+.btn-subir-evidencia {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #861542;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+.btn-subir-evidencia:hover {
+  background: #6a1035;
+  transform: translateY(-1px);
+}
+.btn-cancelar, .btn-subir {
+  padding: 0.7rem 1.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  display: flex;             /* para alinear spinner y texto */
+  align-items: center;       /* centrado vertical */
+  justify-content: center;   /* centrado horizontal */
+  min-width: 120px;          /* ancho mínimo fijo */
+}
+/* Urgencia de la tarea */
+.badge-urgencia {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+/* Colores según nivel */
+.badge-urgencia.vencida { color: #dc3545; }
+.badge-urgencia.venceHoy { color: #ff4500; }
+.badge-urgencia.proxima { color: #ffa500; }
+
+/* Estado de la tarea */
+.badge-estado {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.badge-estado.en-proceso { background-color: #ffc107; color: #fff; }
+.badge-estado.completada { background-color: #c53030; color: #fff; }
+
+.btn-icon {
+  font-size: 0.8rem;
+}
+
+/* Detalles de tarea */
+.tarea-detalles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.detalle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detalle-icon {
+  color: #861542;
+  font-size: 0.9rem;
+}
+
+.detalle-texto {
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+/* =========================== Loading y Estados ============================ */
+.loading-container {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #861542;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  margin: 1rem 0;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: #dee2e6;
+  margin-bottom: 1rem;
+}
+
+.empty-title {
+  color: #495057;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.empty-message {
+  color: #6c757d;
+  font-size: 1rem;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* =========================== Modal Moderno y Minimal ============================ */
+.modal-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 1rem;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content-preview {
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+  width: 100%;
+  max-height: 100vh;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  overflow: hidden;
+}
+.modal-header {
+  position: relative;
+  display: flex;
+  justify-content: center; /* centra el h2 */
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 3px solid #ff6b9d;
+}
+
+.modal-header h2 {
+  margin: 6;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.modal-close {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #000;
+  font-size: 40px;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-50%) rotate(90deg);
+  color: #ff6b9d;
+}
+
+.modal-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.modal-body img {
+  max-width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.modal-body img:hover {
+  transform: scale(1.03);
+}
+
+.modal-description {
+  text-align: center;
+  padding: 0.5rem 1rem;
+  background: #fefefe;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+  flex-wrap: wrap;
+}
+
+.btn-cancelar, .btn-subir {
+  padding: 0.7rem 1.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btn-cancelar {
+  background: #861542;
+  color: white;
+}
+
+.btn-cancelar:hover {
+  background: #6a1035;
+}
+
+.btn-subir {
+  background: #861542;
+  color: white;
+}
+
+.btn-subir:hover {
+  background: #6a1035;
+}
+.btn-subir .spinner {
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-content-preview { max-width: 95%; }
+  .modal-body img { max-height: 60vh; }
+  .modal-footer { flex-direction: column; gap: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+  .modal-header h2 { font-size: 1.2rem; }
+  .modal-body img { max-height: 50vh; }
+  .btn-cancelar, .btn-subir { width: 100%; justify-content: center; }
+}
+
+
+/* =========================== Responsive ============================ */
+@media (max-width: 768px) {
+  .filtros-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .tarea-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .btn-subir-evidencia {
+    align-self: stretch;
+    justify-content: center;
+  }
+  
+  .tarea-detalles {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content-preview {
+    margin: 1rem;
+  }
+  
+  .modal-buttons {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .proyecto-titulo {
+    font-size: 1.5rem;
+  }
+  
+  .tarea-card {
+    padding: 1rem;
+  }
+  
+  .tarea-badges {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.filtro-label-inline {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #222;
+}
+
+
+
+
+

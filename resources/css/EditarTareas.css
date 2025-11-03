@@ -1,0 +1,353 @@
+/* --- Reset y básicos --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: "Arial", sans-serif;
+  background-color: #fff;
+}
+/* --- Contenedor principal --- */
+.EditarTareas-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+/* --- Encabezado --- */
+.EditarTareas-encabezado {
+  width: 100%;
+  background-color: white;
+}
+
+.EditarTareas-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.EditarTareas-logo {
+  height: 50px;
+  object-fit: contain;
+}
+
+.EditarTareas-logo-central {
+  height: 60px;
+  object-fit: contain;
+}
+
+.EditarTareas-separador {
+  width: 2px;
+  height: 50px;
+  background-color: #861542;
+}
+
+.EditarTareas-barra {
+  height: 50px;
+  width: 100%;
+  background-color: #861542;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.EditarTareas-contenedor-icono {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  z-index: 2;
+}
+
+.EditarTareas-icono-casa {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  fill: #d5b690;
+  background: transparent;
+}
+
+.EditarTareas-titulo-barra {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #d5b690;
+  font-weight: bold;
+  font-size: 18px;
+  background: transparent;
+}
+
+.EditarTareas-sub-menu {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 200px;
+  background-color: #d5b690;
+  border: 1px solid #861542;
+  padding: 0;
+  margin: 0;
+  border-radius: 1px;
+  list-style: none;
+  z-index: 10;
+}
+
+.EditarTareas-sub-menu li {
+  padding: 10px 20px;
+  background-color: #d5b690;
+  border-bottom: 1px solid #861542;
+  text-align: center;
+}
+
+.EditarTareas-sub-menu li:last-child {
+  border-bottom: none;
+}
+
+.EditarTareas-sub-menu li a {
+  background-color: transparent;
+  color: #861542;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+}
+
+/* --- Formulario --- */
+.EditarTareas-input-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.EditarTareas-titulo {
+  font-size: 22px;
+  color: black;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.EditarTareas-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 4px;
+}
+
+.EditarTareas-input::placeholder {
+  color: #999;
+}
+
+.EditarTareas-input {
+  width: 100%;
+  max-width: 800px;
+  padding: 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;  /* borde gris */
+  border-radius: 3px;
+  outline: none;
+  resize: none;
+  color: #333;
+}
+
+/* --- Botones --- */
+.EditarTareas-botones {
+  display: flex;
+  justify-content: space-between; 
+  gap: 30px; 
+  margin-top: 20px;
+}
+
+.btn-EditarTareas {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  width: 180px;
+  text-align: center;
+}
+
+.btn-EditarTareas.cancelar,
+.btn-EditarTareas.guardar {
+  background-color: #861542; /* vino */
+  color: #fff;
+}
+
+/* --- Fechas --- */
+.fechas-botones-contenedor {
+  max-width: 375px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fechas-doble {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.fecha-item {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+
+.fecha-item .agregartareas-label {
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.fecha-item .calendar-button {
+  width: 100%;            
+  padding: 15px;           
+  font-size: 14px;         
+  border: 1px solid #ccc;  /* borde gris */
+  border-radius: 3px;      
+  box-sizing: border-box;  
+  height: 50px;            
+  color: #333;            
+}
+
+/* --- DatePicker --- */
+.react-datepicker {
+  background-color: #fff;
+  border: 1px solid #861542;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: Arial;
+  color:  #999;
+}
+
+.react-datepicker__header {
+  background-color: #fff;
+  color: #861542;
+  border-bottom: 1px solid #861542;
+  border-radius: 6px 6px 0 0;
+  padding: 6px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__navigation {
+  font-weight: bold;
+  color: #861542;
+}
+
+.react-datepicker__month-dropdown,
+.react-datepicker__year-dropdown {
+  border: 1px solid #861542;
+  border-radius: 4px;
+  padding: 2px 4px;
+  background-color: #fff;
+  color: #861542;
+}
+
+.react-datepicker__month-dropdown .react-datepicker__month-option--selected,
+.react-datepicker__year-dropdown .react-datepicker__year-option--selected {
+  background-color: #f8e6ef;  /* rosa claro */
+  color: #861542;
+}
+
+.react-datepicker__day--selected {
+  background-color: #861542;   /* vino */
+  color: #fff;
+}
+
+.react-datepicker__day--selected:focus,
+.react-datepicker__day--selected:hover {
+  background-color: #861542;
+  color: #fff;
+}
+
+.react-datepicker__day:hover {
+  background-color: transparent;
+  color: #333;
+  cursor: pointer;
+}
+
+.react-datepicker__day--today {
+  background-color: #f8e6ef;  /* rosa claro */
+  color: #861542;
+  font-weight: bold;
+}
+
+.react-datepicker__today-button {
+  background-color: #861542;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-top: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+}
+
+.react-datepicker__today-button:hover {
+  background-color: #d5b690;
+  color: #861542;
+}
+
+/* --- React-Select --- */
+
+.agregartareas-select__option {
+  color: #861542;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.agregartareas-select__option--is-focused {
+  background-color: #f8e6ef;     /* rosa claro al pasar mouse */
+  color: #861542;
+}
+
+.agregartareas-select__control {
+  border: 1px solid #ccc !important;
+  border-radius: 3px !important;
+  min-height: 50px !important;
+  box-shadow: none !important;
+}
+
+.agregartareas-select__control:hover {
+  border-color: #ccc !important;
+}
+
+.agregartareas-select__single-value {
+  color: #000 !important;
+  opacity: 1 !important;
+}
+
+.agregartareas-select__placeholder {
+  color: #999 !important;
+}
+
+.agregartareas-select__option {
+  color: #000 !important;
+  background-color: #fff !important;
+}
+
+.agregartareas-select__option--is-selected {
+  background-color: #f8e6ef !important;
+  color: #000 !important;
+}
+
+.agregartareas-select__option--is-focused {
+  background-color: #fff !important;
+}
+

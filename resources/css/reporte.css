@@ -1,0 +1,274 @@
+/* Contenedor principal (sin cuadro) */
+.generar-reportes {
+  padding: 20px; /* separa los elementos de los bordes del layout */
+  text-align: center;
+   width: 100%;
+  max-width: 550px;
+}
+
+/* Título */
+.generar-reportes .form-titulo {
+  font-size: 22px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 25px;
+}
+
+/* Cada bloque de fecha: label + input/select */
+.fecha-item {
+  display: flex;
+  flex-direction: column; /* vertical */
+  align-items: center;    /* centra el contenido horizontalmente */
+  flex: 1;
+  min-width: 180px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* Label centrado */
+.fecha-item .form-label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;  /* espacio entre label e input */
+  text-align: center;
+}
+
+/* Select (lista desplegable) */
+.fecha-item select.form-select {
+  width: 100%;
+  max-width: 250px;  /* ancho máximo razonable */
+  padding: 10px 30px 10px 10px; /* espacio extra a la derecha para la flecha */
+  font-size: 16px;
+  box-sizing: border-box;
+  white-space: normal;
+}
+
+/* Botón de calendario */
+.fecha-item .btn-outline-secondary {
+  width: auto;
+  min-width: 180px;
+  max-width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 5px; /* separación con el label */
+}
+/* Centrado específico para tareas próximas */
+.fecha-selectores-container.tareas-proximas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fecha-selectores-container.tareas-proximas .fecha-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.fecha-selectores-container.tareas-proximas .form-label {
+  text-align: center;
+  width: 100%;
+}
+/* Flex para filas de inputs */
+.generar-reportes .d-flex.flex-md-row {
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* DatePicker popup */
+.react-datepicker {
+  background-color: #fff;
+  border: 1px solid #861542;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: Arial;
+  color: #999;
+}
+
+.react-datepicker__header {
+  background-color: #fff;
+  color: #861542;
+  border-bottom: 1px solid #861542;
+  border-radius: 6px 6px 0 0;
+  padding: 6px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.react-datepicker__day--selected {
+  background-color: #861542;
+  color: #fff;
+}
+
+.react-datepicker__day--today {
+  background-color: #f8e6ef;
+  color: #861542;
+  font-weight: bold;
+}
+
+/* Barra de progreso */
+.progress-bar-custom {
+  background-color: #861542;
+}
+
+.boton-form {
+  width: auto;
+  max-width: 100%;
+  padding: 15px;
+  margin-top: 65px;
+  font-size: 16px;
+  border: none;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: #fff;
+  background-color: #861542;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 576px) {
+  .generar-reportes {
+    padding: 15px;
+  }
+}
+.progress-contenedor {
+  margin-top: 30px; /* espacio arriba de la barra */
+  max-width: 400px;
+  height: 8px;
+}
+
+.reportes-container {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.generar-reportes {
+  background: #f8f9fa;
+  border-radius: 8px;
+  z-index: 1;
+  border: 1px solid #ccc;
+}
+/* Estilos para el select dinámico */
+.dynamic-select {
+  position: relative;
+  z-index: 1; /* Asegura que esté por encima de otros elementos */
+}
+
+/* Cuando no hay espacio debajo, el dropdown se muestra hacia arriba */
+.dynamic-select.dropup option {
+  direction: rtl;
+}
+
+/* Asegurar que el dropdown tenga suficiente espacio */
+.dynamic-select option {
+  padding: 8px 12px;
+  background-color: white;
+}
+
+/* Para pantallas pequeñas, forzar el dropdown hacia arriba */
+@media (max-height: 600px) {
+  .dynamic-select {
+    position: relative;
+  }
+  
+  .dynamic-select option {
+    max-height: 150px;
+    overflow-y: auto;
+  }
+}
+
+/* Mejorar la apariencia del select en dispositivos móviles */
+@media (max-width: 768px) {
+  .dynamic-select {
+    font-size: 16px; /* Previene el zoom en iOS */
+  }
+}
+
+
+/* Estilo para el ícono del dropdown */
+.dropdown-icon {
+  transition: transform 0.3s ease;
+  margin-left: 8px;
+}
+
+.dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+
+/* Limitar el ancho de los elementos de fecha */
+.fecha-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 1 auto; /* No permitir que crezcan */
+  min-width: 180px;
+  max-width: 200px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* Para tareas próximas, mantener el mismo tamaño */
+.tareas-proximas .fecha-item {
+  max-width: 200px;
+}
+/* Barra de progreso mejorada */
+.progress-contenedor-mejorado {
+  max-width: 500px;
+}
+
+.progress-grueso {
+  height: 12px;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+  overflow: hidden;
+}
+
+.progress-bar-mejorada {
+  background: linear-gradient(90deg, #861542, #a75877);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-bar-mejorada::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 20px 20px;
+  animation: move 1s linear infinite;
+}
+
+@keyframes move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 0;
+  }
+}

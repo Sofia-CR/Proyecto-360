@@ -1,0 +1,222 @@
+/* Contenedor del modal */
+.vertareas-modal-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column; /* para que título, imagen y indicador estén verticalmente */
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+/* Contenido del modal */
+.vertareas-modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column; /* apila título, imagen, indicador */
+  align-items: center;
+  justify-content: center;
+  width: 70vw;
+  max-width: 1200px;
+  height: auto;
+  max-height: 80vh;
+  background: transparent;
+}
+
+/* Imagen principal */
+.modal-imagen-contenedor {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-imagen-contenedor img {
+  max-width: 90vw;
+  max-height: 70vh;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Botones del carrusel */
+.modal-carrusel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 60px;
+  color: #fff;
+  background-color: rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: 0.3s;
+  z-index: 1001;
+}
+
+.modal-carrusel-btn:hover {
+  background-color: rgba(134, 21, 66, 0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Botón izquierda / derecha */
+.modal-carrusel-btn:first-of-type { left: 10px; }
+.modal-carrusel-btn:last-of-type { right: 10px; }
+
+/* Botón cerrar modal */
+.vertareas-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 40px;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  z-index: 1002;
+}
+
+.vertareas-modal-close:hover {
+  color: #861542;
+}
+
+/* Indicador de posición */
+.modal-indicador {
+  color: #fff;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 18px;
+}
+.modal-titulo {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.modal-no-imagenes {
+  color: #fff;
+  text-align: center;
+}
+
+.vertareas-modal-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.vertareas-modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70vw;
+  max-width: 1200px;
+  height: auto;
+  max-height: 80vh;
+  background: transparent;
+}
+
+.modal-imagen-contenedor {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-imagen-contenedor img {
+  max-width: 90vw;
+  max-height: 70vh;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.modal-carrusel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 60px;
+  color: #fff;
+  background-color: rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: 0.3s;
+  z-index: 1001;
+}
+
+.modal-carrusel-btn:hover {
+  background-color: rgba(134, 21, 66, 0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.modal-carrusel-btn:first-of-type { left: 10px; }
+.modal-carrusel-btn:last-of-type { right: 10px; }
+
+.vertareas-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 40px;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  z-index: 1002;
+}
+
+.vertareas-modal-close:hover {
+  color: #861542;
+}
+
+.modal-indicador {
+  color: #fff;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 18px;
+}
+.tarjeta-proyecto {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.nombre-proyecto {
+  font-size: 1.4rem;
+  color: #333;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}

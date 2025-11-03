@@ -1,0 +1,747 @@
+
+/* Contenedor principal */
+.tareas-proceso-global {
+  font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+/* ================================
+   Filtros y lista
+================================ */
+.tareas-proceso-filtros,
+.tareas-proceso-lista {
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.tareas-proceso-tarea-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tareas-proceso-proyecto-nombre {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #333;
+}
+.tareas-proceso-icono-estado {
+  font-size: 1.2em; /* ajusta según prefieras */
+}
+/* ================================
+   Buscador
+================================ */
+.tareas-proceso-buscador-container {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto 1.5rem auto;
+  box-sizing: border-box;
+}
+
+.tareas-proceso-input-buscar:focus,
+.tareas-proceso-input-buscar-inline:focus {
+  border-color: #861542;
+  box-shadow: 0 0 0 3px rgba(134, 21, 66, 0.2);
+  outline: none;
+}
+
+.tareas-proceso-icono-buscar,
+.tareas-proceso-icono-buscar-inline {
+  font-size: 1rem;
+  color: #888;
+}
+
+.tareas-proceso-icono-buscar {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.tareas-proceso-buscador-inner {
+  position: relative; /* ya lo tienes */
+  display: flex;
+  align-items: center;
+}
+.tareas-proceso-input-buscar-inline {
+  width: 100%;
+  padding: 10px 45px 10px 45px; 
+  border: 2px solid #e9ecef;
+  border-radius: 50px; 
+  font-size: 1rem;
+  height: 40px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.tareas-proceso-icono-buscar-inline {
+  position: absolute;
+  left: 12px;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.tareas-proceso-clear-busqueda-inline {
+  position: absolute;
+  right: 12px;
+  border: none;        /* quita borde */
+  background: transparent;
+}
+
+
+.tareas-proceso-clear-busqueda:hover,
+.tareas-proceso-clear-busqueda-inline:hover {
+  color: #555;
+}
+
+/* Información de resultados */
+.tareas-proceso-resultados-info {
+  text-align: center;
+}
+.tareas-proceso-resultados-info span {
+  position: relative;
+  background-color: #856404;
+  color: white;              
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  z-index: 10;
+
+}
+
+
+/* ================================
+   Panel de Estadísticas
+================================ */
+
+.tareas-proceso-stats-container {
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto 2rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+
+.tareas-proceso-stat-card {
+  background:#861542;
+  z-index: 1;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.tareas-proceso-subtitulo {
+  font-size: 1.1rem;
+  color: #6c757d;
+  text-transform: uppercase;
+}
+
+/* Tarjetas de proyectos */
+.tareas-proceso-card {
+  width: 100%;         
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;  
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: relative;   
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tareas-proceso-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.tareas-proceso-marcar-completado {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.tareas-proceso-info-tarea {
+  margin-top: 10px;
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+}
+
+.tareas-proceso-tarea-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.tareas-proceso-icono-estado {
+  font-size: 1.2em;
+}
+
+.tareas-proceso-icono-estado.en-proceso {
+  color: #ffc107;
+  font-size: 28px;  
+}
+
+.tareas-proceso-proyecto-nombre {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.tareas-proceso-estatus-proceso {
+  display: inline-block;
+  background-color: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: #495057;
+  margin-bottom: 10px;
+}
+
+.tareas-proceso-fecha {
+  font-size: 0.9em;
+  color: #6c757d;
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+.tareas-proceso-acciones {
+  margin-top: 15px;
+}
+
+.tareas-proceso-btn-ver {
+  padding: 8px 16px;
+  background-color: #861542;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+
+  display: flex;
+  align-items: center;      /* centra verticalmente */
+  justify-content: center;  /* centra horizontalmente */
+  gap: 5px;
+
+  transition: background-color 0.2s ease;
+}
+
+
+.tareas-proceso-btn-ver:hover {
+  background-color: #a21f58;
+}
+
+/* Loader */
+.tareas-proceso-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.tareas-proceso-loader-logo img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.tareas-proceso-loader-texto {
+  font-size: 1.2em;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.tareas-proceso-loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #861542;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Modal de evidencias - CORREGIDO */
+.tareas-proceso-modal-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.tareas-proceso-modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 1200px;
+  max-height: 90vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Evita que el contenido se salga */
+}
+
+.tareas-proceso-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 50%;
+  line-height: 1;
+  z-index: 10;
+  transition: background-color 0.2s ease;
+}
+
+.tareas-proceso-modal-close:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.tareas-proceso-modal-header {
+  flex-shrink: 0;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e9ecef;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #856404;
+}
+
+.tareas-proceso-modal-titulo {
+  margin: 0;
+  color: #333;
+  font-size: 1.3em;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Contenedor principal del modal - CORREGIDO */
+.tareas-proceso-modal-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 15px;
+  overflow: hidden; /* Evita desbordamiento */
+}
+
+/* Área de la imagen - CORREGIDA */
+.tareas-proceso-imagen-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Cambiado de center a flex-start */
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  padding: 10px 0;
+}
+
+.tareas-proceso-modal-imagen-contenedor {
+  position: relative;
+  text-align: center;
+  width: 100%;
+  max-height: 60vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  flex-shrink: 0; 
+}
+
+.tareas-proceso-modal-imagen-contenedor img {
+  max-width: 100%;
+  max-height: 60vh; 
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.tareas-proceso-modal-carrusel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 5;
+}
+
+.tareas-proceso-modal-carrusel-btn:first-of-type {
+  left: 40px;
+}
+
+.tareas-proceso-modal-carrusel-btn:last-of-type {
+  right: 40px;
+}
+
+.tareas-proceso-modal-carrusel-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Indicador */
+.tareas-proceso-modal-indicador {
+  text-align: center;
+  color: #666;
+  font-size: 0.9em;
+  margin: 10px 0;
+  padding: 5px 15px;
+  background: #f8f9fa;
+  border-radius: 20px;
+  display: inline-block;
+  border: 1px solid #e9ecef;
+  flex-shrink: 0;
+}
+
+/* Contenedor para el botón inferior - CORREGIDO */
+.tareas-proceso-boton-inferior {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 10px 0;
+  margin-top: 10px;
+  border-top: 1px solid #e9ecef;
+  flex-shrink: 0; /* Importante: no se reduce */
+}
+
+.tareas-proceso-btn-completar {
+  background-color: #861542;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(116, 27, 27, 0.76);
+}
+
+.tareas-proceso-btn-completar:hover {
+  background-color: #861542;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(122, 37, 37, 0.651);
+}
+
+.tareas-proceso-modal-no-imagenes {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 40px 20px;
+  font-size: 1.1em;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tareas-proceso-modal-content {
+    padding: 20px;
+    margin: 10px;
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .tareas-proceso-modal-imagen-contenedor {
+    max-height: 50vh;
+  }
+  
+  .tareas-proceso-modal-imagen-contenedor img {
+    max-height: 50vh;
+  }
+  
+  .tareas-proceso-modal-carrusel-btn {
+    width: 45px;
+    height: 45px;
+    padding: 12px 16px;
+    font-size: 18px;
+  }
+  
+  .tareas-proceso-modal-carrusel-btn:first-of-type {
+    left: 20px;
+  }
+  
+  .tareas-proceso-modal-carrusel-btn:last-of-type {
+    right: 20px;
+  }
+  
+  .tareas-proceso-modal-titulo {
+    font-size: 1.1em;
+  }
+  
+  .tareas-proceso-modal-header {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-height: 700px) {
+  .tareas-proceso-modal-imagen-contenedor {
+    max-height: 45vh;
+  }
+  
+  .tareas-proceso-modal-imagen-contenedor img {
+    max-height: 45vh;
+  }
+  
+  .tareas-proceso-modal-header {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+  }
+  
+  .tareas-proceso-boton-inferior {
+    padding: 15px 0 5px 0;
+  }
+}
+
+
+/* Header de tarjeta mejorado */
+.tareas-proceso-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+/* Checkbox personalizado */
+.tareas-proceso-checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tareas-proceso-checkbox-label input {
+  display: none;
+}
+
+.tareas-proceso-checkbox-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.tareas-proceso-checkbox-label input:checked + .tareas-proceso-checkbox-custom {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.tareas-proceso-checkbox-label input:checked + .tareas-proceso-checkbox-custom::after {
+  content: '✓';
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Información meta */
+.tareas-proceso-meta-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tareas-proceso-estatus-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.tareas-proceso-estatus-badge.en-proceso {
+  background-color: #fff3cd;
+  color: #ff9800;
+  color: linear-gradient(135deg, #ffc107, #ff9800);
+}
+
+.tareas-proceso-estatus-badge.completado {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.tareas-proceso-fechas {
+  display: flex;
+  gap: 1rem;
+}
+
+.tareas-proceso-fecha-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.tareas-proceso-fecha-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.tareas-proceso-fecha-valor {
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Barra de progreso */
+.tareas-proceso-progress-container {
+  margin: 1.5rem 0;
+}
+
+.tareas-proceso-progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.tareas-proceso-progress-bar {
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tareas-proceso-progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #ffc107, #ff9800);
+  border-radius: 4px;
+  transition: width 0.4s ease-in-out;
+  box-shadow: 0 0 6px rgba(163, 120, 80, 0.5);
+}
+
+
+/* Estado vacío */
+.tareas-proceso-empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.tareas-proceso-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.tareas-proceso-empty-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.tareas-proceso-empty-message {
+  font-size: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.tareas-proceso-acciones {
+  display: flex;
+  justify-content: center;
+  align-items: center;    
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tareas-proceso-btn-detalles {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tareas-proceso-btn-detalles:hover {
+  background-color: #545b62;
+}
+
+@media (max-width: 768px) {
+  .tareas-proceso-stats-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .tareas-proceso-meta-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .tareas-proceso-fechas {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .tareas-proceso-fecha-item {
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,297 @@
+import React, { useState, useRef, useEffect } from "react";
+import Header from "./Header";
+import { Link, useNavigate } from "react-router-dom";
+import { FaCalendarAlt } from "react-icons/fa";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale } from "react-datepicker";
+import es from "date-fns/locale/es";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/global.css';
+import '../css/NuevoProyecto.css';
+
+registerLocale("es", es);
+
+const CalendarButton = React.forwardRef(({ value, onClick }, ref) => (
+  <button
+    type="button"
+    className="btn-calendario w-100 d-flex align-items-center gap-2"
+    onClick={onClick}
+    ref={ref}
+  >
+    <FaCalendarAlt className={!value ? "text" : ""} /> 
+    <span className={!value ? "text" : ""}>
+      {value || "Seleccionar fecha"}
+    </span>
+  </button>
+));
+
+function NuevoProyecto() {
+  const navigate = useNavigate();
+  const nombreProyectoRef = useRef(null);
+  const descripcionProyectoRef = useRef(null);
+  const menuRef = useRef(null);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [mostrarExtras, setMostrarExtras] = useState(true);
+  const [fechaInicio, setFechaInicio] = useState(null);
+  const [fechaFin, setFechaFin] = useState(null);
+  const [errores, setErrores] = useState({});
+  const [loading, setLoading] = useState(false); 
+
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const id_usuario = usuario?.id_usuario;
+  const id_departamento = usuario?.id_departamento;
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const ajustarAltura = (ref) => {
+    if (ref.current) {
+      ref.current.style.height = 'auto';
+      ref.current.style.height = ref.current.scrollHeight + 'px';
+    }
+  };
+
+  useEffect(() => {
+    ajustarAltura(nombreProyectoRef);
+    ajustarAltura(descripcionProyectoRef);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleInputChange = (campo) => {
+    setErrores((prev) => ({ ...prev, [campo]: null }));
+  };
+
+  const handleNuevaTarea = () => console.log("Nueva Tarea");
+
+  const handleCancelar = () => {
+    nombreProyectoRef.current.value = "";
+    descripcionProyectoRef.current.value = "";
+    setFechaInicio(null);
+    setFechaFin(null);
+    setUsuarioSeleccionado("");
+    setErrores({});
+    setTareaGuardada(false);
+    setIdTareaRecienCreada(null);
+  };
+ const handleGuardar = async (e) => {
+    e?.preventDefault();
+
+    // 1️⃣ Obtener token JWT
+    const token = localStorage.getItem("jwt_token");
+    if (!token) {
+        alert("Sesión expirada. Redirigiendo al login.");
+        navigate("/Login", { replace: true });
+        return;
+    }
+
+    if (!id_usuario) return alert("No se encontró el usuario logueado.");
+
+    const nombre = nombreProyectoRef.current.value.trim();
+    const descripcion = descripcionProyectoRef.current.value.trim();
+    const inicio = fechaInicio;
+    const fin = fechaFin;
+    const hoy = new Date();
+    hoy.setHours(0,0,0,0);
+
+    const nuevosErrores = {};
+    if (!nombre) nuevosErrores.nombre = "El nombre del proyecto es obligatorio.";
+    if (!descripcion) nuevosErrores.descripcion = "La descripción es obligatoria.";
+    if (!inicio) nuevosErrores.inicio = "Selecciona la fecha de inicio.";
+    if (!fin) nuevosErrores.fin = "Selecciona la fecha de fin.";
+    if (inicio && inicio < hoy) nuevosErrores.inicio = "La fecha de inicio no puede ser anterior al día de hoy.";
+    if (inicio && fin && fin < inicio) nuevosErrores.fin = "La fecha de fin no puede ser menor a la fecha de inicio.";
+
+    setErrores(nuevosErrores);
+    if (Object.keys(nuevosErrores).length > 0) return;
+
+    const proyecto = {
+        id_usuario: parseInt(id_usuario),
+        id_departamento: parseInt(id_departamento),
+        p_nombre: nombre,
+        descripcion: descripcion,
+        pf_inicio: `${inicio.getFullYear()}-${String(inicio.getMonth()+1).padStart(2,'0')}-${String(inicio.getDate()).padStart(2,'0')}`,
+        pf_fin: `${fin.getFullYear()}-${String(fin.getMonth()+1).padStart(2,'0')}-${String(fin.getDate()).padStart(2,'0')}`
+    };
+
+    try {
+        setLoading(true); 
+        const res = await fetch("http://127.0.0.1:8000/api/proyectos", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` // 2️⃣ Incluir token JWT
+            },
+            body: JSON.stringify(proyecto)
+        });
+
+        // 3️⃣ Manejar token expirado
+        if (res.status === 401) {
+            alert("Token inválido o expirado. Redirigiendo al login.");
+            localStorage.removeItem("jwt_token");
+            navigate("/Login", { replace: true });
+            return;
+        }
+
+        const data = await res.json().catch(async () => ({ error: await res.text() }));
+        if (!res.ok) return alert("Error al guardar el proyecto: " + (data.message || JSON.stringify(data)));
+
+        const idProyecto = data.id_proyecto || data.proyecto?.id_proyecto;
+        alert("Proyecto guardado correctamente");
+
+        nombreProyectoRef.current.value = "";
+        descripcionProyectoRef.current.value = "";
+        setFechaInicio(null);
+        setFechaFin(null);
+        setErrores({});
+        setMostrarExtras(false);
+
+        navigate("/agregartareas", { 
+            state: { 
+                id_departamento_inicial: id_departamento,
+                id_usuario, 
+                id_proyecto: idProyecto,
+                p_nombre: proyecto.p_nombre,
+                descripcion: proyecto.descripcion,
+                pf_inicio: proyecto.pf_inicio,
+                pf_fin: proyecto.pf_fin
+            } 
+        });
+
+    } catch (error) {
+        alert("Error al conectar con el servidor");
+        console.error(error);
+    } finally {
+        setLoading(false); 
+    }
+};
+
+
+  return (
+   <div className="container-fluid p-0 app-global">
+  <Header />
+
+      <div className="container my-4">
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-8 col-lg-6 contenedor-nuevo-proyecto">
+            <h1 className="text-center mb-4 form-titulo">Nuevo Proyecto</h1>
+            <div className="mb-3 d-flex flex-column">
+              <label htmlFor="nombreProyecto" className="form-label fw-bold form-label">Nombre del proyecto</label>
+              <textarea
+                id="nombreProyecto"
+                ref={nombreProyectoRef}
+                className="form-control form-input"
+                placeholder="Escribe el nombre del proyecto"
+                rows={1}
+                onInput={() => { ajustarAltura(nombreProyectoRef); handleInputChange("nombre"); }}
+              />
+              {errores.nombre && <small className="text-danger mt-1">{errores.nombre}</small>}
+            </div>
+
+            <div className="mb-3 d-flex flex-column">
+              <label htmlFor="descripcionProyecto" className="form-label fw-bold nuevoproyecto-label">Descripción del proyecto</label>
+              <textarea
+                id="descripcionProyecto"
+                ref={descripcionProyectoRef}
+                className="form-control form-input"
+                placeholder="Escribe la descripción del proyecto"
+                rows={3}
+                onInput={() => { ajustarAltura(descripcionProyectoRef); handleInputChange("descripcion"); }}
+              />
+              {errores.descripcion && <small className="text-danger mt-1">{errores.descripcion}</small>}
+            </div>
+
+            <div className="row mb-3">
+              <div className="col-12 col-md-6 mb-3 d-flex flex-column">
+                <label className="form-label fw-bold mb-1">Fecha de inicio</label>
+                <DatePicker
+                  selected={fechaInicio}
+                  onChange={(date) => { setFechaInicio(date); handleInputChange("inicio"); }}
+                  dateFormat="dd/MM/yyyy"
+                  showMonthDropdown
+                  showYearDropdown
+                  dropdownMode="select"
+                  locale="es"
+                  minDate={new Date()}
+                  customInput={<CalendarButton />}
+                />
+                {errores.inicio && <small className="error">{errores.inicio}</small>}
+              </div>
+
+              <div className="col-12 col-md-6 mb-3 d-flex flex-column">
+                <label className="form-label fw-bold mb-1">Fecha de fin</label>
+                <DatePicker
+                  selected={fechaFin}
+                  onChange={(date) => { setFechaFin(date); handleInputChange("fin"); }}
+                  dateFormat="dd/MM/yyyy"
+                  showMonthDropdown
+                  showYearDropdown
+                  dropdownMode="select"
+                  locale="es"
+                  minDate={fechaInicio || new Date()}
+                  customInput={<CalendarButton />}
+                />
+                {errores.fin && <small className="text-danger mt-1">{errores.fin}</small>}
+              </div>
+            </div>
+
+            <div className="d-flex flex-column flex-md-row gap-2 justify-content-center">
+              {mostrarExtras ? (
+                <>
+                  <button 
+                    type="button"
+                    className="btn-form w-100 w-md-auto"
+                    onClick={handleCancelar}
+                    disabled={loading} 
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    type="button"
+                    className="btn-form w-100 w-md-auto"
+                    onClick={handleGuardar}
+                    disabled={loading} 
+                  >  {loading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
+                    {loading ? "Guardando…" : "Guardar Proyecto"} 
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button 
+                    type="button"
+                    className="btn-form w-100 w-md-auto"
+                    onClick={handleNuevaTarea}
+                  >
+                    Nueva Tarea
+                  </button>
+                  <button 
+                    type="button"
+                    className="btn-form w-100 w-md-auto"
+                    onClick={() => navigate("/Vertareas")}
+                  >
+                    Ver Proyectos
+                  </button>
+                </>
+              )}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default NuevoProyecto;
+
+
+

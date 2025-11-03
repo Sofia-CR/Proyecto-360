@@ -1,0 +1,339 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  background-color: white;
+  font-family: "Open Sans", sans-serif;
+}
+
+.agregarusuario-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+.agregarusuario-encabezado {
+  width: 100%;
+  background-color: white;
+}
+
+.agregarusuario-barra {
+  height: 50px;
+  width: 100%;
+  background-color: #861542;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  position: relative;
+  border: none; 
+  box-shadow: none; 
+}
+
+.agregarusuario-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.agregarusuario-logo {
+  height: 50px;
+  object-fit: contain;
+}
+
+.agregarusuario-logo-central {
+  height: 60px;
+  object-fit: contain;
+}
+
+.agregarusuario-separador {
+  width: 2px;
+  height: 50px;
+  background-color: #861542;
+}
+
+.agregarusuario-titulo-barra {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #d5b690;
+  font-weight: bold;
+  font-size: 18px;
+  background: transparent;
+}
+
+/* Enlaces */
+.agregarusuario-sub-menu li a {
+  color: #861542; 
+  text-decoration: none;
+  font-weight: bold;
+  display: block; 
+  background-color: transparent; 
+  border-bottom: none;
+}
+
+.agregarusuario-contenedor-principal {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 20px;
+}
+
+.agregarusuario-contenedor-usuarios {
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 100%;
+  max-width: 800px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.agregarusuario-busqueda {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  max-width: 500px;    
+  margin-top: 10px;
+  align-items: center;
+  padding: 0 10px;      
+  box-sizing: border-box;
+}
+
+.agregarusuario-input {
+  flex: 1;              
+  height: 36px;        
+  font-size: 16px;
+  padding: 0 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+  color: black;
+  box-sizing: border-box;
+}
+
+.agregarusuario-boton-buscar,
+.agregarusuario-boton-agregar,
+.agregarusuario-paginacion button {
+  height: 36px;
+  font-size: 16px;
+  padding: 0 15px;
+  border-radius: 5px;
+  border: 1px solid #861542;
+  background-color: #861542;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.agregarusuario-boton-buscar:hover,
+.agregarusuario-boton-agregar:hover,
+.agregarusuario-paginacion button:hover {
+  background-color: #a0255e;
+}
+
+.agregarusuario-lista-usuarios {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.agregarusuario-lista-usuarios li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 500px;    
+  height: 36px;           
+  padding: 0 10px;      
+  margin-bottom: 10px;
+  color: #000000;
+  font-size: 16px;
+  border-bottom: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.agregarusuario-paginacion {
+  display: flex;
+  gap: 8px;            
+  margin-top: 15px; 
+  justify-content: center; 
+}
+
+.agregarusuario-paginacion button.activo {
+  background-color: #d5b690; 
+  color: #861542;
+  border: 1px solid #861542;
+}
+
+.agregarusuario-usuarios-agregados {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.agregarusuario-usuarios-agregados ul {
+  list-style: none;
+  padding: 0;
+}
+
+.agregarusuario-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.agregarusuario-modal-contenido {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  min-width: 300px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  animation: slideDown 0.3s ease-in-out;
+}
+
+.agregarusuario-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  color: #28a745 !important;
+  cursor: pointer;
+}
+
+.agregarusuario-icono-palomita {
+  font-size: 60px;
+  color: #28a745;
+  margin-bottom: 15px;
+  animation: pop 0.3s ease-in-out;
+}
+
+.agregarusuario-mensaje-agregado {
+  font-size: 18px;
+  color: #28a745;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.agregarusuario-contenedor-icono {
+  position: absolute;  
+  left: 0;            
+  top: 0;
+  height: 100%;        
+  width: 200px;        
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  background: transparent;
+  z-index: 2;             
+}
+
+.agregarusuario-icono-casa {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  fill: #d5b690;
+  background: transparent;
+}
+.agregarusuario-encabezado {
+  width: 100%;
+  background-color: white;
+  box-shadow: none; 
+  border: none;
+  padding: 0; 
+}
+
+.agregarusuario-barra {
+  height: 50px;
+  width: 100%;
+  background-color: #861542;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  border: none;
+  box-shadow: none;
+}
+
+.agregarusuario-sub-menu {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 200px;
+  background-color: #d5b690;
+  border: 2px solid #861542; 
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.25);
+  padding: 0;
+  margin: 0; 
+  border-radius: 1px;
+  list-style: none;
+  z-index: 10;
+}
+.agregarusuario-sub-menu li {
+  padding: 10px 20px; 
+  background-color: #d5b690;
+  border-bottom: 1px solid #861542;
+}
+.agregarusuario-sub-menu li:last-child {
+  border-bottom: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

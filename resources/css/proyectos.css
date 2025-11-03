@@ -1,0 +1,311 @@
+.proyectos-app {
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.proyectos-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+.proyectos-buscador {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+  width: 100%;
+}
+
+.proyectos-input-buscar {
+  width: 100%;
+  max-width: 700px;
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.proyectos-lista-proyectos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  
+}
+
+.proyectos-card {
+  border: 1px solid #ccc;
+  background-color: white;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.proyectos-info {
+  display: flex;
+  flex-direction: column; /* apila verticalmente */
+  gap: 5px;               /* espacio entre líneas */
+  color: #000000;
+}
+
+.proyectos-info label {
+  display: block;
+  font-weight: normal;
+  margin-bottom: 4px;
+  color: #000000;
+   font-size: 16px;
+}
+
+.proyectos-botones {
+  display: flex;
+  justify-content: center;  /* centra los botones */
+  gap: 15px;                /* espacio entre botones */
+  flex-wrap: wrap;          /* se apilan en móvil */
+  margin-top: 10px;
+}
+
+.proyectos-btn {
+  padding: 12px 45px;       /* más “relleno” horizontal y vertical */
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;       /* bordes suaves */
+  color: #fff;
+  background-color: #861542;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  display: inline-flex;      /* mejor que inline-block para centrar el texto */
+  align-items: center;       /* centra el texto verticalmente */
+  justify-content: center;   /* centra el texto horizontalmente */
+  white-space: nowrap;       /* evita que se divida el texto */
+  transition: background-color 0.2s;
+  min-width: 120px;          /* ancho mínimo uniforme */
+}
+
+.proyectos-btn:hover {
+  background-color: #5f0e2b;
+}
+
+.proyectos-card.seleccionado {
+  border: 2px solid #861542;
+  background-color: #f8e6ef;
+}
+
+/* Fondo oscuro del modal */
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1040;
+}
+
+/* Contenedor del modal centrado */
+.modal-container-custom {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  width: 90%;
+  max-width: 500px;
+}
+
+/* Header con título e ícono */
+.modal-header-custom {
+  border-bottom: none;
+  padding-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  justify-content: center; /* centra el título */
+  align-items: center;     /* alinea verticalmente */
+  gap: 8px;
+  position: relative;      /* necesario para que la X absoluta quede dentro del header */
+}
+
+/* Botón X */
+.btn-close-custom {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #861542;
+  z-index: 1100;
+}
+
+/* Body del modal */
+.modal-body-custom {
+  margin: 20px 0; /* un poquito más de espacio arriba y abajo */
+  font-size: 16px;
+  text-align: center; /* centra el texto */
+}
+
+/* Footer con botones */
+.modal-footer-custom {
+  display: flex;
+  justify-content: center; /* centra los botones horizontalmente */
+  gap: 15px;
+  flex-wrap: wrap; /* para pantallas pequeñas */
+}
+
+.modal-footer-custom .btn-custom {
+  background-color: #861542;
+  color: #fff;
+  padding: 10px 25px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 100px; /* ancho uniforme */
+}
+/* Modal blanco */
+.modal-content-custom {
+  background-color: #fff; /* color sólido */
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  position: relative;
+  z-index: 1055; /* aseguramos que esté encima del backdrop */
+}
+
+.proyecto-nombre {
+  font-weight: bold;
+  font-size: 20px; /* tamaño mayor para el proyecto */
+}
+
+
+.tarea-evidencias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.evidencia-thumb {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: transform 0.2s;
+}
+
+.evidencia-thumb:hover {
+  transform: scale(1.1);
+  border-color: #861542;
+}
+.proyecto-nombre {
+  text-transform: uppercase;
+}
+.tarea-nombre {
+  text-transform: uppercase;
+  font-weight: bold;  
+  font-size: 18px;
+}
+.filtro-estatus-toggle {
+  display: flex;
+  justify-content: center; /* centra los botones */
+  gap: 10px;               /* espacio entre botones */
+  margin: 15px 0;          /* margen arriba y abajo */
+  flex-wrap: wrap;          /* para móviles */
+}
+
+.toggle-btn {
+  padding: 8px 20px;
+  border: 1px solid #861542;
+  border-radius: 20px;
+  background-color: #fff;
+  color: #861542;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+  background-color: #861542;
+  color: #fff;
+}
+
+.toggle-btn.active {
+  background-color: #861542;
+  color: #fff;
+}
+.miniatura-evidencia {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-ver-tarea {
+  background-color: #d5b690; /* color de fondo del botón */
+  color: #861542;             /* color del texto y del ícono */
+  border: 2px solid #861542;  /* borde llamativo */
+  border-radius: 50px;        /* esquinas redondeadas */
+  padding: 6px 15px;          /* espacio interno */
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;                   /* espacio entre ícono y texto */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-ver-tarea:hover {
+  background-color: #861542;  /* cambia fondo al pasar el mouse */
+  color: #fff;                /* cambia texto e ícono a blanco */
+  transform: scale(1.05);     /* ligero zoom */
+}
+
+.btn-ver-tarea svg {
+  font-size: 16px;            /* tamaño del ícono */
+}
+
+
+
+.proyectos-filtros {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.proyectos-select {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: #fff;
+  appearance: none; /* quita estilo nativo del navegador */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23333' height='10' viewBox='0 0 10 10' width='10' xmlns='http://www.w3.org/2000/svg'><path d='M0 0 L5 5 L10 0 Z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  transition: all 0.3s ease;
+}
+
+.proyectos-select:focus {
+  outline: none;
+  border-color: #4F46E5;
+  box-shadow: 0 0 8px rgba(79, 70, 229, 0.3);
+}
+
+
+
+

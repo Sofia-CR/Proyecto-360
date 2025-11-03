@@ -1,0 +1,157 @@
+import React, { useState, useEffect } from "react";
+import Header from "./Header";
+import "../css/TareasPendientes.css";
+import logo3 from "../imagenes/logo3.png";
+import { FaExclamationCircle } from "react-icons/fa";
+import { FiSearch, FiX } from "react-icons/fi";
+
+function TareasPendientes() {
+  const [busqueda, setBusqueda] = useState("");
+  const [proyectos, setProyectos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTareasPendientes = async () => {
+      try {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        if (!usuario?.id_usuario) {
+          console.warn("Usuario no encontrado en localStorage");
+          setLoading(false);
+          return;
+        }
+
+        const res = await fetch(
+          `http://127.0.0.1:8000/api/tareaspendientesusuario?usuario=${usuario.id_usuario}`
+        );
+        const data = await res.json();
+
+        if (data.success) {
+          setProyectos(data.proyectos || []);
+        } else {
+          console.error("Error al cargar proyectos y tareas:", data.mensaje);
+        }
+      } catch (error) {
+        console.error("Error al cargar proyectos y tareas:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTareasPendientes();
+  }, []);
+
+  const proyectosFiltrados = (proyectos || [])
+    .map(({ proyecto, tareas }) => {
+      if (!proyecto || !tareas) return { proyecto: null, tareas: [], mostrar: false };
+      const proyectoCoincide = proyecto.p_nombre?.toLowerCase().includes(busqueda.toLowerCase());
+      const tareasFiltradas = proyectoCoincide
+        ? tareas
+        : tareas.filter((t) => t.t_nombre?.toLowerCase().includes(busqueda.toLowerCase()));
+      return {
+        proyecto,
+        tareas: tareasFiltradas,
+        mostrar: proyectoCoincide || tareasFiltradas.length > 0,
+      };
+    })
+    .filter(({ mostrar }) => mostrar);
+
+  return (
+    <div className="container-fluid p-0 app-global">
+      <Header />
+
+      <div className="container my-4">
+        <div className="text-center">
+          <h1 className="form-titulo">Tareas Pendientes</h1>
+        </div>
+
+        <div className="proyectos-filtros">
+          <div className="tareaspendientesj-contenedor-buscador-y-tarjetas">
+            {/* Buscador */}
+            <div className="tareaspendientesj-buscador-contenedor">
+              <div className="tareaspendientesj-buscador-inner">
+                <FiSearch className="buscador-verproyectos-icono" />
+                <input
+                  type="text"
+                  placeholder="Buscar proyectos por nombre..."
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  className="tareaspendientesj-buscador-input"
+                />
+                {busqueda && (
+                  <button
+                    className="tareaspendientesj-buscador-clear"
+                    onClick={() => setBusqueda("")}
+                  >
+                    <FiX />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Resultados */}
+            {busqueda && (
+              <div className="tareaspendientesj-buscador-resultados-info">
+                {proyectos.filter((p) =>
+                  p.proyecto?.p_nombre?.toLowerCase().includes(busqueda.toLowerCase())
+                ).length} resultado(s) para "{busqueda}"
+              </div>
+             )}
+
+             {loading ? (
+  <div className="loader-container">
+    <div className="loader-logo">
+      <img src={logo3} alt="Cargando" />
+    </div>
+    <div className="loader-texto">CARGANDO...</div>
+    <div className="loader-spinner"></div>
+  </div>
+) : proyectos.length === 0 ? (
+  // Solo si el backend no devolvió proyectos
+  <p className="loading-tareas text-center">
+    No hay proyectos o tareas pendientes.
+  </p>
+) : (
+  proyectosFiltrados.map(({ proyecto, tareas }) =>
+    proyecto ? (
+      <div key={proyecto.id_proyecto} className="tareaspendientesj-proyectos-card">
+        <h3 className="tareaspendientesj-nombre-proyecto">{proyecto.p_nombre}</h3>
+        {tareas.map((tarea) => (
+          <li key={tarea.id_tarea} className="tareaspendientesj-item-tarea-pendiente">
+            <div className="tareaspendientesj-info-tarea-TP">
+              <div className="tareaspendientesj-tarea-header">
+                <FaExclamationCircle className="tareaspendientesj-icono-pendiente" />
+                <label className="tareaspendientesj-tarea-nombre-TP">{tarea.t_nombre}</label>
+              </div>
+              <div className="tareaspendientesj-tarea-footer">
+                <span className="tareaspendientesj-tarea-estatus-Pendiente">{tarea.t_estatus}</span>
+                <span className="tareaspendientesj-tarea-fecha-TP">
+                  Vence: {tarea.tf_fin || tarea.fechaVencimiento}
+                </span>
+              </div>
+            </div>
+          </li>
+        ))}
+      </div>
+    ) : null
+  )
+)}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default TareasPendientes;
+
+
+
+
+
+
+
+
+
+
+
