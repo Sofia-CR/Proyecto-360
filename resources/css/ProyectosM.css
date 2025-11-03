@@ -82,13 +82,13 @@
 }
 
 /* INFORMACIÓN DEL PROYECTO */
-.proyectos-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 0.95rem;
+.modificar-proyectos-fp {
+  font-size: 16px;
+  color: #4a5568;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 4px 12px;
+  border-radius: 12px;
 }
 
 .proyectos-info div {
@@ -119,12 +119,12 @@
   font-size: 0.9rem;
   min-width: 180px;
   color: white;
-  background: linear-gradient(135deg, #861542, #a52c5c);
+  background: #861542;
   box-shadow: 0 4px 12px rgba(134, 21, 66, 0.25);
 }
 
 .modificar-proyectos-btn:hover {
-  background: linear-gradient(135deg, #a52c5c, #c2185b);
+  background: #661133;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(134, 21, 66, 0.35);
 }
@@ -298,3 +298,4 @@
     font-size: 0.9rem;
   }
 }
+

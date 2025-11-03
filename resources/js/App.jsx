@@ -32,6 +32,7 @@ import TareasPendientesJefe from "./TareasPendientesJefe";
 import TareasCompletadasJefe from "./TareasCompletadasJefe";
 import AgregarT from "./AgregarT";
 import EditarTareas from "./EditarTareas";
+import EliminarProyectos from "./EliminarProyectos";
 
 
 
@@ -72,6 +73,7 @@ function App() {
   <Route path="/ModificarProyecto" element={<ModificarProyecto />} />
     <Route path="/AgregarT" element={<AgregarT />} />
      <Route path="/EditarTareas/:id" element={<EditarTareas />} />
+      <Route path="/EliminarProyectos" element={<EliminarProyectos />} />
    
       </Routes>
     </Router>

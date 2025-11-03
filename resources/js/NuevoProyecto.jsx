@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Header from "./Header";
 import { Link, useNavigate } from "react-router-dom";
-import { FaCalendarAlt } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale } from "react-datepicker";
@@ -9,6 +8,7 @@ import es from "date-fns/locale/es";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/global.css';
 import '../css/NuevoProyecto.css';
+import { FaExclamationTriangle, FaCalendarAlt } from "react-icons/fa";
 
 registerLocale("es", es);
 
@@ -25,6 +25,15 @@ const CalendarButton = React.forwardRef(({ value, onClick }, ref) => (
     </span>
   </button>
 ));
+const ErrorMensaje = ({ mensaje }) => {
+  if (!mensaje) return null;
+  return (
+    <small className="error">
+      <FaExclamationTriangle className="error-icon" />
+      {mensaje}
+    </small>
+  );
+};
 
 function NuevoProyecto() {
   const navigate = useNavigate();
@@ -194,7 +203,7 @@ function NuevoProyecto() {
                 rows={1}
                 onInput={() => { ajustarAltura(nombreProyectoRef); handleInputChange("nombre"); }}
               />
-              {errores.nombre && <small className="text-danger mt-1">{errores.nombre}</small>}
+               <ErrorMensaje mensaje={errores.nombre} />
             </div>
 
             <div className="mb-3 d-flex flex-column">
@@ -207,7 +216,7 @@ function NuevoProyecto() {
                 rows={3}
                 onInput={() => { ajustarAltura(descripcionProyectoRef); handleInputChange("descripcion"); }}
               />
-              {errores.descripcion && <small className="text-danger mt-1">{errores.descripcion}</small>}
+              <ErrorMensaje mensaje={errores.descripcion} />
             </div>
 
             <div className="row mb-3">
@@ -224,7 +233,7 @@ function NuevoProyecto() {
                   minDate={new Date()}
                   customInput={<CalendarButton />}
                 />
-                {errores.inicio && <small className="error">{errores.inicio}</small>}
+               <ErrorMensaje mensaje={errores.inicio} />
               </div>
 
               <div className="col-12 col-md-6 mb-3 d-flex flex-column">
@@ -240,7 +249,7 @@ function NuevoProyecto() {
                   minDate={fechaInicio || new Date()}
                   customInput={<CalendarButton />}
                 />
-                {errores.fin && <small className="text-danger mt-1">{errores.fin}</small>}
+                <ErrorMensaje mensaje={errores.fin} />
               </div>
             </div>
 

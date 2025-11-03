@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaCalendarAlt } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import Header from "./Header";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import "../css/global.css";
+import "../css/agregartareas.css";
+import { FaExclamationTriangle, FaCalendarAlt } from "react-icons/fa";
 
-// Botón personalizado para DatePicker
+
 const CalendarButton = React.forwardRef(({ value, onClick }, ref) => (
   <button
     type="button"
@@ -20,6 +20,16 @@ const CalendarButton = React.forwardRef(({ value, onClick }, ref) => (
     <span className={!value ? "text" : ""}>{value || "Seleccionar fecha"}</span>
   </button>
 ));
+
+const ErrorMensaje = ({ mensaje }) => {
+  if (!mensaje) return null;
+  return (
+    <small className="error">
+      <FaExclamationTriangle className="error-icon" />
+      {mensaje}
+    </small>
+  );
+};
 
 function AgregarTareas() {
   const navigate = useNavigate();
@@ -41,33 +51,44 @@ function AgregarTareas() {
   const [loading, setLoading] = useState(false);
   const [idTareaRecienCreada, setIdTareaRecienCreada] = useState(null);
 
-  const [minFecha, setMinFecha] = useState(null);
-  const [maxFecha, setMaxFecha] = useState(null);
+  
+    const [minFecha, setMinFecha] = useState(null);
+const [maxFecha, setMaxFecha] = useState(null);
   const getAuthHeaders = () => ({
     Authorization: `Bearer ${localStorage.getItem("token")}`
   });
 
-  // Fechas del proyecto
   useEffect(() => {
-    if (!id_proyecto) return;
-    axios
-      .get(`/api/proyectos/${id_proyecto}/fechasProyecto`, { headers: getAuthHeaders() })
-      .then(res => {
-        if (res.data.success) {
-          setMinFecha(new Date(res.data.pf_inicio));
-          setMaxFecha(new Date(res.data.pf_fin));
-        }
-      })
-      .catch(err => console.error(err));
-  }, [id_proyecto]);
-  const ajustarAltura = ref => {
+  if (!id_proyecto) return;
+
+  axios.get(`/api/proyectos/${id_proyecto}/fechasProyecto`)
+    .then(res => {
+      if (res.data.success) {
+        const inicio = new Date(res.data.pf_inicio);
+        const fin = new Date(res.data.pf_fin);
+        const inicioMex = new Date(inicio);
+        inicioMex.setHours(inicioMex.getHours() + 6);
+
+        const finMex = new Date(fin);
+        finMex.setHours(finMex.getHours() + 6);
+
+        console.log("Fechas ajustadas a México:");
+        console.log("Inicio:", inicioMex);
+        console.log("Fin:", finMex);
+        setMinFecha(inicioMex);
+        setMaxFecha(finMex);
+      }
+    })
+    .catch(err => console.error(err));
+}, [id_proyecto]);
+
+  const ajustarAltura = (ref) => {
     if (ref.current) {
       ref.current.style.height = "auto";
       ref.current.style.height = ref.current.scrollHeight + "px";
     }
   };
 
-  // Cargar departamentos
   useEffect(() => {
     axios
       .get("/api/CatalogoDepartamentos", { headers: getAuthHeaders() })
@@ -82,7 +103,6 @@ function AgregarTareas() {
       .catch(err => console.error(err));
   }, [id_departamento_inicial]);
 
-  // Cargar usuarios según departamento
   useEffect(() => {
     if (!departamentoSeleccionado) return;
     axios
@@ -98,10 +118,8 @@ function AgregarTareas() {
       });
   }, [departamentoSeleccionado]);
 
-  // Manejo de errores al escribir
   const handleInputChange = campo => setErrores(prev => ({ ...prev, [campo]: null }));
 
-  // Guardar tarea
   const handleGuardar = async () => {
     const nombre = nombreTareaRef.current.value.trim();
     const descripcion = descripcionTareaRef.current.value.trim();
@@ -151,6 +169,16 @@ function AgregarTareas() {
       setLoading(false);
     }
   };
+  const ErrorMensaje = ({ mensaje }) => {
+  if (!mensaje) return null;
+  return (
+    <small className="error">
+      <FaExclamationTriangle className="error-icon" />
+      {mensaje}
+    </small>
+  );
+};
+
 
   // Cancelar tarea
   const handleCancelar = () => {
@@ -183,7 +211,7 @@ function AgregarTareas() {
                 rows={1}
                 onInput={() => { ajustarAltura(nombreTareaRef); handleInputChange("nombre"); }}
               />
-              {errores.nombre && <small className="error">{errores.nombre}</small>}
+              <ErrorMensaje mensaje={errores.nombre} />
             </div>
 
             {/* Descripción */}
@@ -197,7 +225,7 @@ function AgregarTareas() {
                 rows={2}
                 onInput={() => { ajustarAltura(descripcionTareaRef); handleInputChange("descripcion"); }}
               />
-              {errores.descripcion && <small className="error">{errores.descripcion}</small>}
+              <ErrorMensaje mensaje={errores.descripcion} />
             </div>
 
             {/* Departamento */}
@@ -235,7 +263,7 @@ function AgregarTareas() {
                   </option>
                 ))}
               </select>
-              {errores.usuario && <small className="error">{errores.usuario}</small>}
+                 <ErrorMensaje mensaje={errores.usuario} />
             </div>
 
             {/* Fechas */}
@@ -250,11 +278,13 @@ function AgregarTareas() {
                   showYearDropdown
                   dropdownMode="select"
                   locale="es"
-                  minDate={minFecha}
-                  maxDate={fechaFin || maxFecha}
+                 minDate={minFecha}      // no puede ser antes del inicio del proyecto
+  maxDate={fechaFin || maxFecha} // opcional: no más allá del fin del proyecto
+
                   customInput={<CalendarButton />}
                 />
-                {errores.inicio && <small className="error">{errores.inicio}</small>}
+                 <ErrorMensaje mensaje={errores.inicio} />
+        
               </div>
               <div className="col-12 col-md-6 mb-3 d-flex flex-column">
                 <label className="form-label fw-bold mb-1">Fecha de fin</label>
@@ -266,32 +296,36 @@ function AgregarTareas() {
                   showYearDropdown
                   dropdownMode="select"
                   locale="es"
-                  minDate={fechaInicio || minFecha}
-                  maxDate={maxFecha}
+                   minDate={fechaInicio || minFecha} 
+  maxDate={maxFecha} 
                   customInput={<CalendarButton />}
                 />
-                {errores.fin && <small className="error">{errores.fin}</small>}
+                 <ErrorMensaje mensaje={errores.fin} />
+        
               </div>
             </div>
 
-            {/* Botones */}
-            <div className="d-flex flex-column flex-md-row gap-2 justify-content-center">
-              <button type="button" className="btn-form w-100 w-md-auto" onClick={handleCancelar} disabled={loading}>
-                Cancelar
-              </button>
-              <button type="button" className="btn-form w-100 w-md-auto" onClick={handleGuardar} disabled={loading}>
-                {loading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
-                {loading ? "Guardando…" : "Guardar Tarea"}
-              </button>
-            </div>
-
-            {/* Ver tarea */}
+         <div className="d-flex flex-column flex-md-row gap-2 justify-content-center">
+  <button type="button" className="btn-form w-100 w-md-auto" onClick={handleCancelar} disabled={loading}>
+    Cancelar
+  </button>
+  <button type="button" className="btn-form w-100 w-md-auto" onClick={handleGuardar} disabled={loading}>
+    {loading && <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>}
+    {loading ? "Guardando…" : "Guardar Tarea"}
+  </button>
+</div>
             {tareaGuardada && (
-              <div className="mt-3 text-center">
-                <button type="button" className="btn-form" onClick={() => navigate("/proyectos")}>
-                  Ver Tareas
-                </button>
-              </div>
+           <div className="mt-3 d-flex justify-content-center">
+  <button
+    type="button"
+    className="btn-form"
+    style={{ width: "100%", maxWidth: "300px" }}
+    onClick={() => navigate("/Vertareasusuario", { state: { id_proyecto } })}
+  >
+    <span style={{ fontSize: "1.5rem", marginRight: "8px", lineHeight: "0.8" }}>←</span>
+    Ver Tareas
+  </button>
+</div>
             )}
 
           </div>

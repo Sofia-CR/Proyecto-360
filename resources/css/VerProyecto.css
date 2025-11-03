@@ -175,7 +175,7 @@
 }
 
 .custom-select {
-  border-radius: 10px;
+  border-radius: 6px;
   border: 1px solid #ccc;
   padding: 10px 15px;
   text-align: left;
@@ -221,7 +221,7 @@
   width: 100%;
   padding: 15px 50px 15px 50px;
   border: 2px solid rgba(134, 21, 66, 0.1);
-  border-radius: 8px;
+  border-radius: 15px;
   background: #ffffff;
   box-shadow: 0 5px 15px rgba(134, 21, 66, 0.08);
   font-size: 16px;

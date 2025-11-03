@@ -10,7 +10,7 @@
 }
 .contenedor-nuevo-proyecto {
  width: 100%;
-  max-width: 700px;
+  max-width: 600px;
 }
 
 .form-label {
@@ -64,6 +64,7 @@
   cursor: pointer;
   font-weight: bold;
   text-align: center;
+  z-index: 10;
 }
 .fecha-item {
   display: flex;

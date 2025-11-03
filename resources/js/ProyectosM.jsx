@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import logo3 from "../imagenes/logo3.png";
-import "../css/global.css";
 import "../css/ProyectosM.css";
 import { FaAngleDown } from "react-icons/fa";
 import { FiSearch, FiX } from "react-icons/fi";
@@ -149,7 +148,7 @@ function ProyectosM() {
           proyectosFiltrados.map((p) => (
             <div key={p.id_proyecto} className="modificar-proyectos-card">
               <h5 className="modificar-proyectos-nombre">{p.p_nombre}</h5>
-              <div className="proyectos-info">
+              <div className="modificar-proyectos-fp">
                 <div>Fin: {p.pf_fin}</div>
               </div>
               <div className="modificar-proyectos-botones">

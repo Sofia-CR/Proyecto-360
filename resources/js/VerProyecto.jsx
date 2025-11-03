@@ -60,9 +60,12 @@ function Proyectos() {
   };
 
   const verTareas = (idProyecto) => {
-    localStorage.setItem("id_proyecto", idProyecto);
-    navigate("/vertareasusuario");
-  };
+  // Guardar en sessionStorage como respaldo
+  sessionStorage.setItem("id_proyecto", idProyecto);
+
+  // Navegar con state
+  navigate("/vertareasusuario", { state: { id_proyecto: idProyecto } });
+};
 
   const proyectosFiltrados = proyectos
     .filter((p) => p.p_nombre.toLowerCase().includes(busqueda.toLowerCase()))

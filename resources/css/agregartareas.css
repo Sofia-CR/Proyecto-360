@@ -25,7 +25,7 @@
 
 .agregartareas-input-container {
   width: 100%;
-  max-width: 700px; 
+  max-width: 600px; 
 }
 
 .agregartareas-input {
@@ -40,12 +40,12 @@
   z-index: 1;
 }
 
-/* --- Botones --- */
 .agregartareas-botones {
   display: flex;
   justify-content: space-between; 
   gap: 30px; 
   margin-top: 20px;
+  z-index: 10;
 }
 
 .btn-agregartareas {
@@ -63,6 +63,7 @@
 .btn-agregartareas.guardar {
   background-color: #861542; /* vino */
   color: #fff;
+
 }
 
 /* --- Fechas --- */
@@ -229,4 +230,21 @@
 .agregartareas-select__option--is-focused {
   background-color: #fff !important;
 }
+.mw-300 {
+  max-width: 300px;
+}
+.error {
+  color: #c20600; /* rojo */
+  font-size: 0.9rem;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+}
+
+.error-icon {
+  color: #c20600;
+  font-size: 1rem;
+}
+
 

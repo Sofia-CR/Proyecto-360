@@ -60,7 +60,7 @@ function Header({ children }) {
           subMenu: [
             { label: "Ver Proyectos", path: "/VerProyecto", icon: <FaEye /> },
             { label: "Modificar Proyectos", path: "/ProyectosM", icon: <FaEdit /> },
-            { label: "Eliminar Proyectos", path: "/proyectos/eliminar", icon: <FaTrash /> },
+            { label: "Eliminar Proyectos", path: "/EliminarProyectos", icon: <FaTrash /> },
           ],
         },
         {

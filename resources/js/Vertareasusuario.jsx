@@ -4,50 +4,62 @@ import { FiSearch, FiX } from "react-icons/fi";
 import Header from "./Header";
 import "../css/vertareausuario.css";
 import logo3 from "../imagenes/logo3.png";
+import { useLocation } from "react-router-dom";
+
 
 function VertareasUsuario() {
   const [tareas, setTareas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [loading, setLoading] = useState(true); 
 
-  useEffect(() => {
-    const cargarTareas = async () => {
-      const idProyecto = localStorage.getItem("id_proyecto");
-      const token = localStorage.getItem("jwt_token");
+ const location = useLocation();
 
-      if (!idProyecto) return alert("No se encontró el proyecto.");
-      if (!token) return alert("No hay token de autenticación.");
+useEffect(() => {
+  const cargarTareas = async () => {
+    let idProyecto = location.state?.id_proyecto;
+    if (!idProyecto) {
+      idProyecto = sessionStorage.getItem("id_proyecto");
+    } else {
+      // Guardar en sessionStorage para recargas
+      sessionStorage.setItem("id_proyecto", idProyecto);
+    }
 
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `http://127.0.0.1:8000/api/proyectos/${idProyecto}/tareas-activas`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    const token = localStorage.getItem("jwt_token");
 
-        const data = await res.json().catch(async () => ({ error: await res.text() }));
+    if (!idProyecto) return alert("No se encontró el proyecto.");
+    if (!token) return alert("No hay token de autenticación.");
 
-        if (res.ok && data.tareas) {
-          setTareas(data.tareas);
-        } else {
-          console.error("Error al cargar tareas:", data);
-          setTareas([]);
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/proyectos/${idProyecto}/tareas-activas`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (err) {
-        console.error("Error al cargar tareas:", err);
-        alert("Ocurrió un error al cargar las tareas.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      );
 
-    cargarTareas();
-  }, []);
+      const data = await res.json().catch(async () => ({ error: await res.text() }));
+
+      if (res.ok && data.tareas) {
+        setTareas(data.tareas);
+      } else {
+        console.error("Error al cargar tareas:", data);
+        setTareas([]);
+      }
+    } catch (err) {
+      console.error("Error al cargar tareas:", err);
+      alert("Ocurrió un error al cargar las tareas.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  cargarTareas();
+}, [location.state]);
+
 
   const tareasFiltradas = tareas.filter(
     (t) =>
