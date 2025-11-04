@@ -32,27 +32,13 @@ function TareasenProceso() {
     obtenerProyectos();
   }, []);
 
-  // Función para verificar si todas las tareas están finalizadas
 const todasLasTareasFinalizadas = (proyecto) => {
-  console.log("🔍 Verificando proyecto:", proyecto);
-  console.log("📋 Tareas del proyecto:", proyecto.tareas);
-  
-  if (!proyecto.tareas || proyecto.tareas.length === 0) {
-    console.log("❌ No hay tareas o array vacío");
-    return false;
-  }
-  
-  // Verificar que todas las tareas tengan estatus "Finalizada"
-  const todasFinalizadas = proyecto.tareas.every(tarea => {
-    console.log(`Tarea ${tarea.id_tarea}: ${tarea.t_estatus}`);
-    return tarea.t_estatus === "Finalizada";
-  });
-  
-  console.log("✅ Todas finalizadas:", todasFinalizadas);
-  return todasFinalizadas;
+  if (!proyecto.tareas || proyecto.tareas.length === 0) return false;
+
+  return (proyecto.total_tareas || 0) === (proyecto.tareas_completadas || 0);
 };
 
-  // Funciones auxiliares para formatear fechas y calcular días
+
   const formatearFecha = (fecha) => {
     if (!fecha) return 'No especificada';
     return new Date(fecha).toLocaleDateString('es-ES', {
@@ -82,6 +68,29 @@ const todasLasTareasFinalizadas = (proyecto) => {
     sessionStorage.setItem("proyectoSeleccionado", JSON.stringify(proyecto));
     navigate("/VerTareasPendientes");
   };
+const handleCompletarTareaProyecto = async (idProyecto) => {
+  setCargando(true);
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/proyectos/${idProyecto}/finalizar`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      // Eliminamos el proyecto finalizado del estado local para que desaparezca de la lista
+      setProyectos(prev => prev.filter(p => p.id_proyecto !== idProyecto));
+    } else {
+      console.error(data.mensaje);
+    }
+  } catch (error) {
+    console.error("Error al finalizar proyecto:", error);
+  } finally {
+    setCargando(false);
+  }
+};
+
 
   return (
     <div className="container-fluid p-0 tareas-proceso-global">
@@ -214,13 +223,6 @@ const todasLasTareasFinalizadas = (proyecto) => {
                         />
                         Marcar Proyecto como Finalizado
                       </label>
-                    )}
-
-                    {/* Mensaje informativo si hay tareas pendientes */}
-                    {p.p_estatus !== "Finalizada" && !todasLasTareasFinalizadas(p) && tareasPendientes > 0 && (
-                      <div className="vtp-mensaje-pendientes">
-                        ⚠️ Complete todas las tareas para finalizar el proyecto
-                      </div>
                     )}
                   </div>
                 </div>

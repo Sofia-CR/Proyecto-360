@@ -13,6 +13,7 @@ import {
   FaCheckCircle,
   FaHourglassHalf ,
   FaSpinner,
+  FaToggleOn,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
@@ -60,6 +61,7 @@ function Header({ children }) {
           subMenu: [
             { label: "Ver Proyectos", path: "/VerProyecto", icon: <FaEye /> },
             { label: "Modificar Proyectos", path: "/ProyectosM", icon: <FaEdit /> },
+             { label: "Cambiar estatus del proyecto", path: "/DesbloquearProyectos", icon: <FaToggleOn /> },
             { label: "Eliminar Proyectos", path: "/EliminarProyectos", icon: <FaTrash /> },
           ],
         },

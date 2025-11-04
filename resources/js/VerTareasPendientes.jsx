@@ -6,8 +6,12 @@ import { LuClock3 } from "react-icons/lu";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import "../css/VerTareasPendientes.css";
 import logo3 from "../imagenes/logo3.png"; 
+import { FiCheck } from "react-icons/fi";
+
 
 function VerTareasPendientes() {
+  const [tareaCompletada, setTareaCompletada] = useState(false);
+
   const [proyecto, setProyecto] = useState(null);
   const [tareaActual, setTareaActual] = useState(null);
   const [evidencias, setEvidencias] = useState([]);
@@ -31,7 +35,9 @@ function VerTareasPendientes() {
     try {
       setCargandoProyecto(true);
       const response = await fetch(`http://127.0.0.1:8000/api/tareas-proyectos-jefe?usuario=${usuario.id_usuario}`);
+
       const data = await response.json();
+      console.log("Datos recibidos del backend:", data);
       
       if (data.success) {
         const proyectoSeleccionado = JSON.parse(proyectoGuardado);
@@ -41,10 +47,10 @@ function VerTareasPendientes() {
         
         if (proyectoCompleto) {
           setProyecto(proyectoCompleto);
-          // ✅ ACTUALIZAR sessionStorage con datos frescos
+   
           sessionStorage.setItem("proyectoSeleccionado", JSON.stringify(proyectoCompleto));
         } else {
-          // ✅ Si el proyecto no se encuentra, usar los datos guardados pero limpiar tareas pendientes
+         
           const proyectoActualizado = {
             ...proyectoSeleccionado,
             tareas: (proyectoSeleccionado.tareas || []).map(t => ({
@@ -84,9 +90,10 @@ function VerTareasPendientes() {
     );
   }
 
-  const tareasFiltradas = proyecto?.tareas
-    ?.filter(t => t.t_estatus !== "Finalizada")
-    ?.filter(t => t.t_nombre.toLowerCase().includes(busqueda.toLowerCase()));
+const tareasFiltradas = proyecto?.tareas
+  ?.filter(t => t.t_estatus.toLowerCase() !== "finalizada")
+  ?.filter(t => t.t_nombre.toLowerCase().includes(busqueda.toLowerCase()));
+
 
   const handleCompletarTarea = async (idTarea) => {
     if (!idTarea) return;
@@ -104,7 +111,7 @@ function VerTareasPendientes() {
       const data = await response.json();
 
       if (data.success || response.ok) {
-        // ✅ ACTUALIZAR ESTADO LOCAL
+    
         setProyecto(prevProyecto => {
           if (!prevProyecto?.tareas) return prevProyecto;
           
@@ -134,7 +141,7 @@ function VerTareasPendientes() {
     }
   };
 
-  // ... (el resto de las funciones permanecen igual)
+
   const handleVerEvidencias = (tarea) => {
     setTareaActual(tarea);
     setEvidencias(tarea.evidencias || []);
@@ -296,6 +303,14 @@ function VerTareasPendientes() {
             </div>
           </div>
         )}
+        {tareaCompletada && (
+  <div className="vtp-toast">
+    <FiCheck style={{ marginRight: "8px" }} />
+    Tarea completada correctamente
+  </div>
+)}
+
+
       </div>
     </div>
   );

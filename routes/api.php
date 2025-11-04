@@ -37,6 +37,8 @@ Route::put('/tareas/{id}/completar', [TareasCompletadasController::class, 'compl
 Route::get('tareas-proyectos-jefe', [TareasPController::class, 'obtenerTareasProyectosJefe']);
 Route::get('tareasCompletadas/jefe', [ProyectoController::class, 'tareasCompletadasJefe']);
 Route::put('/proyectos/{id}/finalizar', [ProyectoJefeController::class, 'CambiarStatusProyecto']);
+Route::get('/proyectos/completados', [TareasPController::class, 'obtenerProyectosCompletados']);
+
 
 
 
@@ -71,6 +73,7 @@ Route::get('/proyectos/{id}/fechasProyecto', [ProyectoController::class, 'fechas
 Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
     Route::get('/usuario', [AuthController::class, 'usuario']);
+    
     // Ruta fallback para login cuando no autenticado
 Route::get('/login', function () {
     return response()->json(['error' => 'No autenticado'], 401);
