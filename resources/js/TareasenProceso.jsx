@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import logo3 from "../imagenes/logo3.png";
 
 function TareasenProceso() {
+  const [cargando, setCargando] = useState(false);
   const [busqueda, setBusqueda] = useState("");
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +32,44 @@ function TareasenProceso() {
     obtenerProyectos();
   }, []);
 
+  // Función para verificar si todas las tareas están finalizadas
+const todasLasTareasFinalizadas = (proyecto) => {
+  console.log("🔍 Verificando proyecto:", proyecto);
+  console.log("📋 Tareas del proyecto:", proyecto.tareas);
+  
+  if (!proyecto.tareas || proyecto.tareas.length === 0) {
+    console.log("❌ No hay tareas o array vacío");
+    return false;
+  }
+  
+  // Verificar que todas las tareas tengan estatus "Finalizada"
+  const todasFinalizadas = proyecto.tareas.every(tarea => {
+    console.log(`Tarea ${tarea.id_tarea}: ${tarea.t_estatus}`);
+    return tarea.t_estatus === "Finalizada";
+  });
+  
+  console.log("✅ Todas finalizadas:", todasFinalizadas);
+  return todasFinalizadas;
+};
+
+  // Funciones auxiliares para formatear fechas y calcular días
+  const formatearFecha = (fecha) => {
+    if (!fecha) return 'No especificada';
+    return new Date(fecha).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  const calcularDiasRestantes = (fechaFin) => {
+    if (!fechaFin) return null;
+    const hoy = new Date();
+    const fin = new Date(fechaFin);
+    const diferencia = fin.getTime() - hoy.getTime();
+    return Math.ceil(diferencia / (1000 * 3600 * 24));
+  };
+
   const totalProyectos = proyectos.length;
   const totalTareas = proyectos.reduce((total, p) => total + (p.total_tareas || 0), 0);
   const tareasCompletadas = proyectos.reduce((total, p) => total + (p.tareas_completadas || 0), 0);
@@ -40,7 +79,6 @@ function TareasenProceso() {
   );
 
   const handleVerTareas = (proyecto) => {
-    // Guardar proyecto en sessionStorage
     sessionStorage.setItem("proyectoSeleccionado", JSON.stringify(proyecto));
     navigate("/VerTareasPendientes");
   };
@@ -67,8 +105,7 @@ function TareasenProceso() {
           </div>
         </div>
 
-        {/* Buscador */}
-        <div className="tareas-proceso-buscador-container flex mb-3">
+        <div className="buscador-verproyectos-contenedor">
           <div className="buscador-verproyectos-inner">
             <FiSearch className="buscador-verproyectos-icono" />
             <input
@@ -79,7 +116,7 @@ function TareasenProceso() {
               className="buscador-verproyectos-input"
             />
             {busqueda && (
-              <button className="tareas-proceso-clear-busqueda-inline" onClick={() => setBusqueda("")}>
+              <button className="tareas-proceso-buscador-clear" onClick={() => setBusqueda("")}>
                 <FiX />
               </button>
             )}
@@ -96,36 +133,107 @@ function TareasenProceso() {
           ) : proyectosFiltrados.length > 0 ? (
             proyectosFiltrados.map(p => {
               const porcentajeCompletado = Math.round(((p.tareas_completadas || 0) / (p.total_tareas || 1)) * 100);
+              const diasRestantes = calcularDiasRestantes(p.pf_fin);
+              const tareasPendientes = p.total_tareas - (p.tareas_completadas || 0);
+              
               return (
                 <div key={p.id_proyecto} className="tareas-proceso-card">
+                  {/* Header con estado y acciones */}
                   <div className="tareas-proceso-card-header">
-                    <div className="tareas-proceso-tarea-header">
+                    <div className="tareas-proceso-estado-container">
                       <LuClock3 className="tareas-proceso-icono-estado en-proceso" />
-                      <div className="tareas-proceso-proyecto-nombre">{p.p_nombre}</div>
+                      <span className={`tareas-proceso-estatus-badge ${p.p_estatus?.toLowerCase().replace(' ', '-')}`}>
+                        {p.p_estatus}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="tareas-proceso-info-tarea">
-                    <span className={`tareas-proceso-estatus-badge ${p.p_estatus?.toLowerCase().replace(' ', '-')}`}>
-                      {p.p_estatus}
-                    </span>
-                    <div className="tareas-proceso-fecha-item">Vence: {p.pf_fin}</div>
+                  {/* Nombre del proyecto */}
+                  <div className="tareas-proceso-proyecto-nombre">{p.p_nombre}</div>
+                  
+                  {/* Información del proyecto */}
+                  <div className="tareas-proceso-meta-info">
+                    <div className="tareas-proceso-meta-item">
+                      <span className="meta-label">Fecha límite</span>
+                      <span className="meta-value">{formatearFecha(p.pf_fin)}</span>
+                      {diasRestantes <= 3 && diasRestantes >= 0 && (
+                        <span className="dias-restantes urgente">{diasRestantes} días</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Barra de progreso mejorada */}
+                  <div className="tareas-proceso-progress-container">
+                    <div className="tareas-proceso-progress-header">
+                      <span>Progreso del proyecto</span>
+                      <span className="porcentaje">{porcentajeCompletado}%</span>
+                    </div>
                     <div className="tareas-proceso-progress-bar">
-                      <div className="tareas-proceso-progress-fill" style={{ width: `${porcentajeCompletado}%` }}></div>
+                      <div 
+                        className="tareas-proceso-progress-fill" 
+                        style={{ width: `${porcentajeCompletado}%` }}
+                      ></div>
                     </div>
-                    <div className="tareas-proceso-progress-info">
-                      <span>{p.tareas_completadas || 0} de {p.total_tareas || 0}</span>
-                      <span>{porcentajeCompletado}%</span>
+                    <div className="tareas-proceso-progress-stats">
+                      <span>{p.tareas_completadas || 0} completadas</span>
+                      <span>{tareasPendientes} pendientes</span>
                     </div>
+                  </div>
+
+                  {/* Información de tareas */}
+                  <div className="tareas-proceso-tareas-info">
+                    <div className="tarea-stats">
+                      <div className="stat">
+                        <span className="stat-number">{p.total_tareas || 0}</span>
+                        <span className="stat-label">Total tareas</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-number">{p.tareas_completadas || 0}</span>
+                        <span className="stat-label">Completadas</span>
+                      </div>
+                      <div className="stat">
+                        <span className="stat-number">{tareasPendientes}</span>
+                        <span className="stat-label">Pendientes</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="tareas-proceso-acciones">
                     <button className="tareas-proceso-btn-ver" onClick={() => handleVerTareas(p)}>
-                      Ver Tareas
+                      <LuClock3 className="btn-icon" />
+                      Ver Tareas Pendientes
                     </button>
+
+                    {/* Checkbox SOLO si todas las tareas están finalizadas */}
+                    {p.p_estatus !== "Finalizada" && todasLasTareasFinalizadas(p) && (
+                      <label className="vtp-checkbox-completar">
+                        <input
+                          type="checkbox"
+                          onChange={() => handleCompletarTareaProyecto(p.id_proyecto)}
+                          disabled={cargando}
+                        />
+                        Marcar Proyecto como Finalizado
+                      </label>
+                    )}
+
+                    {/* Mensaje informativo si hay tareas pendientes */}
+                    {p.p_estatus !== "Finalizada" && !todasLasTareasFinalizadas(p) && tareasPendientes > 0 && (
+                      <div className="vtp-mensaje-pendientes">
+                        ⚠️ Complete todas las tareas para finalizar el proyecto
+                      </div>
+                    )}
                   </div>
                 </div>
               );
             })
           ) : (
-            <p>No hay proyectos en proceso</p>
+            <div className="tareas-proceso-empty-state">
+              <LuClock3 className="tareas-proceso-empty-icon" />
+              <h3 className="tareas-proceso-empty-title">No hay proyectos en proceso</h3>
+              <p className="tareas-proceso-empty-message">
+                {busqueda ? 'No se encontraron proyectos con ese nombre' : 'Todos los proyectos están completados o no hay proyectos asignados'}
+              </p>
+            </div>
           )}
         </div>
       </div>
@@ -134,7 +242,6 @@ function TareasenProceso() {
 }
 
 export default TareasenProceso;
-
 
 
 

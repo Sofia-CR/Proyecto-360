@@ -21,20 +21,26 @@ public function obtenerTareasProyectosJefe(Request $request)
         }
 
         $idDepartamento = $usuario->id_departamento;
+
         $proyectos = \App\Models\Proyecto::where('id_departamento', $idDepartamento)
+            ->where('p_estatus', 'ILIKE', 'EN PROCESO') // Solo proyectos en proceso
             ->whereHas('tareas', function($q) {
-                $q->where('t_estatus', 'ILIKE', 'en proceso');
+                // Solo proyectos que tengan al menos una tarea EN PROCESO
+                $q->where('t_estatus', 'ILIKE', 'EN PROCESO');
             })
             ->with(['tareas' => function($q) {
-                $q->where('t_estatus', 'ILIKE', 'en proceso')
+                // Trae todas las tareas EN PROCESO o FINALIZADA para calcular progreso y checkbox
+                $q->whereIn('t_estatus', ['EN PROCESO', 'FINALIZADA'])
                   ->with('evidencias');
             }])
             ->get()
             ->map(function($proyecto) {
-                $tareasEnProceso = $proyecto->tareas;
+                // Total de tareas (independiente de estatus)
                 $proyecto->total_tareas = \App\Models\Tarea::where('id_proyecto', $proyecto->id_proyecto)->count();
+
+                // Tareas completadas (con evidencias)
                 $proyecto->tareas_completadas = \App\Models\Tarea::where('id_proyecto', $proyecto->id_proyecto)
-                    ->whereHas('evidencias') 
+                    ->whereHas('evidencias')
                     ->count();
 
                 return $proyecto;
@@ -49,4 +55,5 @@ public function obtenerTareasProyectosJefe(Request $request)
         return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
     }
 }
+
 }

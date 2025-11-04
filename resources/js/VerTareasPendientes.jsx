@@ -3,7 +3,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 import { LuClock3 } from "react-icons/lu";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import "../css/VerTareasPendientes.css";
+import logo3 from "../imagenes/logo3.png"; 
 
 function VerTareasPendientes() {
   const [proyecto, setProyecto] = useState(null);
@@ -14,9 +16,11 @@ function VerTareasPendientes() {
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(false);
   const [imagenCargando, setImagenCargando] = useState(true);
+  const [cargandoProyecto, setCargandoProyecto] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  // Obtener proyecto y tareas desde la BD
+  const obtenerProyectoActualizado = async () => {
     const proyectoGuardado = sessionStorage.getItem("proyectoSeleccionado");
     const usuario = JSON.parse(localStorage.getItem("usuario"));
 
@@ -24,21 +28,66 @@ function VerTareasPendientes() {
       return navigate("/tareas-en-proceso");
     }
 
-    const proyectoSeleccionado = JSON.parse(proyectoGuardado);
-    setProyecto(proyectoSeleccionado);
-
-    fetch(`http://127.0.0.1:8000/api/tareas-proyectos-jefe?usuario=${usuario.id_usuario}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          const proyectoCompleto = data.proyectos.find(p => p.id_proyecto === proyectoSeleccionado.id_proyecto);
-          if (proyectoCompleto) setProyecto(proyectoCompleto);
+    try {
+      setCargandoProyecto(true);
+      const response = await fetch(`http://127.0.0.1:8000/api/tareas-proyectos-jefe?usuario=${usuario.id_usuario}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        const proyectoSeleccionado = JSON.parse(proyectoGuardado);
+        const proyectoCompleto = data.proyectos.find(
+          p => p.id_proyecto === proyectoSeleccionado.id_proyecto
+        );
+        
+        if (proyectoCompleto) {
+          setProyecto(proyectoCompleto);
+          // ✅ ACTUALIZAR sessionStorage con datos frescos
+          sessionStorage.setItem("proyectoSeleccionado", JSON.stringify(proyectoCompleto));
+        } else {
+          // ✅ Si el proyecto no se encuentra, usar los datos guardados pero limpiar tareas pendientes
+          const proyectoActualizado = {
+            ...proyectoSeleccionado,
+            tareas: (proyectoSeleccionado.tareas || []).map(t => ({
+              ...t,
+              t_estatus: "Finalizada"
+            }))
+          };
+          setProyecto(proyectoActualizado);
+          sessionStorage.setItem("proyectoSeleccionado", JSON.stringify(proyectoActualizado));
         }
-      })
-      .catch(err => console.error("Error al obtener tareas:", err));
+      }
+    } catch (error) {
+      console.error("Error al obtener tareas:", error);
+      const proyectoSeleccionado = JSON.parse(proyectoGuardado);
+      setProyecto(proyectoSeleccionado);
+    } finally {
+      setCargandoProyecto(false);
+    }
+  };
+
+  useEffect(() => {
+    obtenerProyectoActualizado();
   }, [navigate]);
 
-  // Función para completar tarea
+  if (cargandoProyecto) {
+    return (
+      <div className="container-fluid p-0 vtp-global">
+        <Header />
+        <div className="loader-container">
+          <div className="loader-logo">
+            <img src={logo3} alt="Cargando" />
+          </div>
+          <div className="loader-texto">CARGANDO...</div>
+          <div className="loader-spinner"></div>
+        </div>
+      </div>
+    );
+  }
+
+  const tareasFiltradas = proyecto?.tareas
+    ?.filter(t => t.t_estatus !== "Finalizada")
+    ?.filter(t => t.t_nombre.toLowerCase().includes(busqueda.toLowerCase()));
+
   const handleCompletarTarea = async (idTarea) => {
     if (!idTarea) return;
 
@@ -53,23 +102,29 @@ function VerTareasPendientes() {
       });
       
       const data = await response.json();
-      
-      if (data.success) {
-        // Actualizar estado local
-        setProyecto(prev => ({
-          ...prev,
-          tareas: prev.tareas.map(t =>
-            t.id_tarea === idTarea 
-              ? { ...t, t_estatus: "Finalizada" } 
-              : t
-          )
-        }));
+
+      if (data.success || response.ok) {
+        // ✅ ACTUALIZAR ESTADO LOCAL
+        setProyecto(prevProyecto => {
+          if (!prevProyecto?.tareas) return prevProyecto;
+          
+          const tareasActualizadas = prevProyecto.tareas.map(tarea =>
+            tarea.id_tarea === idTarea 
+              ? { ...tarea, t_estatus: "Finalizada" }
+              : tarea
+          );
+          
+          const proyectoActualizado = { ...prevProyecto, tareas: tareasActualizadas };
+          
+          sessionStorage.setItem("proyectoSeleccionado", JSON.stringify(proyectoActualizado));
+          
+          return proyectoActualizado;
+        });
         
-        // Cerrar modal después de completar
         handleCerrarModal();
-        alert("Tarea marcada como finalizada exitosamente");
+        
       } else {
-        alert(`Error: ${data.mensaje}`);
+        alert(`Error: ${data.mensaje || 'No se pudo completar la tarea'}`);
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -79,6 +134,7 @@ function VerTareasPendientes() {
     }
   };
 
+  // ... (el resto de las funciones permanecen igual)
   const handleVerEvidencias = (tarea) => {
     setTareaActual(tarea);
     setEvidencias(tarea.evidencias || []);
@@ -107,26 +163,17 @@ function VerTareasPendientes() {
     setIndiceActual(prev => (prev === evidencias.length - 1 ? 0 : prev + 1));
   };
 
-  // Función para manejar la carga de imágenes
-  const handleImageLoad = () => {
-    setImagenCargando(false);
-  };
-
+  const handleImageLoad = () => setImagenCargando(false);
   const handleImageError = (e) => {
     console.error("Error cargando imagen:", evidencias[indiceActual]);
     setImagenCargando(false);
     e.target.style.display = 'none';
   };
 
-  // Función para obtener la clase de estatus
   const getStatusClass = (estatus) => {
     if (!estatus) return '';
     return estatus.toLowerCase().replace(/\s+/g, '-');
   };
-
-  const tareasFiltradas = proyecto?.tareas?.filter(t =>
-    t.t_nombre.toLowerCase().includes(busqueda.toLowerCase())
-  );
 
   if (!proyecto) return null;
 
@@ -136,29 +183,8 @@ function VerTareasPendientes() {
 
       <div className="container my-4">
         <h1 className="form-titulo">
-          Tareas del proyecto: <span style={{color: '#861542'}}>{proyecto.p_nombre}</span>
+          Tareas del proyecto: <span style={{ color: '#861542' }}>{proyecto.p_nombre}</span>
         </h1>
-
-        {/* Buscador */}
-        <div className="vtp-buscador-contenedor">
-          <div className="vtp-buscador-inner">
-            <input
-              type="text"
-              placeholder="Buscar tarea..."
-              className="vtp-buscador-input"
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-            />
-            {busqueda && (
-              <button 
-                className="vtp-buscador-clear"
-                onClick={() => setBusqueda('')}
-              >
-                ×
-              </button>
-            )}
-          </div>
-        </div>
 
         <div className="vtp-contenedor-buscador-y-tarjetas">
           <div className="vtp-lista-tareas">
@@ -174,139 +200,102 @@ function VerTareasPendientes() {
                       {t.t_estatus}
                     </span>
                     <span className="vtp-tarea-fecha">Vence: {t.tf_fin || t.fechaVencimiento}</span>
+                    
                     <button
                       className="vtp-btn-evidencias"
                       onClick={() => handleVerEvidencias(t)}
                     >
                       Ver Evidencias ({t.evidencias?.length || 0})
                     </button>
+
+                    {t.t_estatus !== "Finalizada" && (
+                      <label className="vtp-checkbox-completar">
+                        <input
+                          type="checkbox"
+                          onChange={() => handleCompletarTarea(t.id_tarea)}
+                          disabled={cargando}
+                        />
+                        Marcar como Finalizada
+                      </label>
+                    )}
                   </div>
                 </div>
               ))
             ) : (
               <div className="vtp-no-tareas-mensaje">
-                <LuClock3 style={{fontSize: '3rem', color: '#861542', marginBottom: '15px'}} />
-                <h3 style={{color: '#861542', marginBottom: '10px'}}>
+                <LuClock3 style={{ fontSize: '3rem', color: '#861542', marginBottom: '15px' }} />
+                <h3 style={{ color: '#861542', marginBottom: '10px' }}>
                   {busqueda ? 'No hay tareas que coincidan con la búsqueda' : 'No hay tareas pendientes'}
                 </h3>
-                <p style={{color: '#6c757d'}}>
-                  {busqueda ? 'Intenta con otros términos de búsqueda' : 'Todas las tareas están completadas o no hay tareas asignadas'}
+                <p style={{ color: '#6c757d' }}>
+                  {busqueda
+                    ? 'Intenta con otros términos de búsqueda'
+                    : 'Todas las tareas están completadas o no hay tareas asignadas'}
                 </p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Botón Volver */}
-        <div style={{textAlign: 'center', marginTop: '30px'}}>
-          <button className="vtp-btn-volver" onClick={() => navigate("/tareas-en-proceso")}>
-            Volver a proyectos
-          </button>
-        </div>
-
-     // Modal de evidencias - VERSIÓN MEJORADA CON NAVEGACIÓN
-{modalVisible && tareaActual && (
-  <div className="vtp-modal">
-    <div className="vtp-modal-content">
-      <button className="vtp-modal-cerrar" onClick={handleCerrarModal}>
-        <FiX />
-      </button>
-      
-      <div className="vtp-modal-header">
-        <h3>{tareaActual.t_nombre}</h3>
-        <span className={`vtp-modal-estatus ${getStatusClass(tareaActual.t_estatus)}`}>
-          {tareaActual.t_estatus}
-        </span>
-      </div>
-
-      {evidencias.length > 0 ? (
-        <div className="vtp-evidencias-container">
-          {/* Navegación - MEJORADA */}
-          <div className="vtp-evidencias-navegacion">
-            {evidencias.length > 1 && (
-              <button 
-                className="vtp-btn-navegacion vtp-btn-prev" 
-                onClick={handlePrev}
-                aria-label="Imagen anterior"
-              >
-                ◀
+        {modalVisible && tareaActual && (
+          <div className="vtp-modal">
+            <div className="vtp-modal-content">
+              <button className="vtp-modal-cerrar" onClick={handleCerrarModal}>
+                <FiX />
               </button>
-            )}
-            
-            <div className="vtp-imagen-container">
-              {imagenCargando && <div className="vtp-imagen-cargando"></div>}
-              <img
-                src={`http://127.0.0.1:8000/storage/${evidencias[indiceActual].ruta_archivo}`}
-                alt={`Evidencia ${indiceActual + 1} de ${tareaActual.t_nombre}`}
-                className="vtp-imagen-evidencia"
-                onLoad={handleImageLoad}
-                onError={handleImageError}
-                style={{ display: imagenCargando ? 'none' : 'block' }}
-              />
+              
+              <div className="vtp-modal-header">
+                <h3>{tareaActual.t_nombre}</h3>
+                <span className={`vtp-modal-estatus ${getStatusClass(tareaActual.t_estatus)}`}>
+                  {tareaActual.t_estatus}
+                </span>
+              </div>
+
+              {evidencias.length > 0 ? (
+                <div className="vtp-evidencias-container">
+                  <div className="vtp-evidencias-navegacion">
+                    <div className="vtp-imagen-container">
+                      {imagenCargando && <div className="vtp-imagen-cargando"></div>}
+                      <img
+                        src={`http://127.0.0.1:8000/storage/${evidencias[indiceActual].ruta_archivo}`}
+                        alt={`Evidencia ${indiceActual + 1} de ${tareaActual.t_nombre}`}
+                        className="vtp-imagen-evidencia"
+                        onLoad={handleImageLoad}
+                        onError={handleImageError}
+                        style={{ display: imagenCargando ? 'none' : 'block' }}
+                      />
+                    </div>
+
+                    {evidencias.length > 1 && (
+                      <>
+                        <button className="vtp-btn-navegacion vtp-btn-prev" onClick={handlePrev}>
+                          <FiChevronLeft size={28} />
+                        </button>
+                        <button className="vtp-btn-navegacion vtp-btn-next" onClick={handleNext}>
+                          <FiChevronRight size={28} />
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {evidencias.length > 1 && (
+                    <div className="vtp-contador">
+                      <span>{indiceActual + 1} / {evidencias.length}</span>
+                    </div>
+                  )}
+
+                  <div className="vtp-evidencias-info">
+                    <span className="vtp-tarea-fecha">
+                      Subido: {evidencias[indiceActual]?.created_at || 'Fecha no disponible'}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="vtp-sin-evidencias"></div>
+              )}
             </div>
-
-            {evidencias.length > 1 && (
-              <button 
-                className="vtp-btn-navegacion vtp-btn-next" 
-                onClick={handleNext}
-                aria-label="Siguiente imagen"
-              >
-                ▶
-              </button>
-            )}
           </div>
-
-          {/* Contador de imágenes */}
-          {evidencias.length > 1 && (
-            <div className="vtp-contador">
-              <span>{indiceActual + 1} / {evidencias.length}</span>
-            </div>
-          )}
-
-          {/* Información de la evidencia */}
-          <div className="vtp-evidencias-info">
-            <span className="vtp-tarea-fecha">
-              Subido: {evidencias[indiceActual]?.created_at || 'Fecha no disponible'}
-            </span>
-          </div>
-
-          {/* Botón para completar tarea */}
-          {tareaActual.t_estatus !== 'Finalizada' && (
-            <div className="vtp-acciones">
-              <button
-                className="vtp-btn-completar"
-                onClick={() => handleCompletarTarea(tareaActual.id_tarea)}
-                disabled={cargando}
-              >
-                {cargando ? '⏳ Marcando...' : '✅ Marcar como Finalizada'}
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="vtp-sin-evidencias">
-          <div style={{fontSize: '4rem', color: '#dee2e6', marginBottom: '20px'}}>🖼️</div>
-          <h3 style={{color: '#6c757d', marginBottom: '15px'}}>No hay evidencias</h3>
-          <p style={{color: '#868e96', marginBottom: '25px'}}>
-            Esta tarea no tiene evidencias adjuntas todavía.
-          </p>
-          
-          {tareaActual.t_estatus !== 'Finalizada' && (
-            <div className="vtp-acciones">
-              <button
-                className="vtp-btn-completar"
-                onClick={() => handleCompletarTarea(tareaActual.id_tarea)}
-                disabled={cargando}
-              >
-                {cargando ? '⏳ Marcando...' : '✅ Marcar como Finalizada'}
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  </div>
-)}
+        )}
       </div>
     </div>
   );

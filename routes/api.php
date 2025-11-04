@@ -16,6 +16,7 @@ use App\Http\Controllers\BackupController;
 use App\Http\Controllers\JefeController;
 use App\Http\Controllers\TareasCompletadasController;
 use App\Http\Controllers\TareasPController;
+use App\Http\Controllers\ProyectoJefeController;
 use Illuminate\Support\Facades\DB;
 // Rutas públicas
 Route::post('/login', [AuthController::class, 'login']);
@@ -35,6 +36,7 @@ Route::get('/tareas/departamento', [TareasCompletadasController::class, 'tareasE
 Route::put('/tareas/{id}/completar', [TareasCompletadasController::class, 'completarTarea']);
 Route::get('tareas-proyectos-jefe', [TareasPController::class, 'obtenerTareasProyectosJefe']);
 Route::get('tareasCompletadas/jefe', [ProyectoController::class, 'tareasCompletadasJefe']);
+Route::put('/proyectos/{id}/finalizar', [ProyectoJefeController::class, 'CambiarStatusProyecto']);
 
 
 
