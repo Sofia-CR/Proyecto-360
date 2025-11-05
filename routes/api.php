@@ -38,7 +38,9 @@ Route::get('tareas-proyectos-jefe', [TareasPController::class, 'obtenerTareasPro
 Route::get('tareasCompletadas/jefe', [ProyectoController::class, 'tareasCompletadasJefe']);
 Route::put('/proyectos/{id}/finalizar', [ProyectoJefeController::class, 'CambiarStatusProyecto']);
 Route::get('/proyectos/completados', [TareasPController::class, 'obtenerProyectosCompletados']);
-
+Route::put('/proyectos/{id}/cambiar-status', [ProyectoJefeController::class, 'CambiarStatusProyectoTerminado']);
+Route::put('tareas/{idTarea}/cambiarstatus-tarea', [TareaController::class, 'CambiarStatusTareaFinalizada']);
+Route::put('/tareas/{id}/cambiar-estatus-enproceso', [ProyectoJefeController::class, 'cambiarStatusTareaEnProceso']);
 
 
 
