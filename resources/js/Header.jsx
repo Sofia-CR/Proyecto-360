@@ -85,7 +85,7 @@ function Header({ children }) {
       return [
         { label: "TAREAS PENDIENTES", path: "/TareasPendientesJefe", icon: <FaHourglassHalf /> },
          { label: "Tareas completadas", path: "/TareasCompletadasJefe", icon: <FaCheckCircle /> },
-        { label: "REPORTES", path: "/reporte", icon: <FaChartBar /> },
+        { label: "REPORTES", path: "/ReporteUsuario", icon: <FaChartBar /> },
         { label: "CERRAR SESIÓN", path: "logout", icon: <FaDoorOpen /> },
       ];
     }

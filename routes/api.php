@@ -41,7 +41,7 @@ Route::get('/proyectos/completados', [TareasPController::class, 'obtenerProyecto
 Route::put('/proyectos/{id}/cambiar-status', [ProyectoJefeController::class, 'CambiarStatusProyectoTerminado']);
 Route::put('tareas/{idTarea}/cambiarstatus-tarea', [TareaController::class, 'CambiarStatusTareaFinalizada']);
 Route::put('/tareas/{id}/cambiar-estatus-enproceso', [ProyectoJefeController::class, 'cambiarStatusTareaEnProceso']);
-
+Route::get('generar-pdf-completadas-jefe', [ReporteUsuarioController::class, 'generarReporteCompletadas']);
 
 
 //Route::get('/tareas/pendientes', [TareaController::class, 'tareasPendientes']);

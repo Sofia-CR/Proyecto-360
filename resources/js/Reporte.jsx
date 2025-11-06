@@ -68,7 +68,6 @@ function Reporte() {
     if (tipoReporte === "proximas") {
       if (!fechaFin) nuevosErrores.fechaFin = "Selecciona la fecha hasta.";
     }
-    // AGREGAR VALIDACIÓN PARA TAREAS COMPLETADAS
     if (tipoReporte === "completadas") {
       if (!fechaInicio) nuevosErrores.fechaInicio = "Selecciona la fecha de inicio.";
       if (!fechaFin) nuevosErrores.fechaFin = "Selecciona la fecha de fin.";

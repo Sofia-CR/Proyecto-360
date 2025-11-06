@@ -35,6 +35,7 @@ import EditarTareas from "./EditarTareas";
 import EliminarProyectos from "./EliminarProyectos";
 import VerTareasPendientes from "./VerTareasPendientes";
 import DesbloquearProyectos from "./DesbloquearProyectos";
+import ReporteUsuario from "./ReporteUsuario";
 
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
       <Route path="/EliminarProyectos" element={<EliminarProyectos />} />
       <Route path="/VerTareasPendientes" element={<VerTareasPendientes />} />
       <Route path="/DesbloquearProyectos" element={<DesbloquearProyectos />} />
+      <Route path="/ReporteUsuario" element={<ReporteUsuario />} />
 
    
       </Routes>

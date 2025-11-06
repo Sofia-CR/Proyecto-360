@@ -12,7 +12,7 @@ class TareasPController extends Controller
 public function obtenerTareasProyectosJefe(Request $request)
 {
     try {
-        $usuario = DB::table('c_usuario')
+       $usuario = DB::table('c_usuario')
             ->where('id_usuario', $request->query('usuario'))
             ->first();
 
@@ -23,26 +23,32 @@ public function obtenerTareasProyectosJefe(Request $request)
         $idDepartamento = $usuario->id_departamento;
 
         $proyectos = \App\Models\Proyecto::where('id_departamento', $idDepartamento)
-            ->where('p_estatus', 'ILIKE', 'EN PROCESO') // Solo proyectos en proceso
+            ->where('p_estatus', 'ILIKE', 'EN PROCESO')
             ->whereHas('tareas', function($q) {
-                // Solo proyectos que tengan al menos una tarea EN PROCESO
-                 $q->whereIn(DB::raw('LOWER(t_estatus)'), ['en proceso', 'finalizada']);
+                // Solo proyectos que tengan al menos una tarea EN PROCESO o FINALIZADA
+                $q->whereIn(DB::raw('LOWER(t_estatus)'), ['en proceso', 'finalizada']);
             })
             ->with(['tareas' => function($q) {
-                // Trae todas las tareas EN PROCESO o FINALIZADA para calcular progreso y checkbox
-               $q->whereIn(DB::raw('LOWER(t_estatus)'), ['en proceso', 'finalizada'])
-                  ->with('evidencias');
+                // Trae todas las tareas EN PROCESO o FINALIZADA con sus evidencias
+                $q->whereIn(DB::raw('LOWER(t_estatus)'), ['en proceso', 'finalizada'])
+                    ->with('evidencias');
             }])
             ->get()
             ->map(function($proyecto) {
-                // Total de tareas (independiente de estatus)
+                // 1. Total de tareas (independiente de estatus)
                 $proyecto->total_tareas = \App\Models\Tarea::where('id_proyecto', $proyecto->id_proyecto)->count();
 
-                // Tareas completadas (con evidencias)
+                // 2. Tareas completadas (Progreso validado por el jefe)
                 $proyecto->tareas_completadas = \App\Models\Tarea::where('id_proyecto', $proyecto->id_proyecto)
-                    ->whereHas('evidencias')
+                    ->where('t_estatus', 'ILIKE', 'Finalizada')
                     ->count();
 
+                // 3. ¡NUEVA MÉTRICA! Tareas listas para revisión (Estatus 'En Proceso' Y tienen evidencia)
+                $proyecto->tareas_a_revisar = \App\Models\Tarea::where('id_proyecto', $proyecto->id_proyecto)
+                    ->where('t_estatus', 'ILIKE', 'En Proceso') // Tareas en estatus 'En Proceso'
+                    ->whereHas('evidencias') // ¡Que además tengan evidencias subidas!
+                    ->count();
+                
                 return $proyecto;
             });
 
