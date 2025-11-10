@@ -1,63 +1,3 @@
-/* =========================== Contenedor principal ============================ */
-.search-container {
-  max-width: 500px;
-  margin: 0 auto 2rem;
-}
-
-.search-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  color: #6c757d;
-  font-size: 1rem;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px 12px 12px 40px;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  background-color: #fff;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #861542;
-  box-shadow: 0 0 0 3px rgba(134, 21, 66, 0.1);
-}
-
-/* =========================== Loading ============================ */
-.loading-container {
-  text-align: center;
-  padding: 3rem;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #861542;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-text {
-  color: #6c757d;
-  font-size: 1.1rem;
-}
 
 /* =========================== Empty State ============================ */
 .empty-state {
@@ -87,7 +27,7 @@
   margin: 0 auto;
 }
 
-/* =========================== Lista de proyectos (una tarjeta por fila) ============================ */
+/* =========================== Lista de proyectos  ============================ */
 .proyectos-list {
   display: flex;
   flex-direction: column;
@@ -223,7 +163,7 @@
   white-space: nowrap;
 }
 
-/* =========================== Botón mejorado ============================ */
+/* =========================== Botón  ============================ */
 .btn-ver-tareas {
   display: flex;
   align-items: center;

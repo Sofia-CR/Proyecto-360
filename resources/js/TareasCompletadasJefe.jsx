@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
+import '../css/global.css';
 import "../css/TareasCJ.css"; 
 import logo3 from "../imagenes/logo3.png";
-import { FaCheckCircle, FaInfoCircle } from "react-icons/fa";
+import { FaCheckCircle, FaInfoCircle, FaBars } from "react-icons/fa";
 import { FiSearch, FiX } from "react-icons/fi";
+import MenuDinamico from "../components/MenuDinamico";
 
 function TareasCompletadasJefe() {
   const [busqueda, setBusqueda] = useState("");
   const [tareas, setTareas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mensajeAPI, setMensajeAPI] = useState("");
+   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+      const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   useEffect(() => {
     const fetchTareasCompletadas = async () => {
@@ -67,8 +70,36 @@ function TareasCompletadasJefe() {
   }, []);
 
   return (
-    <div className="container-fluid p-0 app-global">
-      <Header />
+    <div className="main-layout">
+             {/* ===== MENU LATERAL ===== */}
+             <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+               <MenuDinamico 
+                 collapsed={sidebarCollapsed}
+                 departamentoId={localStorage.getItem('last_depId')} 
+                 departamentoNombre={localStorage.getItem('last_depNombre')} 
+                 departamentoSlug={localStorage.getItem('last_depSlug')} 
+                 activeRoute="tareas-completadas"
+               />
+             </div>
+       
+             {/* ===== CONTENIDO PRINCIPAL ===== */}
+             <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+               {/* Fondo semitransparente */}
+               <div className="logo-fondo">
+                 <img src={logo3} alt="Fondo" />
+               </div>
+       
+               {/* ===== BARRA SUPERIOR ===== */}
+               <div className="header-global">
+                 <div className="header-left" onClick={toggleSidebar}>
+                   <FaBars className="icono-hamburguesa-global" />
+                 </div>
+                 <div className="barra-center">
+                   <span className="titulo-barra-global">
+                     TAREAS COMPLETADAS 
+                   </span>
+                 </div>
+               </div>
 
       <div className="container my-4">
         <div className="text-center">
@@ -112,7 +143,7 @@ function TareasCompletadasJefe() {
                 <div className="loader-logo">
                   <img src={logo3} alt="Cargando" />
                 </div>
-                <div className="loader-texto">CARGANDO...</div>
+                <div className="loader-texto">CARGANDO TAREAS COMPLETADAS...</div>
                 <div className="loader-spinner"></div>
               </div>
             ) : proyectosAgrupados.length === 0 ? (
@@ -149,6 +180,7 @@ function TareasCompletadasJefe() {
         </div>
       </div>
     </div>
+        </div>
   );
 }
 

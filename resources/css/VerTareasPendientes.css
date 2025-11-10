@@ -16,6 +16,8 @@
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
+  z-index: 10;
 }
 /* ===== Tarjetas de tareas pendientes estilo "completadas" ===== */
 .vtp-item-tarea {
@@ -31,6 +33,9 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  padding-right: 60px;
+  position: relative;
+  z-index: 10;
 }
 
 .vtp-item-tarea::before {
@@ -160,18 +165,6 @@
   box-shadow: 0 12px 30px rgba(134, 21, 66, 0.15);
 }
 
-.vtp-tarea-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.vtp-tarea-nombre {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #861542;
-  text-transform: uppercase;
-}
 
 .vtp-icono-pendiente {
   color: #ffb900;
@@ -217,6 +210,7 @@
   padding: 8px 16px;
   border-radius: 20px;
   border: none;
+  margin-right: auto;
 }
 
 .vtp-btn-evidencias:hover {
@@ -490,26 +484,7 @@
   .vtp-item-tarea-proceso { padding: 12px 16px; }
   .vtp-tarea-nombre-proceso { font-size: 1rem; }
 }
-.vtp-checkbox-completar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  color: #000; /* Color del texto */
-  user-select: none;
-}
 
-.vtp-checkbox-completar input {
-  appearance: none; /* Quita el estilo default */
-  width: 20px;
-  height: 20px;
-  border: 2px solid #861542; /* Color borde */
-  border-radius: 4px; /* Esquinas redondeadas */
-  position: relative;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
 
 /* Marca visible */
 .vtp-checkbox-completar input:checked {
@@ -552,5 +527,53 @@
   font-size: 1.2rem;
   margin-right: 8px; /* ya no hace falta inline en React */
 }
+
+
+.vtp-tarea-header {
+  display: flex;
+  /* ALINEACIÓN CLAVE: alineamos el contenido al inicio de la línea */
+  align-items: flex-start; 
+  gap: 15px; /* ✅ CORREGIDO: Usar 'px' en lugar de 'spx' */
+  width: 100%;
+}
+
+.vtp-checkbox-completar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+/* Ajuste del input */
+.vtp-checkbox-completar input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #861542;
+}
+
+/* Si el texto es largo, el nombre nunca invadirá el área del checkbox */
+.vtp-tarea-nombre {
+  margin-right: 60px; /* evita que el texto se meta debajo del checkbox */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1;
+}
+.vtp-tarea-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* para que no se monten si hay varias líneas */
+  flex-wrap: wrap; /* permite que el texto baje en lugar de solaparse */
+  gap: 10px;
+  word-break: break-word; /* rompe texto largo */
+  overflow-wrap: anywhere;
+}
+
+
 
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "./Header";
 import logo3 from "../imagenes/logo3.png";
+import '../css/global.css';
 import "../css/AgregarT.css";
-import { FaAngleDown } from "react-icons/fa";
+import { FaAngleDown, FaBars } from "react-icons/fa";
 import { FiSearch, FiX } from "react-icons/fi";
+import MenuDinamico from "../components/MenuDinamico";
 
 function ProyectosM() {
   const [busqueda, setBusqueda] = useState("");
@@ -13,6 +14,8 @@ function ProyectosM() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+        const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -64,8 +67,36 @@ function ProyectosM() {
   const mostrarSelect = busqueda.length === 0 || proyectosFiltrados.length > 0;
 
   return (
-    <div className="proyectos-app">
-      <Header />
+  <div className="main-layout">
+               {/* ===== MENU LATERAL ===== */}
+               <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+                 <MenuDinamico 
+                   collapsed={sidebarCollapsed}
+                   departamentoId={localStorage.getItem('last_depId')} 
+                   departamentoNombre={localStorage.getItem('last_depNombre')} 
+                   departamentoSlug={localStorage.getItem('last_depSlug')} 
+                   activeRoute="agregar-tareas"
+                 />
+               </div>
+         
+               {/* ===== CONTENIDO PRINCIPAL ===== */}
+               <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+                 {/* Fondo semitransparente */}
+                 <div className="logo-fondo">
+                   <img src={logo3} alt="Fondo" />
+                 </div>
+         
+                 {/* ===== BARRA SUPERIOR ===== */}
+                 <div className="header-global">
+                   <div className="header-left" onClick={toggleSidebar}>
+                     <FaBars className="icono-hamburguesa-global" />
+                   </div>
+                   <div className="barra-center">
+                     <span className="titulo-barra-global">
+                       AGREGAR TAREAS
+                     </span>
+                   </div>
+                 </div>
       <h1 className="form-titulo">Proyectos</h1>
 
       <div className="buscador-verproyectos-contenedor">
@@ -162,6 +193,7 @@ function ProyectosM() {
         ) : null}
       </div>
     </div>
+     </div>
   );
 }
 

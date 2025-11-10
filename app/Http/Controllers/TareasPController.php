@@ -102,5 +102,51 @@ public function obtenerProyectosCompletados(Request $request)
     }
 }
 
+public function dashboardDepartamento(Request $request)
+{
+    $usuarioId = $request->query('usuario'); // obtenemos id_usuario enviado desde React
+
+    if (!$usuarioId) {
+        return response()->json(['error' => 'ID de usuario no especificado'], 400);
+    }
+
+    // Suponiendo que hay una tabla 'usuarios' con id_usuario y id_departamento
+    $usuario = \DB::table('c_usuario')->where('id_usuario', $usuarioId)->first();
+
+    if (!$usuario) {
+        return response()->json(['error' => 'Usuario no encontrado'], 404);
+    }
+
+    $departamentoId = $usuario->id_departamento;
+
+    // Proyectos del departamento
+    $proyectos = \DB::table('proyectos')
+        ->where('id_departamento', $departamentoId)
+        ->get();
+
+    $proyectosIds = $proyectos->pluck('id_proyecto');
+
+    // Tareas de los proyectos del departamento
+    $tareas = \DB::table('tareas')
+        ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto')
+        ->select('tareas.*', 'proyectos.p_nombre as nombre_proyecto')
+        ->whereIn('tareas.id_proyecto', $proyectosIds)
+        ->get();
+
+    // Conteos por estatus
+    $conteos = [
+        'completadas' => $tareas->where('t_estatus', 'finalizada')->count(),
+        'pendientes' => $tareas->where('t_estatus', 'pendiente')->count(),
+        'en_proceso' => $tareas->where('t_estatus', 'en proceso')->count(),
+        'total' => $tareas->count(),
+    ];
+
+    return response()->json([
+        'proyectos' => $proyectos,
+        'tareas' => $tareas,
+        'conteos' => $conteos,
+    ]);
+}
+
 
 }

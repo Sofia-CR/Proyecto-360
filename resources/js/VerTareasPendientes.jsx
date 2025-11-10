@@ -8,7 +8,6 @@ import "../css/VerTareasPendientes.css";
 import logo3 from "../imagenes/logo3.png"; 
 import { FiCheck } from "react-icons/fi";
 
-
 function VerTareasPendientes() {
   const [tareaCompletada, setTareaCompletada] = useState(false);
 
@@ -23,7 +22,6 @@ function VerTareasPendientes() {
   const [cargandoProyecto, setCargandoProyecto] = useState(true);
   const navigate = useNavigate();
 
-  // Obtener proyecto y tareas desde la BD
   const obtenerProyectoActualizado = async () => {
     const proyectoGuardado = sessionStorage.getItem("proyectoSeleccionado");
     const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -203,27 +201,29 @@ const tareasFiltradas = proyecto?.tareas
                     <span className="vtp-tarea-nombre">{t.t_nombre}</span>
                   </div>
                   <div className="vtp-tarea-footer">
-                    <span className={`vtp-tarea-estatus ${getStatusClass(t.t_estatus)}`}>
-                      {t.t_estatus}
-                    </span>
-                    <span className="vtp-tarea-fecha">Vence: {t.tf_fin || t.fechaVencimiento}</span>
-                    
-                    <button
-                      className="vtp-btn-evidencias"
-                      onClick={() => handleVerEvidencias(t)}
-                    >
-                      Ver Evidencias ({t.evidencias?.length || 0})
-                    </button>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+      <span className={`vtp-tarea-estatus ${getStatusClass(t.t_estatus)}`}>
+        {t.t_estatus}
+      </span>
+      <span className="vtp-tarea-fecha">Vence: {t.tf_fin || t.fechaVencimiento}</span>
+      
+      <button
+        className="vtp-btn-evidencias"
+        onClick={() => handleVerEvidencias(t)}
+      >
+        Ver Evidencias ({t.evidencias?.length || 0})
+      </button>
+    </div>
 
-                    {t.t_estatus !== "Finalizada" && (
-                      <label className="vtp-checkbox-completar">
-                        <input
-                          type="checkbox"
-                          onChange={() => handleCompletarTarea(t.id_tarea)}
-                          disabled={cargando}
-                        />
-                        Marcar como Finalizada
-                      </label>
+                   {t.t_estatus !== "Finalizada" && (
+      <label className="vtp-checkbox-completar">
+        <input
+          type="checkbox"
+          onChange={() => handleCompletarTarea(t.id_tarea)}
+          disabled={cargando}
+        />
+        Marcar como Finalizada
+      </label>
                     )}
                   </div>
                 </div>

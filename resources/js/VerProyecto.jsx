@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "./Header";
 import logo3 from "../imagenes/logo3.png";
 import "../css/global.css";
 import "../css/VerProyecto.css";
 import { FaAngleDown, FaCalendarAlt, FaTasks, FaExclamationTriangle } from "react-icons/fa";
+import { FaBars } from "react-icons/fa"; 
 import { FiSearch, FiX } from "react-icons/fi";
+import MenuDinamico from "../components/MenuDinamico";
 
 function Proyectos() {
   const [busqueda, setBusqueda] = useState("");
@@ -14,12 +15,16 @@ function Proyectos() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
+
 
   useEffect(() => {
     const cargarProyectos = async () => {
       const usuario = JSON.parse(localStorage.getItem("usuario"));
       const token = localStorage.getItem("jwt_token");
       const idUsuario = usuario?.id_usuario;
+    
 
       if (!idUsuario) return alert("Usuario no encontrado.");
       if (!token) return alert("No hay token de autenticación, inicia sesión.");
@@ -94,11 +99,42 @@ function Proyectos() {
   const mostrarSelect = busqueda.length === 0 || proyectosFiltrados.length > 0;
 
   return (
-    <div className="verproyectos-app">
-      <Header />
-      <h1 className="form-titulo">Proyectos</h1>
+     <div className="main-layout">
+          {/* ===== MENU LATERAL ===== */}
+          <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+            <MenuDinamico 
+              collapsed={sidebarCollapsed}
+              departamentoId={localStorage.getItem('last_depId')} 
+              departamentoNombre={localStorage.getItem('last_depNombre')} 
+              departamentoSlug={localStorage.getItem('last_depSlug')} 
+              activeRoute="ver-proyecto"
+            />
+          </div>
+    
+          {/* ===== CONTENIDO PRINCIPAL ===== */}
+          <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+            {/* Fondo semitransparente */}
+            <div className="logo-fondo">
+              <img src={logo3} alt="Fondo" />
+            </div>
+    
+            {/* ===== BARRA SUPERIOR ===== */}
+            <div className="header-global">
+              <div className="header-left" onClick={toggleSidebar}>
+                <FaBars className="icono-hamburguesa-global" />
+              </div>
+              <div className="barra-center">
+                <span className="titulo-barra-global">
+                  PROYECTOS
+                </span>
+              </div>
+            </div>
 
-      <div className="buscador-verproyectos-contenedor">
+             <div className="container my-4">
+               <div className="row justify-content-center"></div>
+                <h1 className="form-titulo">Proyectos</h1>
+
+                <div className="buscador-verproyectos-contenedor">
         <div className="buscador-verproyectos-inner">
           <FiSearch className="buscador-verproyectos-icono" />
           <input
@@ -239,6 +275,8 @@ function Proyectos() {
         ) : null}
       </div>
     </div>
+      </div>
+        </div>
   );
 }
 

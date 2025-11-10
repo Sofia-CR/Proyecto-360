@@ -83,8 +83,8 @@ function Header({ children }) {
     } else {
       
       return [
-        { label: "TAREAS PENDIENTES", path: "/TareasPendientesJefe", icon: <FaHourglassHalf /> },
-         { label: "Tareas completadas", path: "/TareasCompletadasJefe", icon: <FaCheckCircle /> },
+          { label: "INICIO", path: "/GestionProyectosUsuario", icon: <FaCheckCircle /> },
+        { label: "MIS TAREAS", path: "/Usuario", icon: <FaHourglassHalf /> },
         { label: "REPORTES", path: "/ReporteUsuario", icon: <FaChartBar /> },
         { label: "CERRAR SESIÓN", path: "logout", icon: <FaDoorOpen /> },
       ];

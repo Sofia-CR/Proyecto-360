@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "./Header";
 import logo3 from "../imagenes/logo3.png";
+import '../css/global.css';
 import "../css/ModificarTareas.css";
-import { FaExclamationCircle, FaCheckCircle, FaClock } from "react-icons/fa";
+import { FaClock, FaBars } from "react-icons/fa";
 import { FiSearch, FiX } from "react-icons/fi";
+import MenuDinamico from "../components/MenuDinamico";
 
 function ModificarTareas() {
   const navigate = useNavigate(); 
   const [busqueda, setBusqueda] = useState("");
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   // 🚀 Fetch de proyectos y tareas
   useEffect(() => {
@@ -69,8 +72,36 @@ function ModificarTareas() {
 };
 
   return (
-    <div className="modificar-tareas-app">
-      <Header />
+    <div className="main-layout">
+        {/* ===== MENU LATERAL ===== */}
+        <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+          <MenuDinamico 
+            collapsed={sidebarCollapsed}
+            departamentoId={localStorage.getItem('last_depId')} 
+            departamentoNombre={localStorage.getItem('last_depNombre')} 
+            departamentoSlug={localStorage.getItem('last_depSlug')} 
+            activeRoute="modificar-t"
+          />
+        </div>
+  
+        {/* ===== CONTENIDO PRINCIPAL ===== */}
+        <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+          {/* Fondo semitransparente */}
+          <div className="logo-fondo">
+            <img src={logo3} alt="Fondo" />
+          </div>
+  
+          {/* ===== BARRA SUPERIOR ===== */}
+          <div className="header-global">
+            <div className="header-left" onClick={toggleSidebar}>
+              <FaBars className="icono-hamburguesa-global" />
+            </div>
+            <div className="barra-center">
+              <span className="titulo-barra-global">
+                TAREAS POR REVISAR 
+              </span>
+            </div>
+          </div>
 
       <div className="container my-4">
         <h1 className="form-titulo text-center">Modificar Tareas</h1>
@@ -160,6 +191,7 @@ function ModificarTareas() {
           ))
         )}
       </div>
+    </div>
     </div>
   );
 }

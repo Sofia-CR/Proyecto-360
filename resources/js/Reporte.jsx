@@ -1,15 +1,16 @@
 import { useState, useRef } from "react";
 import React from "react";
-import Header from "./Header";
 import DatePicker from "react-datepicker";
-import { FaCalendarAlt, FaAngleDown,FaFilePdf } from "react-icons/fa";
+import { FaCalendarAlt, FaAngleDown,FaFilePdf,FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/global.css';
+import logo3 from "../imagenes/logo3.png";
 import '../css/reporte.css';
-import '../css/formulario.css';
 import PdfViewer from "./PdfViewer";
+import MenuDinamico from "../components/MenuDinamico";
 
 function Reporte() {
   const [pdfUrl, setPdfUrl] = useState(null);
@@ -24,6 +25,8 @@ function Reporte() {
   const navigate = useNavigate();
   const menuRef = useRef(null);
   const selectRef = useRef(null);
+   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+      const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
   
   const opcionesReporte = [
     { value: "vencidas", label: "Tareas Vencidas" },
@@ -187,8 +190,36 @@ function Reporte() {
   };
 
   return (
-    <div className="container-fluid p-0 app-global">
-      <Header />
+    <div className="main-layout">
+            {/* ===== MENU LATERAL ===== */}
+            <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+              <MenuDinamico 
+                collapsed={sidebarCollapsed}
+                departamentoId={localStorage.getItem('last_depId')} 
+                departamentoNombre={localStorage.getItem('last_depNombre')} 
+                departamentoSlug={localStorage.getItem('last_depSlug')} 
+                activeRoute="generar-reporte"
+              />
+            </div>
+      
+            {/* ===== CONTENIDO PRINCIPAL ===== */}
+            <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+              {/* Fondo semitransparente */}
+              <div className="logo-fondo">
+                <img src={logo3} alt="Fondo" />
+              </div>
+      
+              {/* ===== BARRA SUPERIOR ===== */}
+              <div className="header-global">
+                <div className="header-left" onClick={toggleSidebar}>
+                  <FaBars className="icono-hamburguesa-global" />
+                </div>
+                <div className="barra-center">
+                  <span className="titulo-barra-global">
+                    GENERAR REPORTES 
+                  </span>
+                </div>
+              </div>
    
         <h1 className="mb-4 form-titulo">Generar reportes</h1>
            <div className="generar-reportes mt-4 mx-auto p-3">
@@ -387,6 +418,7 @@ function Reporte() {
           />
         )}
     </div>
+     </div>
   );
 }
 

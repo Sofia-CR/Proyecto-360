@@ -38,15 +38,16 @@ function Contenedor() {
         setLoading(false);
         return;
       }
-      localStorage.setItem("jwt_token", data.token); // Guardar token
-      localStorage.setItem("usuario", JSON.stringify(data.usuario));
+      localStorage.setItem("jwt_token", data.token);
+      localStorage.setItem("rol", data.usuario.rol);
+      console.log(localStorage.getItem(data.usuario));
 login(data.usuario, data.token); // Guardar usuario en contexto
 setPassword('');
 
 if (data.usuario.rol === "Jefe") {
-  navigate("/NuevoProyecto"); // 👉 los Jefes van a nuevo proyecto
+  navigate("/GestionProyectos"); // 👉 los Jefes van a nuevo proyecto
 } else if (data.usuario.rol === "Usuario") {
-  navigate("/Usuario"); // 👉 los usuarios normales van a su interfaz
+  navigate("/GestionProyectosUsuario"); // 👉 los usuarios normales van a su interfaz
 } else {
   navigate("/"); // 👉 por si acaso, lo mandas a inicio
 }

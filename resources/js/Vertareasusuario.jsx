@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { FaExclamationCircle, FaCheckCircle, FaClock, FaTasks } from "react-icons/fa";
-import { FiSearch, FiX } from "react-icons/fi";
-import Header from "./Header";
+import { FaExclamationCircle, FaCheckCircle, FaClock, FaTasks, FaBars  } from "react-icons/fa";
+import "../css/global.css";
 import "../css/vertareausuario.css";
 import logo3 from "../imagenes/logo3.png";
 import { useLocation } from "react-router-dom";
+import MenuDinamico from "../components/MenuDinamico";
 
 
 function VertareasUsuario() {
   const [tareas, setTareas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [loading, setLoading] = useState(true); 
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
  const location = useLocation();
 
@@ -105,8 +107,36 @@ useEffect(() => {
   };
 
   return (
-    <div className="container-fluid p-0 app-global">
-      <Header />
+     <div className="main-layout">
+              {/* ===== MENU LATERAL ===== */}
+              <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+                <MenuDinamico 
+                  collapsed={sidebarCollapsed}
+                  departamentoId={localStorage.getItem('last_depId')} 
+                  departamentoNombre={localStorage.getItem('last_depNombre')} 
+                  departamentoSlug={localStorage.getItem('last_depSlug')} 
+                  activeRoute="vertarea-usuario"
+                />
+              </div>
+        
+              {/* ===== CONTENIDO PRINCIPAL ===== */}
+              <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+                {/* Fondo semitransparente */}
+                <div className="logo-fondo">
+                  <img src={logo3} alt="Fondo" />
+                </div>
+        
+                {/* ===== BARRA SUPERIOR ===== */}
+                <div className="header-global">
+                  <div className="header-left" onClick={toggleSidebar}>
+                    <FaBars className="icono-hamburguesa-global" />
+                  </div>
+                  <div className="barra-center">
+                    <span className="titulo-barra-global">
+                     TAREAS PENDIENTES
+                    </span>
+                  </div>
+                </div>
       <div className="container my-4">
         {loading ? (
           <div className="loader-container">
@@ -154,6 +184,7 @@ useEffect(() => {
         )}
       </div>
     </div>
+     </div>
   );
 }
 

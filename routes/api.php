@@ -17,6 +17,7 @@ use App\Http\Controllers\JefeController;
 use App\Http\Controllers\TareasCompletadasController;
 use App\Http\Controllers\TareasPController;
 use App\Http\Controllers\ProyectoJefeController;
+
 use Illuminate\Support\Facades\DB;
 // Rutas públicas
 Route::post('/login', [AuthController::class, 'login']);
@@ -28,8 +29,6 @@ Route::get('/proyectos', [NuevoProyectoController::class, 'index']);
 Route::post('/proyectos', [NuevoProyectoController::class, 'store']);
 Route::get('/CatalogoDepartamentos', [TareasCompletadasController::class, 'CatalogoDepartamentos']);
 Route::post('/tareas', [TareaController::class, 'store']);
-Route::get('/proyectos/jefe', [JefeController::class, 'ProyectosDeUsuario']);
-Route::get('tareas/{idProyecto}/usuario/{idUsuario}', [JefeController::class, 'obtenerTareasPendientes']);
 Route::get('tareasPendientes/jefe/{idUsuario}', [JefeController::class, 'ObtenerTareasPendientesJefe']);
 Route::get('tareasCompletadas/jefe/{idUsuario}', [JefeController::class, 'ObtenerTareasCompletadasUsuario']);
 Route::get('/tareas/departamento', [TareasCompletadasController::class, 'tareasEnProcesoDepartamento']);
@@ -43,6 +42,16 @@ Route::put('tareas/{idTarea}/cambiarstatus-tarea', [TareaController::class, 'Cam
 Route::put('/tareas/{id}/cambiar-estatus-enproceso', [ProyectoJefeController::class, 'cambiarStatusTareaEnProceso']);
 Route::get('generar-pdf-completadas-jefe', [ReporteUsuarioController::class, 'generarReporteCompletadas']);
 
+//JEFEE
+Route::get('/proyectos/jefe', [JefeController::class, 'ProyectosDeUsuario']);
+Route::get('tareas/{idProyecto}/usuario/{idUsuario}', [JefeController::class, 'obtenerTareasPendientes']);
+Route::post('/evidencias', [EvidenciaController::class, 'subirEvidencia']);
+Route::get('/usuario/tareas', [JefeController::class, 'tareasPorUsuario']);
+
+
+Route::get('/dashboard-departamento', [TareasPController::class, 'dashboardDepartamento']);
+
+
 
 //Route::get('/tareas/pendientes', [TareaController::class, 'tareasPendientes']);
 Route::get('/proyectos/{id}/tareas', [TareaController::class, 'indexPorProyecto']);
@@ -52,7 +61,6 @@ Route::post('/proyectos/eliminar-multiples', [ProyectoController::class, 'elimin
 Route::get('/departamentos/{id}/usuarios', [CUsuarioController::class, 'usuariosPorDepartamento']);
 Route::get('/proyecto/{idProyecto}/tareas', [TareaController::class, 'indexPorProyecto']);
 Route::put('/proyectos/{idProyecto}', [ProyectoController::class, 'update']);
-Route::post('/evidencias', [EvidenciaController::class, 'subirEvidencia']);
 Route::get('/reporte-vencimientos', [ReporteController::class, 'generarPDF']);
 Route::get('/usuarios/{id}', [CUsuarioController::class, 'show']);
 Route::get('/tarea/{id}/evidencias', [TareaController::class, 'evidencias']);

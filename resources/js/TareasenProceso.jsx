@@ -1,10 +1,13 @@
-import Header from "./Header";
+
 import React, { useState, useEffect } from "react";
 import "../css/tareasenProceso.css";
 import { FiSearch, FiX } from "react-icons/fi";
 import { LuClock3 } from "react-icons/lu";
+import { FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import logo3 from "../imagenes/logo3.png";
+import '../css/global.css';
+import MenuDinamico from "../components/MenuDinamico";
 
 function TareasenProceso() {
   const [cargando, setCargando] = useState(false);
@@ -12,6 +15,8 @@ function TareasenProceso() {
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+ const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -93,8 +98,36 @@ const handleCompletarTareaProyecto = async (idProyecto) => {
 
 
   return (
-    <div className="container-fluid p-0 tareas-proceso-global">
-      <Header />
+    <div className="main-layout">
+      {/* ===== MENU LATERAL ===== */}
+      <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+        <MenuDinamico 
+          collapsed={sidebarCollapsed}
+          departamentoId={localStorage.getItem('last_depId')} 
+          departamentoNombre={localStorage.getItem('last_depNombre')} 
+          departamentoSlug={localStorage.getItem('last_depSlug')} 
+          activeRoute="tareas-enproceso"
+        />
+      </div>
+
+      {/* ===== CONTENIDO PRINCIPAL ===== */}
+      <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+        {/* Fondo semitransparente */}
+        <div className="logo-fondo">
+          <img src={logo3} alt="Fondo" />
+        </div>
+
+        {/* ===== BARRA SUPERIOR ===== */}
+        <div className="header-global">
+          <div className="header-left" onClick={toggleSidebar}>
+            <FaBars className="icono-hamburguesa-global" />
+          </div>
+          <div className="barra-center">
+            <span className="titulo-barra-global">
+              TAREAS POR REVISAR 
+            </span>
+          </div>
+        </div>
       <div className="container my-4">
         <h1 className="form-titulo mb-3 text-center">Proyectos en Proceso</h1>
 
@@ -134,11 +167,14 @@ const handleCompletarTareaProyecto = async (idProyecto) => {
 
         {/* Lista de proyectos */}
         <div className="tareas-proceso-lista">
-          {loading ? (
-            <div className="loader-container">
-              <div className="loader-logo"><img src={logo3} alt="Cargando" /></div>
-              <div className="loader-texto">CARGANDO...</div>
-            </div>
+           {loading ? (
+          <div className="loader-container">
+            <div className="loader-logo">
+              <img src={logo3} alt="Cargando" />
+            </div>
+            <div className="loader-texto">CARGANDO...</div>
+            <div className="loader-spinner"></div>
+          </div>
           ) : proyectosFiltrados.length > 0 ? (
             proyectosFiltrados.map(p => {
               const porcentajeCompletado = Math.round(((p.tareas_completadas || 0) / (p.total_tareas || 1)) * 100);
@@ -241,6 +277,7 @@ const handleCompletarTareaProyecto = async (idProyecto) => {
         </div>
       </div>
     </div>
+</div>
   );
 }
 

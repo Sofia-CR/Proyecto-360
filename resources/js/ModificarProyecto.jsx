@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import Header from "./Header";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaCalendarAlt, FaExclamationTriangle } from "react-icons/fa";
+import { FaCalendarAlt, FaExclamationTriangle,FaBars } from "react-icons/fa";
 import DatePicker from "react-datepicker";
+import logo3 from "../imagenes/logo3.png";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale } from "react-datepicker";
 import es from "date-fns/locale/es";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/global.css';
 import '../css/ModificarProyecto.css';
+import MenuDinamico from "../components/MenuDinamico";
 
 registerLocale("es", es);
 
@@ -97,6 +99,8 @@ function ModificarProyecto() {
   const [datosOriginales, setDatosOriginales] = useState(null);
   const [guardadoExitoso, setGuardadoExitoso] = useState(false);
   const [mostrarEstado, setMostrarEstado] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   const [touched, setTouched] = useState({
     fechaInicio: false,
@@ -265,8 +269,36 @@ function ModificarProyecto() {
   const cancelarCancelar = () => setMostrarConfirmacion(false);
 
   return (
-    <div className="app-global">
-      <Header />
+     <div className="main-layout">
+                  {/* ===== MENU LATERAL ===== */}
+                  <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+                    <MenuDinamico 
+                      collapsed={sidebarCollapsed}
+                      departamentoId={localStorage.getItem('last_depId')} 
+                      departamentoNombre={localStorage.getItem('last_depNombre')} 
+                      departamentoSlug={localStorage.getItem('last_depSlug')} 
+                      activeRoute="vertarea-usuario"
+                    />
+                  </div>
+            
+                  {/* ===== CONTENIDO PRINCIPAL ===== */}
+                  <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+                    {/* Fondo semitransparente */}
+                    <div className="logo-fondo">
+                      <img src={logo3} alt="Fondo" />
+                    </div>
+            
+                    {/* ===== BARRA SUPERIOR ===== */}
+                    <div className="header-global">
+                      <div className="header-left" onClick={toggleSidebar}>
+                        <FaBars className="icono-hamburguesa-global" />
+                      </div>
+                      <div className="barra-center">
+                        <span className="titulo-barra-global">
+                         MODIFICAR PROYECTO
+                        </span>
+                      </div>
+                    </div>
 
       <div className="container my-4">
         <h1 className="text-center mb-4 form-titulo">Modificar Proyecto</h1>
@@ -302,8 +334,10 @@ function ModificarProyecto() {
             {errores.descripcion && <div className="invalid-feedback">{errores.descripcion}</div>}
           </div>
 
-          <div className="fechas-container d-flex gap-3">
-            <SelectorFecha
+          <div className="row mb-3">
+              <div className="col-12 col-md-6 mb-3 d-flex flex-column">
+                <label className="form-label fw-bold mb-1">Fecha de inicio</label>
+             <DatePicker
               label="Fecha de inicio"
               selected={fechaInicio}
               onChange={(date) => { setFechaInicio(date); setTouched(prev => ({...prev, fechaInicio: true})); }}
@@ -311,7 +345,10 @@ function ModificarProyecto() {
               error={errores.inicio || errores.fechas}
               onBlur={() => verificarCambios()}
             />
-            <SelectorFecha
+            </div>
+            <div className="col-12 col-md-6 mb-3 d-flex flex-column">
+                <label className="form-label fw-bold mb-1">Fecha de fin</label>
+              <DatePicker
               label="Fecha de fin"
               selected={fechaFin}
               onChange={(date) => { setFechaFin(date); setTouched(prev => ({...prev, fechaFin: true})); }}
@@ -351,7 +388,8 @@ function ModificarProyecto() {
           tipo="peligro"
         />
       </div>
-
+        </div>
+ </div>
   );
 }
 

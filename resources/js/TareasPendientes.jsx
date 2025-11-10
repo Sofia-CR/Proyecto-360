@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
+import '../css/global.css';
 import "../css/TareasPendientes.css";
 import logo3 from "../imagenes/logo3.png";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaBars } from "react-icons/fa";
 import { FiSearch, FiX } from "react-icons/fi";
+import MenuDinamico from "../components/MenuDinamico";
 
 function TareasPendientes() {
   const [busqueda, setBusqueda] = useState("");
   const [proyectos, setProyectos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   useEffect(() => {
     const fetchTareasPendientes = async () => {
@@ -56,8 +59,36 @@ function TareasPendientes() {
     .filter(({ mostrar }) => mostrar);
 
   return (
-    <div className="container-fluid p-0 app-global">
-      <Header />
+    <div className="main-layout">
+          {/* ===== MENU LATERAL ===== */}
+          <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+            <MenuDinamico 
+              collapsed={sidebarCollapsed}
+              departamentoId={localStorage.getItem('last_depId')} 
+              departamentoNombre={localStorage.getItem('last_depNombre')} 
+              departamentoSlug={localStorage.getItem('last_depSlug')} 
+              activeRoute="tareas-pendientes"
+            />
+          </div>
+    
+          {/* ===== CONTENIDO PRINCIPAL ===== */}
+          <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+            {/* Fondo semitransparente */}
+            <div className="logo-fondo">
+              <img src={logo3} alt="Fondo" />
+            </div>
+    
+            {/* ===== BARRA SUPERIOR ===== */}
+            <div className="header-global">
+              <div className="header-left" onClick={toggleSidebar}>
+                <FaBars className="icono-hamburguesa-global" />
+              </div>
+              <div className="barra-center">
+                <span className="titulo-barra-global">
+                  TAREAS POR REVISAR 
+                </span>
+              </div>
+            </div>
 
       <div className="container my-4">
         <div className="text-center">
@@ -87,8 +118,6 @@ function TareasPendientes() {
                 )}
               </div>
             </div>
-
-            {/* Resultados */}
             {busqueda && (
               <div className="tareaspendientesj-buscador-resultados-info">
                 {proyectos.filter((p) =>
@@ -102,7 +131,7 @@ function TareasPendientes() {
     <div className="loader-logo">
       <img src={logo3} alt="Cargando" />
     </div>
-    <div className="loader-texto">CARGANDO...</div>
+    <div className="loader-texto">CARGANDO TAREAS PENDIENTES...</div>
     <div className="loader-spinner"></div>
   </div>
 ) : proyectos.length === 0 ? (
@@ -140,6 +169,7 @@ function TareasPendientes() {
         </div>
       </div>
     </div>
+      </div>
   );
 }
 

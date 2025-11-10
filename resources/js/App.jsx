@@ -36,6 +36,8 @@ import EliminarProyectos from "./EliminarProyectos";
 import VerTareasPendientes from "./VerTareasPendientes";
 import DesbloquearProyectos from "./DesbloquearProyectos";
 import ReporteUsuario from "./ReporteUsuario";
+import GestionProyectos from "./GestionProyectos";
+import GestionProyectosUsuario from "./GestionProyectosUsuario";
 
 
 function App() {
@@ -46,6 +48,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Contenedor />} />
         <Route path="/CambiaContrasena" element={<CambiaContrasena />} />
+        <Route path="/Principal" element={<Principal />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/Contenedor" element={<Contenedor />} />
         <Route path="/RegistroPaso2" element={<RegistroPaso2 />} />
@@ -79,7 +82,8 @@ function App() {
       <Route path="/VerTareasPendientes" element={<VerTareasPendientes />} />
       <Route path="/DesbloquearProyectos" element={<DesbloquearProyectos />} />
       <Route path="/ReporteUsuario" element={<ReporteUsuario />} />
-
+    <Route path="/GestionProyectos" element={<GestionProyectos />} />
+    <Route path="/GestionProyectosUsuario" element={<GestionProyectosUsuario />} />
    
       </Routes>
     </Router>

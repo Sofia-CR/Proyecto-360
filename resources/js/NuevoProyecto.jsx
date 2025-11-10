@@ -1,14 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
-import Header from "./Header";
-import { Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import ErrorMensaje from "../components/ErrorMensaje";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale } from "react-datepicker";
 import es from "date-fns/locale/es";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/global.css';
+import '../css/formulario.css';
 import '../css/NuevoProyecto.css';
-import { FaExclamationTriangle, FaCalendarAlt } from "react-icons/fa";
+import { FaExclamationTriangle, FaCalendarAlt, FaBars } from "react-icons/fa";
+import logo3 from "../imagenes/logo3.png";
+import MenuDinamico from "../components/MenuDinamico";
+
 
 registerLocale("es", es);
 
@@ -25,22 +29,14 @@ const CalendarButton = React.forwardRef(({ value, onClick }, ref) => (
     </span>
   </button>
 ));
-const ErrorMensaje = ({ mensaje }) => {
-  if (!mensaje) return null;
-  return (
-    <small className="error">
-      <FaExclamationTriangle className="error-icon" />
-      {mensaje}
-    </small>
-  );
-};
 
 function NuevoProyecto() {
   const navigate = useNavigate();
   const nombreProyectoRef = useRef(null);
   const descripcionProyectoRef = useRef(null);
   const menuRef = useRef(null);
-
+ const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+   const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
   const [isOpen, setIsOpen] = useState(false);
   const [mostrarExtras, setMostrarExtras] = useState(true);
   const [fechaInicio, setFechaInicio] = useState(null);
@@ -186,13 +182,43 @@ function NuevoProyecto() {
 
 
   return (
-   <div className="container-fluid p-0 app-global">
-  <Header />
+   <div className="main-layout">
+      {/* ===== MENU LATERAL ===== */}
+      <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+        <MenuDinamico 
+          collapsed={sidebarCollapsed}
+          departamentoId={localStorage.getItem('last_depId')} 
+          departamentoNombre={localStorage.getItem('last_depNombre')} 
+          departamentoSlug={localStorage.getItem('last_depSlug')} 
+          activeRoute="nuevo-proyecto"
+        />
+      </div>
 
-      <div className="container my-4">
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-8 col-lg-6 contenedor-nuevo-proyecto">
-            <h1 className="text-center mb-4 form-titulo">Nuevo Proyecto</h1>
+      {/* ===== CONTENIDO PRINCIPAL ===== */}
+      <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+        {/* Fondo semitransparente */}
+        <div className="logo-fondo">
+          <img src={logo3} alt="Fondo" />
+        </div>
+
+        {/* ===== BARRA SUPERIOR ===== */}
+        <div className="header-global">
+          <div className="header-left" onClick={toggleSidebar}>
+            <FaBars className="icono-hamburguesa-global" />
+          </div>
+          <div className="barra-center">
+            <span className="titulo-barra-global">
+              NUEVO PROYECTO
+            </span>
+          </div>
+        </div>
+
+        {/* ===== CONTENIDO DE LA PÁGINA ===== */}
+        <div className="container my-4">
+          <div className="row justify-content-center">
+            <div className="col-12 col-md-8 col-lg-6 contenedor-nuevo-proyecto">
+              <h1 className="text-center mb-4 form-titulo">Nuevo Proyecto</h1>
+                 </div>
             <div className="mb-3 d-flex flex-column">
               <label htmlFor="nombreProyecto" className="form-label fw-bold form-label">Nombre del proyecto</label>
               <textarea

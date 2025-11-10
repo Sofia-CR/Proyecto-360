@@ -13,6 +13,7 @@ use DB;
 
 class JefeController extends Controller
 {
+    //METODO QUE DEVUELVE LAS TAREAS PENDIENTES Y EN PROCESO DE UN USUARIO ESPECIFICO- SE USA EN LA INTERFAZ DE USUARIO.JSX
 public function ProyectosDeUsuario(Request $request)
 {
     try {
@@ -24,51 +25,34 @@ public function ProyectosDeUsuario(Request $request)
                 'mensaje' => 'No se recibió el ID de usuario'
             ], 400);
         }
-
-        // Solo tareas "Pendiente" o "En proceso" (mayúsculas/minúsculas)
-        $tareas = DB::table('tareas as t')
-            ->join('proyectos as p', 't.id_proyecto', '=', 'p.id_proyecto')
-            ->select(
-                't.id_tarea',
-                't.id_usuario',
-                't.t_nombre',
-                't.t_estatus',
-                't.tf_inicio',
-                't.tf_fin',
-                't.descripcion as descripcion_tarea',
-                'p.id_proyecto',
-                'p.p_nombre',
-                'p.pf_fin',
-                'p.p_estatus'
-            )
-            ->where('t.id_usuario', $idUsuario)
-            ->whereIn(DB::raw('UPPER(t.t_estatus)'), ['PENDIENTE', 'EN PROCESO']) // FILTRO
-            ->orderBy('p.p_nombre', 'asc')
-            ->get();
-
-        $proyectosMap = [];
-        foreach ($tareas as $tarea) {
-            $idProyecto = $tarea->id_proyecto;
-
-            if (!isset($proyectosMap[$idProyecto])) {
-                $proyectosMap[$idProyecto] = [
-                    'id_proyecto' => $tarea->id_proyecto,
-                    'p_nombre' => $tarea->p_nombre,
-                    'pf_fin' => $tarea->pf_fin,
-                    'p_estatus' => $tarea->p_estatus,
-                    'tareas' => []
-                ];
-            }
-            $proyectosMap[$idProyecto]['tareas'][] = [
-                'id_tarea' => $tarea->id_tarea,
-                't_nombre' => $tarea->t_nombre,
-                't_estatus' => $tarea->t_estatus,
-                'tf_inicio' => $tarea->tf_inicio,
-                'tf_fin' => $tarea->tf_fin,
-                'descripcion' => $tarea->descripcion_tarea
+        $proyectos = Proyecto::whereHas('tareas', function($q) use ($idUsuario) {
+            $q->where('id_usuario', $idUsuario)
+              ->whereIn(DB::raw('UPPER(t_estatus)'), ['PENDIENTE', 'EN PROCESO']);
+        })
+        ->with(['tareas' => function($q) use ($idUsuario) {
+            $q->where('id_usuario', $idUsuario)
+              ->whereIn(DB::raw('UPPER(t_estatus)'), ['PENDIENTE', 'EN PROCESO']);
+        }])
+        ->orderBy('p_nombre', 'asc')
+        ->get()
+        ->map(function($proyecto) {
+            return [
+                'id_proyecto' => $proyecto->id_proyecto,
+                'p_nombre' => $proyecto->p_nombre,
+                'pf_fin' => $proyecto->pf_fin,
+                'p_estatus' => $proyecto->p_estatus,
+                'tareas' => $proyecto->tareas->map(function($tarea) {
+                    return [
+                        'id_tarea' => $tarea->id_tarea,
+                        't_nombre' => $tarea->t_nombre,
+                        't_estatus' => $tarea->t_estatus,
+                        'tf_inicio' => $tarea->tf_inicio,
+                        'tf_fin' => $tarea->tf_fin,
+                        'descripcion' => $tarea->descripcion,
+                    ];
+                })->toArray()
             ];
-        }
-        $proyectos = array_values($proyectosMap);
+        });
 
         return response()->json([
             'success' => true,
@@ -83,18 +67,16 @@ public function ProyectosDeUsuario(Request $request)
     }
 }
 
-//TAREAS PENDIENTES DE UN JEFE CON SU ID- INTERFAZ DE TAREAUSUARIO
+//METODO QUE DEVUELVE LAS TAREAS PENDIENTES DE UN USUARIO Y PROYECTO ESPECIFICO, SE UTILIZA EN LA INTERFAZ DE TAREA USUARIO.JSX
 public function obtenerTareasPendientes($idProyecto, $idUsuario)
 {
-    $tareasConEvidencias = Tarea::select('tareas.*')
-        ->withCount(['evidencias' => function ($query) use ($idProyecto) {
-            $query->where('id_proyecto', $idProyecto);
-        }])
-        ->where('id_proyecto', $idProyecto)
-        ->where('id_usuario', $idUsuario)
-        ->whereIn(DB::raw('LOWER(t_estatus)'), ['pendiente', 'en proceso']) // <-- Filtramos ambos estatus
-        ->get();
-
+   $tareasConEvidencias = Tarea::withCount(['evidencias' => fn($q) => $q->where('id_proyecto', $idProyecto)])
+    ->where([
+        ['id_proyecto', $idProyecto],
+        ['id_usuario', $idUsuario],
+    ])
+    ->whereIn('t_estatus', ['Pendiente', 'En proceso'])
+    ->get();
     return response()->json([
         'success' => true,
         'tareas' => $tareasConEvidencias
@@ -135,6 +117,55 @@ public function ObtenerTareasPendientesJefe($idUsuario)
         ], 500);
     }
 }
+public function tareasPorUsuario(Request $request)
+{
+    $usuarioId = $request->query('usuario');
+
+    if (!$usuarioId) {
+        return response()->json(['error' => 'Usuario no especificado'], 400);
+    }
+
+    // Conteos por estatus
+    $conteos = \DB::table('tareas')
+        ->selectRaw("
+            COUNT(*) FILTER (WHERE LOWER(t_estatus) = 'finalizada') as completadas,
+            COUNT(*) FILTER (WHERE LOWER(t_estatus) = 'pendiente') as pendientes,
+            COUNT(*) FILTER (WHERE LOWER(t_estatus) = 'en proceso') as en_progreso,
+            COUNT(*) as total
+        ")
+        ->where('id_usuario', $usuarioId)
+        ->first();
+
+    // Obtener tareas con info de proyecto
+    $tareas = \DB::table('tareas')
+        ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto')
+        ->select(
+            'tareas.id_tarea',
+            'tareas.id_proyecto',
+            'proyectos.p_nombre as nombre_proyecto',
+            'tareas.id_usuario',
+            'tareas.t_nombre',
+            'tareas.t_estatus',
+            'tareas.tf_inicio',
+            'tareas.tf_completada',
+            'tareas.tf_fin',
+            'tareas.descripcion'
+        )
+        ->where('tareas.id_usuario', $usuarioId)
+        ->whereIn(DB::raw('LOWER(tareas.t_estatus)'), ['finalizada', 'pendiente', 'en proceso'])
+        ->orderBy('tareas.tf_fin', 'asc')
+        ->get();
+
+    return response()->json([
+        'tareas' => $tareas,
+        'conteos' => $conteos
+    ]);
+}
+
+
+
+
+
 public function ObtenerTareasEnProcesoJefe($idUsuario)
 {
     try {

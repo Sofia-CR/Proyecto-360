@@ -1,17 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { 
-  FaUpload, 
-  FaClock, 
-  FaCheckCircle, 
-  FaExclamationTriangle,
-  FaFileAlt,
-  FaCalendarDay,
-  FaAngleDown
-} from "react-icons/fa";
+import { FaBars, FaUpload, FaClock, FaExclamationTriangle, FaFileAlt, FaCalendarDay, FaAngleDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Header from "./Header";
 import logo3 from "../imagenes/logo3.png";
+import "../css/global.css";
 import "../css/tareasusuario.css"; 
+import MenuDinamico from "../components/MenuDinamico";
 
 function TareasUsuario() {
   const [subiendo, setSubiendo] = useState(false);
@@ -25,6 +18,8 @@ function TareasUsuario() {
   const [open, setOpen] = useState(false);
   const refs = useRef({});
   const navigate = useNavigate();
+const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
   useEffect(() => {
     const token = localStorage.getItem("jwt_token");
@@ -295,8 +290,33 @@ const estado = getEstadoTarea(tarea.t_estatus);
 const tareaSeleccionada = tareas.find(t => t.id_tarea === tareaActual);
 
   return (
-    <div className="container-fluid p-0 app-global">
-      <Header />
+    <div className="main-layout">
+             {/* ===== MENU LATERAL ===== */}
+             <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+               <MenuDinamico
+                 collapsed={sidebarCollapsed}
+                 departamentoId={localStorage.getItem("last_depId")}
+                 departamentoNombre={localStorage.getItem("last_depNombre")}
+                 departamentoSlug={localStorage.getItem("last_depSlug")}
+                 activeRoute="tareas-enproceso"
+               />
+             </div>
+       
+             {/* ===== CONTENIDO PRINCIPAL ===== */}
+             <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
+               <div className="logo-fondo">
+                 <img src={logo3} alt="Fondo" />
+               </div>
+       
+               {/* ===== BARRA SUPERIOR ===== */}
+               <div className="header-global">
+                 <div className="header-left" onClick={toggleSidebar}>
+                   <FaBars className="icono-hamburguesa-global" />
+                 </div>
+                 <div className="barra-center">
+                   <h2 className="titulo-barra-global">TAREAS POR REVISAR</h2>
+                 </div>
+               </div>
       <div className="container my-4">
         <div className="row justify-content-center">
           <div className="col-12 col-lg-10 col-xl-8">
@@ -372,30 +392,9 @@ const tareaSeleccionada = tareas.find(t => t.id_tarea === tareaActual);
   </div>
 )}
 
-
+</div>
     </div>
   );
 }
 
 export default TareasUsuario;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

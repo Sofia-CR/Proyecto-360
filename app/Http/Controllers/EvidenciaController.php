@@ -7,6 +7,7 @@ use App\Models\Evidencia;
 
 class EvidenciaController extends Controller
 {
+    //METODO PARA INSERTAR EVIDENCIAS SE UTLIZA EN LA INTERFAZ DE TAREA USUARIO
     public function subirEvidencia(Request $request)
 {
     \Log::info('Recibido request:', $request->all());
