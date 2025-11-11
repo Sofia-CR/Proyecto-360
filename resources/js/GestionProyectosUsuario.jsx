@@ -7,12 +7,66 @@ import {
   FaHourglassHalf,
   FaTasks,
   FaSearch,
-  FaCalendarAlt
+  FaCalendarAlt,
+  FaUser,
+  FaArrowRight,
+  FaChartLine,
+  FaLayerGroup
 } from "react-icons/fa";
 import "../css/formulario.css";
 import "../css/Gestionproyectosusuario.css";
 import MenuDinamico from "../components/MenuDinamico";
 import logo3 from "../imagenes/logo3.png";
+
+// === Componente del gráfico circular de tareas ===
+const TaskDonutChart = ({ completadas, pendientes, enProceso, total }) => {
+  if (total === 0) {
+    return (
+      <div className="tdu-grafica-circular tdu-sin-tareas">
+        <div className="tdu-circular-center">
+          <span className="tdu-circular-porcentaje">0%</span>
+        </div>
+      </div>
+    );
+  }
+
+  const pctCompletadas = (completadas / total) * 100;
+  const pctEnProceso = (enProceso / total) * 100;
+  const pctPendientes = (pendientes / total) * 100;
+
+
+
+  return (
+   <div
+  className="tdu-grafica-circular"
+  style={{
+    "--pct-completadas": `${pctCompletadas}%`,
+    "--pct-en-proceso": `${pctEnProceso}%`
+  }}
+>
+      <div className="tdu-circular-center">
+       <span className="tdu-circular-porcentaje">{Math.round(pctCompletadas)}%</span>
+        <div className="tdu-circular-label">Completado</div>
+      </div>
+    </div>
+  );
+};
+
+// === Componente de tarjeta de métricas mejorado ===
+const MetricCard = ({ icon, number, label, subtext, color, className }) => (
+  <div className={`tdu-metrica-card ${className}`}>
+    <div className="tdu-metrica-icono" style={{ color }}>
+      {icon}
+    </div>
+    <div className="tdu-metrica-content">
+      <div className="tdu-metrica-numero">{number}</div>
+      <div className="tdu-metrica-label">{label}</div>
+      <div className="tdu-metrica-subtext">{subtext}</div>
+    </div>
+    <div className="tdu-metrica-decoration"></div>
+  </div>
+);
+
 
 function GestionProyectosUsuario() {
   const navigate = useNavigate();
@@ -26,12 +80,16 @@ function GestionProyectosUsuario() {
   const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [usuario, setUsuario] = useState(null);
 
   const toggleSidebar = () => setSidebarCollapsed(!sidebarCollapsed);
 
+  // === Obtener proyectos y conteos del usuario ===
   useEffect(() => {
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
-    if (!usuario?.id_usuario) return;
+    const userData = JSON.parse(localStorage.getItem("usuario"));
+    if (!userData?.id_usuario) return;
+    
+    setUsuario(userData);
 
     const obtenerDatos = async () => {
       try {
@@ -39,7 +97,7 @@ function GestionProyectosUsuario() {
         const token = localStorage.getItem("jwt_token");
 
         const res = await fetch(
-          `http://127.0.0.1:8000/api/usuario/tareas?usuario=${usuario.id_usuario}`,
+          `http://127.0.0.1:8000/api/usuario/tareas?usuario=${userData.id_usuario}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -56,33 +114,11 @@ function GestionProyectosUsuario() {
         }
 
         const data = await res.json();
-        const tareas = data.tareas || [];
+        const proyectosAPI = data.proyectos || [];
         const conteosAPI = data.conteos || {};
 
-        // Agrupar tareas por proyecto
-        const proyectosMap = {};
-        tareas.forEach((t) => {
-          if (!proyectosMap[t.id_proyecto]) {
-            proyectosMap[t.id_proyecto] = {
-              id_proyecto: t.id_proyecto,
-              p_nombre: t.nombre_proyecto,
-              tareas_completadas: 0,
-              tareas_pendientes: 0,
-              tareas_en_progreso: 0,
-              total_tareas: 0,
-            };
-          }
-
-          proyectosMap[t.id_proyecto].total_tareas += 1;
-          const estado = t.t_estatus.toLowerCase();
-          if (estado === "finalizada") proyectosMap[t.id_proyecto].tareas_completadas += 1;
-          else if (estado === "pendiente") proyectosMap[t.id_proyecto].tareas_pendientes += 1;
-          else if (estado === "en proceso") proyectosMap[t.id_proyecto].tareas_en_progreso += 1;
-        });
-
-        setProyectos(Object.values(proyectosMap));
+        setProyectos(proyectosAPI);
         setConteos(conteosAPI);
-
       } catch (error) {
         console.error("Error al obtener datos:", error);
       } finally {
@@ -93,35 +129,41 @@ function GestionProyectosUsuario() {
     obtenerDatos();
   }, [navigate]);
 
+  // === Filtro por búsqueda ===
   const filteredProyectos = proyectos.filter((proyecto) =>
     proyecto.p_nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // === Porcentaje global de completitud ===
   const porcentajeCompletitud =
     conteos.total > 0 ? Math.round((conteos.completadas / conteos.total) * 100) : 0;
 
+  // === Navegar a la vista de tareas ===
   const irATareas = (idProyecto, nombreProyecto) => {
     localStorage.setItem("id_proyecto", idProyecto);
     localStorage.setItem("nombre_proyecto", nombreProyecto);
     navigate("/tareasusuario");
   };
 
+  // === Pantalla de carga ===
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader-logo"><img src={logo3} alt="Cargando" /></div>
+        <div className="loader-texto">CARGANDO...</div>
+        <div className="loader-spinner"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="main-layout">
       <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <MenuDinamico
-          collapsed={sidebarCollapsed}
-          departamentoId={localStorage.getItem("last_depId")}
-          departamentoNombre={localStorage.getItem("last_depNombre")}
-          departamentoSlug={localStorage.getItem("last_depSlug")}
-          activeRoute="gestion-proyectosusuario"
-        />
+        <MenuDinamico collapsed={sidebarCollapsed} activeRoute="gestion-proyectosusuario" />
       </div>
 
       <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <div className="logo-fondo">
-          <img src={logo3} alt="Fondo" />
-        </div>
+        <div className="logo-fondo"><img src={logo3} alt="Fondo" /></div>
 
         <div className="header-global">
           <div className="header-left" onClick={toggleSidebar}>
@@ -130,129 +172,185 @@ function GestionProyectosUsuario() {
           <div className="barra-center">
             <h2 className="titulo-barra-global">INICIO</h2>
           </div>
+          
         </div>
-
-        <div className="tdu-dashboard-content">
-          <div className="form-titulo">
-            <h1>Gestión de proyectos</h1>
+        <div className="tdu-contenido">
+          <div className="tdu-seccion-bienvenida">
+            <div className="tdu-bienvenida-content">
+              <h1>Bienvenido, {usuario?.nombre || "Usuario"}!</h1>
+              <p>Resumen de tus proyectos y tareas</p>
+            </div>
+            <div className="tdu-bienvenido-stats">
+              <div className="tdu-stat-item">
+                <FaChartLine className="tdu-stat-icono" />
+                <div className="tdu-stat-content">
+                  <span className="tdu-stat-numero">{proyectos.length}</span>
+                  <span className="tdu-stat-label">Proyectos Activos</span>
+                </div>
+              </div>
+            </div>
           </div>
-
           <div className="barra-busqueda-global-container mb-4">
-              <div className="barra-busqueda-global-wrapper">
-    <FaSearch className="barra-busqueda-global-icon" />
+            <div className="barra-busqueda-global-wrapper">
+              <FaSearch className="barra-busqueda-global-icon" />
               <input
                 type="text"
                 placeholder="Buscar proyectos..."
-                 className="barra-busqueda-global-input"
+                className="barra-busqueda-global-input"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
-          <div className="tdu-metrics-grid">
-            <div className="tdu-metric-card tdu-completed">
-              <div className="tdu-metric-icon">
-                <FaCheckCircle size={28} />
-              </div>
-              <div className="tdu-metric-content">
-                <div className="tdu-metric-number">{conteos.completadas}</div>
-                <div className="tdu-metric-label">Tareas Completadas</div>
-                <div className="tdu-metric-subtext">{porcentajeCompletitud}% del total</div>
-              </div>
-            </div>
+          <div className="tdu-metrica-grid">
+            <MetricCard
+  icon={<FaCheckCircle size={24} />}
+  number={conteos.completadas}
+  label="Tareas Completadas"
+  subtext={`${porcentajeCompletitud}% del total`}
+  color="#fff"
+  className="tdu-metrica-completadas"
+/>
 
-            <div className="tdu-metric-card tdu-pending">
-              <div className="tdu-metric-icon">
-                <FaHourglassHalf size={28} />
-              </div>
-              <div className="tdu-metric-content">
-                <div className="tdu-metric-number">{conteos.pendientes}</div>
-                <div className="tdu-metric-label">Pendientes</div>
-                <div className="tdu-metric-subtext">Por iniciar</div>
-              </div>
-            </div>
+<MetricCard
+  icon={<FaHourglassHalf size={24} />}
+  number={conteos.pendientes}
+  label="Pendientes"
+  subtext="Por iniciar"
+  color="#fff"
+  className="tdu-metrica-pendientes"
+/>
 
-            <div className="tdu-metric-card tdu-progress">
-              <div className="tdu-metric-icon">
-                <FaTasks size={28} />
+<MetricCard
+  icon={<FaTasks size={24} />}
+  number={conteos.en_progreso}
+  label="En Progreso"
+  subtext="En ejecución"
+  color="#fff"
+  className="tdu-metrica-en-progreso"
+/>
+
+<MetricCard
+  icon={<FaLayerGroup size={24} />}
+  number={conteos.total}
+  label="Total de Tareas"
+  subtext="Todas las actividades"
+  color="#fff"
+  className="tdu-metrica-total"
+/>
+
+          </div>
+          <div className="tdu-progreso-general">
+            <div className="tdu-progreso-header">
+              <h3>Progreso General</h3>
+              <span>{porcentajeCompletitud}% completado</span>
+            </div>
+            <div className="tdu-progreso-barra-container">
+              <div 
+                className="tdu-progreso-barra-fill" 
+                style={{ width: `${porcentajeCompletitud}%` }}
+              ></div>
+            </div>
+            <div className="tdu-progreso-stats">
+              <div className="tdu-progreso-stat">
+                <span className="tdu-conteo completada"></span>
+                <span>Completadas: {conteos.completadas}</span>
               </div>
-              <div className="tdu-metric-content">
-                <div className="tdu-metric-number">{conteos.en_progreso}</div>
-                <div className="tdu-metric-label">En Progreso</div>
-                <div className="tdu-metric-subtext">En ejecución</div>
+              <div className="tdu-progreso-stat">
+                <span className="tdu-conteo progreso"></span>
+                <span>En progreso: {conteos.en_progreso}</span>
+              </div>
+              <div className="tdu-progreso-stat">
+                <span className="tdu-conteo pendiente"></span>
+                <span>Pendientes: {conteos.pendientes}</span>
               </div>
             </div>
           </div>
-          <div className="tdu-recent-projects-section">
-            <div className="tdu-section-header">
-              <h2>Mis Proyectos</h2>
+
+          {/* === Lista de proyectos  === */}
+          <div className="tdu-mis-proyectos">
+            <div className="tdu-mis-proyectos-header">
+              <div className="tdu-mis-proyectos-titulo">
+                <FaProjectDiagram className="tdu-mis-proyectos-titulo-icon" />
+                <h2>Mis Proyectos</h2>
+              </div>
               <div className="tdu-header-actions">
-                <span className="tdu-project-count">{filteredProyectos.length} proyectos</span>
+                <span className="tdu-numero-proyectos">
+                  {filteredProyectos.length} {filteredProyectos.length === 1 ? 'proyecto' : 'proyectos'}
+                </span>
               </div>
             </div>
 
             {filteredProyectos.length === 0 ? (
               <div className="tdu-empty-state">
-                <div className="tdu-empty-icon">
-                  <FaProjectDiagram size={40} />
-                </div>
+                <div className="tdu-empty-icon"><FaProjectDiagram size={48} /></div>
                 <h3>{searchTerm ? "No se encontraron proyectos" : "No tienes proyectos activos"}</h3>
                 <p>{searchTerm ? "Intenta con otros términos de búsqueda" : "Cuando se te asignen proyectos, aparecerán aquí"}</p>
               </div>
             ) : (
-              <div className="tdu-projects-grid">
-                {filteredProyectos.map((proyecto) => {
-                  const progreso =
-                    proyecto.total_tareas > 0
-                      ? Math.round((proyecto.tareas_completadas / proyecto.total_tareas) * 100)
-                      : 0;
+              <div className="tdu-proyectos-grid">
+                {filteredProyectos.map((proyecto) => (
+                  <div key={proyecto.id_proyecto} className="tdu-proyectos-card">
+                    <div className="tdu-proyectos-header">
+                      <div className="tdu-proyectos-title-section">
+                        <h3 className="tdu-proyectos-title">{proyecto.p_nombre}</h3>
+                        <div className="tdu-proyectos-dates">
+                          <FaCalendarAlt className="tdu-date-icon" />
+                          <span>{proyecto.pf_inicio} - {proyecto.pf_fin}</span>
+                        </div>
+                      </div>
+                     <div className="tdu-proyectos-badge">
+  <span>
+    {proyecto.total_tareas} {proyecto.total_tareas === 1 ? 'tarea' : 'tareas'}
+  </span>
+</div>
 
-                  return (
-                    <div key={proyecto.id_proyecto} className="tdu-project-card">
-                      <div className="tdu-project-header">
-                        <h3 className="tdu-project-title">{proyecto.p_nombre}</h3>
-                        <div className="tdu-project-badge">
-                          <span className="tdu-total-tasks">{proyecto.total_tareas} tareas</span>
-                        </div>
+                    </div>
+
+                    <div className="tdu-proyectos-content">
+                      <div className="tdu-grafica">
+                        <TaskDonutChart
+                          completadas={proyecto.tareas_completadas}
+                          pendientes={proyecto.tareas_pendientes}
+                          enProceso={proyecto.tareas_en_progreso}
+                          total={proyecto.total_tareas}
+                        />
                       </div>
-                      <div className="tdu-project-progress">
-                        <div className="tdu-progress-info">
-                          <span>Progreso general</span>
-                          <span>{progreso}%</span>
+
+                      <div className="tdu-resumen-proyecto">
+                        <div className="tdu-tarea-indicador tdu-completada">
+                          <span className="tdu-tarea-count">{proyecto.tareas_completadas}</span>
+                          <span className="tdu-tarea-etiqueta">Completadas</span>
                         </div>
-                        <div className="tdu-progress-bar">
-                          <div
-                            className="tdu-progress-fill"
-                            style={{ width: `${progreso}%` }}
-                          ></div>
+                        <div className="tdu-tarea-indicador tdu-progreso">
+                          <span className="tdu-tarea-count">{proyecto.tareas_en_progreso}</span>
+                          <span className="tdu-tarea-etiqueta">En Progreso</span>
                         </div>
-                      </div>
-                      <div className="tdu-project-tasks-summary">
-                        <div className="tdu-task-indicator tdu-completed">
-                          <span className="tdu-task-count">{proyecto.tareas_completadas}</span>
-                          <span className="tdu-task-label">Completadas</span>
+                        <div className="tdu-tarea-indicador tdu-pendiente">
+                          <span className="tdu-tarea-count">{proyecto.tareas_pendientes}</span>
+                          <span className="tdu-tarea-etiqueta">Pendientes</span>
                         </div>
-                        <div className="tdu-task-indicator tdu-pending">
-                          <span className="tdu-task-count">{proyecto.tareas_pendientes}</span>
-                          <span className="tdu-task-label">Pendientes</span>
-                        </div>
-                        <div className="tdu-task-indicator tdu-progress">
-                          <span className="tdu-task-count">{proyecto.tareas_en_progreso}</span>
-                          <span className="tdu-task-label">En Progreso</span>
-                        </div>
-                      </div>
-                      <div className="tdu-project-footer">
-                        <button
-                          className="tdu-btn-primary"
-                          onClick={() => irATareas(proyecto.id_proyecto, proyecto.p_nombre)}
-                        >
-                          <FaTasks className="tdu-btn-icon" />
-                          Ver Tareas
-                        </button>
                       </div>
                     </div>
-                  );
-                })}
+
+                    {/* Información del proyecto */}
+                    {proyecto.descripcion_proyecto && (
+                      <div className="tdu-proyecto-description">
+                        <p>{proyecto.descripcion_proyecto}</p>
+                      </div>
+                    )}
+
+                    <div className="tdu-proyecto-footer">
+                      <button
+                        className="tdu-btn-primary"
+                        onClick={() => irATareas(proyecto.id_proyecto, proyecto.p_nombre)}
+                      >
+                        <span>Ver Tareas</span>
+                        <FaArrowRight className="tdu-btn-icon" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -263,6 +361,7 @@ function GestionProyectosUsuario() {
 }
 
 export default GestionProyectosUsuario;
+
 
 
 

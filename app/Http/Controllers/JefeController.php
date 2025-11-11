@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Evidencia;
 use App\Models\Tarea;
 use App\Models\Proyecto;
 use App\Models\Usuario;
 
 use App\Notifications\TareaAsignada;
-use App\Models\Evidencia;
+
 use DB;
 
 class JefeController extends Controller
 {
-    //METODO QUE DEVUELVE LAS TAREAS PENDIENTES Y EN PROCESO DE UN USUARIO ESPECIFICO- SE USA EN LA INTERFAZ DE USUARIO.JSX
+    //METODO QUE DEVUELVE LOS PROYECTOS Y NUMERO DE TAREAS DE UN USUARIO ESPECIFICO- SE USA EN LA INTERFAZ DE USUARIO.JSX
 public function ProyectosDeUsuario(Request $request)
 {
     try {
@@ -70,53 +71,35 @@ public function ProyectosDeUsuario(Request $request)
 //METODO QUE DEVUELVE LAS TAREAS PENDIENTES DE UN USUARIO Y PROYECTO ESPECIFICO, SE UTILIZA EN LA INTERFAZ DE TAREA USUARIO.JSX
 public function obtenerTareasPendientes($idProyecto, $idUsuario)
 {
-   $tareasConEvidencias = Tarea::withCount(['evidencias' => fn($q) => $q->where('id_proyecto', $idProyecto)])
-    ->where([
-        ['id_proyecto', $idProyecto],
-        ['id_usuario', $idUsuario],
+    $tareasConEvidencias = Tarea::withCount([
+        'evidencias' => function($query) use ($idProyecto) {
+            $query->where('id_proyecto', $idProyecto);
+        }
     ])
-    ->whereIn('t_estatus', ['Pendiente', 'En proceso'])
-    ->get();
+    ->where('id_proyecto', $idProyecto)
+    ->where('id_usuario', $idUsuario)
+    ->whereIn(\DB::raw('LOWER(t_estatus)'), ['pendiente', 'en proceso'])
+    ->get([
+        'id_tarea',
+        'id_proyecto',
+        'id_usuario',
+        't_nombre',
+        't_estatus',
+        'tf_inicio',
+        'descripcion',
+        'tf_fin'
+    ]);
+
     return response()->json([
         'success' => true,
         'tareas' => $tareasConEvidencias
     ]);
 }
-public function ObtenerTareasPendientesJefe($idUsuario)
-{
-    try {
-        $tareas = DB::table('tareas')
-            ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto') // Unimos las tareas con los proyectos
-            ->where('tareas.id_usuario', $idUsuario) // Filtramos por el ID de usuario
-            ->whereRaw("UPPER(TRIM(tareas.t_estatus)) = ?", ['PENDIENTE']) // Filtramos solo tareas con estatus "PENDIENTE"
-            ->select('tareas.*', 'proyectos.p_nombre') // Seleccionamos las tareas y el nombre del proyecto
-            ->get();
-        if ($tareas->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'mensaje' => 'No se encontraron tareas pendientes para este usuario'
-            ], 404);
-        }
-        $tareasAgrupadas = $tareas->groupBy('id_proyecto');
-        $proyectosConTareas = $tareasAgrupadas->map(function ($tareasPorProyecto, $idProyecto) {
-            return [
-                'proyecto_id' => $idProyecto,
-                'p_nombre' => $tareasPorProyecto->first()->p_nombre, 
-                'tareas' => $tareasPorProyecto
-            ];
-        })->values();
-        return response()->json([
-            'success' => true,
-            'tareas' => $proyectosConTareas
-        ]);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage()
-        ], 500);
-    }
-}
+
+
+
+//METODO QUE DEVELVE EL NUMERO DE TAREAS Y DATOS DEL PROYECTO PARA MOSTRARSE EN LA INTERFAZ DE GESTIONPROYECTOSUSUARIO
 public function tareasPorUsuario(Request $request)
 {
     $usuarioId = $request->query('usuario');
@@ -124,43 +107,106 @@ public function tareasPorUsuario(Request $request)
     if (!$usuarioId) {
         return response()->json(['error' => 'Usuario no especificado'], 400);
     }
-
-    // Conteos por estatus
-    $conteos = \DB::table('tareas')
-        ->selectRaw("
-            COUNT(*) FILTER (WHERE LOWER(t_estatus) = 'finalizada') as completadas,
-            COUNT(*) FILTER (WHERE LOWER(t_estatus) = 'pendiente') as pendientes,
-            COUNT(*) FILTER (WHERE LOWER(t_estatus) = 'en proceso') as en_progreso,
-            COUNT(*) as total
-        ")
-        ->where('id_usuario', $usuarioId)
-        ->first();
-
-    // Obtener tareas con info de proyecto
-    $tareas = \DB::table('tareas')
+    $proyectos = \DB::table('tareas')
         ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto')
-        ->select(
-            'tareas.id_tarea',
-            'tareas.id_proyecto',
-            'proyectos.p_nombre as nombre_proyecto',
-            'tareas.id_usuario',
-            'tareas.t_nombre',
-            'tareas.t_estatus',
-            'tareas.tf_inicio',
-            'tareas.tf_completada',
-            'tareas.tf_fin',
-            'tareas.descripcion'
-        )
         ->where('tareas.id_usuario', $usuarioId)
-        ->whereIn(DB::raw('LOWER(tareas.t_estatus)'), ['finalizada', 'pendiente', 'en proceso'])
-        ->orderBy('tareas.tf_fin', 'asc')
+        ->select(
+            'proyectos.id_proyecto',
+            'proyectos.p_nombre',
+            'proyectos.descripcion as descripcion_proyecto',
+            'proyectos.pf_inicio',
+            'proyectos.pf_fin',
+            \DB::raw("COUNT(CASE WHEN LOWER(TRIM(tareas.t_estatus)) = 'finalizada' THEN 1 END) as tareas_completadas"),
+            \DB::raw("COUNT(CASE WHEN LOWER(TRIM(tareas.t_estatus)) = 'pendiente' THEN 1 END) as tareas_pendientes"),
+            \DB::raw("COUNT(CASE WHEN LOWER(TRIM(tareas.t_estatus)) = 'en proceso' THEN 1 END) as tareas_en_progreso"),
+            \DB::raw("COUNT(tareas.id_tarea) as total_tareas")
+        )
+        ->groupBy(
+            'proyectos.id_proyecto',
+            'proyectos.p_nombre',
+            'proyectos.descripcion',
+            'proyectos.pf_inicio',
+            'proyectos.pf_fin'
+        )
         ->get();
 
+    // Totales generales del usuario
+    $conteos = [
+        'completadas' => $proyectos->sum('tareas_completadas'),
+        'pendientes' => $proyectos->sum('tareas_pendientes'),
+        'en_progreso' => $proyectos->sum('tareas_en_progreso'),
+        'total' => $proyectos->sum('total_tareas'),
+    ];
+
     return response()->json([
-        'tareas' => $tareas,
+        'proyectos' => $proyectos,
         'conteos' => $conteos
     ]);
 }
+
+ //METODO PARA INSERTAR EVIDENCIAS SE UTLIZA EN LA INTERFAZ DE TAREA USUARIO
+   public function subirEvidencia(Request $request)
+{
+    \Log::info('Recibido request:', $request->all());
+
+    if ($request->hasFile('archivo')) {
+        \Log::info('Archivo recibido', ['nombre' => $request->file('archivo')->getClientOriginalName()]);
+    } else {
+        \Log::warning('No se recibió archivo');
+    }
+
+    try {
+        $request->validate([
+            'id_proyecto' => 'required|integer',
+            'id_tarea' => 'required|integer',
+            'id_departamento' => 'required|integer',
+            'id_usuario' => 'required|integer',
+            'ruta_archivo' => 'required|file|mimes:jpg,jpeg,png,pdf,docx|max:5120'
+        ]);
+
+        // Guardar archivo
+        $rutaArchivo = $request->file('ruta_archivo')->store('evidencias', 'public');
+
+        // Crear evidencia
+        $evidencia = Evidencia::create([
+            'id_proyecto' => $request->id_proyecto,
+            'id_tarea' => $request->id_tarea,
+            'id_departamento' => $request->id_departamento,
+            'id_usuario' => $request->id_usuario,
+            'ruta_archivo' => $rutaArchivo,
+            'fecha' => now(),
+        ]);
+
+        // Actualizar tarea y obtener conteo de evidencias
+        $tarea = \App\Models\Tarea::find($request->id_tarea);
+        $evidenciasCount = 0;
+        if ($tarea) {
+            $tarea->t_estatus = 'En proceso';
+            $tarea->save();
+
+            // Contar evidencias asociadas a esta tarea
+            $evidenciasCount = $tarea->evidencias()->count();
+        }
+
+        // Devolver respuesta incluyendo el conteo actualizado
+        return response()->json([
+            'success' => true,
+            'evidencia' => $evidencia,
+            'evidencias_count' => $evidenciasCount,
+            'message' => 'Evidencia subida y tarea actualizada'
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error al subir evidencia: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
+
 
 
 

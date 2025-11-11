@@ -45,7 +45,7 @@ Route::get('generar-pdf-completadas-jefe', [ReporteUsuarioController::class, 'ge
 //JEFEE
 Route::get('/proyectos/jefe', [JefeController::class, 'ProyectosDeUsuario']);
 Route::get('tareas/{idProyecto}/usuario/{idUsuario}', [JefeController::class, 'obtenerTareasPendientes']);
-Route::post('/evidencias', [EvidenciaController::class, 'subirEvidencia']);
+Route::post('/evidencias', [JefeController::class, 'subirEvidencia']);
 Route::get('/usuario/tareas', [JefeController::class, 'tareasPorUsuario']);
 
 

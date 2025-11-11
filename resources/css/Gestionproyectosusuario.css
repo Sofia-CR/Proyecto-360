@@ -1,395 +1,584 @@
-/* ======== DISEÑO GENERAL ======== */
-.main-layout {
-  display: flex;
-  min-height: 100vh;
-  background-color: #f8f9fa;
-  color: #333;
-  overflow: hidden;
+/* ======== DISEÑO GENERAL  ======== */
+.tdu-contenido {
+  padding: 2rem;
+  position: relative;
+  z-index: 2;
 }
-
-/* ======== FORM TITULO ======== */
-.tdu-form-titulo {
-  text-align: center;
+/* === Sección de bienvenida === */
+.tdu-seccion-bienvenida {
+  background: linear-gradient(135deg, #861542 0%, #a02a5e 100%);
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 2rem;
-  padding-top: 1rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 32px rgba(134, 21, 66, 0.2);
 }
 
-.tdu-form-titulo h1 {
-  font-size: 2rem;
-  color: #861542;
+.tdu-bienvenida-content h1 {
+  font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
 
-.tdu-form-titulo p {
-  color: #666;
-  font-size: 1rem;
+.tdu-bienvenida-content p {
+  opacity: 0.9;
   margin: 0;
 }
 
-/* ======== MÉTRICAS ======== */
-.tdu-metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
-  position: relative;
-  z-index: 10;
+.tdu-bienvenido-stats {
+  display: flex;
+  gap: 2rem;
 }
 
-.tdu-metric-card {
-  background: #fff;
+.tdu-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
   border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+.tdu-stat-icono {
+  font-size: 2rem;
+  opacity: 0.8;
+  color:#ffffff;
+}
+.tdu-stat-content {
+  display: flex;
+  flex-direction: column;
+}
+.tdu-stat-numero {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color:#ffffff;
+}
+.tdu-stat-label {
+  font-size: 12px;
+  opacity: 0.8;
+  color:#ffffff;
+}
+/* === METRICAS GENERALES === */
+.tdu-metrica-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.tdu-metrica-card {
+  border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 4px solid transparent;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.tdu-metric-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+.tdu-metrica-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
-.tdu-metric-icon {
+.tdu-metrica-icono {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 60px;
   height: 60px;
   border-radius: 12px;
-  background-color: rgba(134, 21, 66, 0.1);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
 }
 
-.tdu-metric-content {
+.tdu-metrica-content {
   flex: 1;
+  z-index: 2;
 }
 
-.tdu-metric-number {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #000;
+.tdu-metrica-numero {
+  font-size: 2.2rem;
+  font-weight: 800;
   line-height: 1;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.3rem;
 }
 
-.tdu-metric-label {
+.tdu-metrica-label {
   font-weight: 600;
-  color: #444;
   margin-bottom: 0.3rem;
   font-size: 0.95rem;
+  opacity: 0.9;
 }
 
-.tdu-metric-subtext {
+.tdu-metrica-subtext {
   font-size: 0.85rem;
-  color: #777;
+  opacity: 0.8;
 }
 
-.tdu-completed {
-  border-left-color: #28a745;
+.tdu-metrica-decoration {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
-.tdu-completed .tdu-metric-icon {
-  color: #28a745;
-  background-color: rgba(40, 167, 69, 0.1);
-}
-
-.tdu-pending {
-  border-left-color: #ff0707;
-}
-.tdu-pending .tdu-metric-icon {
-  color: #ff0707;
-  background-color: rgba(255, 193, 7, 0.1);
-}
-
-.tdu-progress {
-  border-left-color: #ffc107;
-}
-
-.tdu-progress .tdu-metric-icon {
-  color: #ffc107;
-  background-color: rgba(23, 162, 184, 0.1);
-}
-
-/* ======== SECCIÓN DE PROYECTOS ======== */
-.tdu-recent-projects-section {
+/* === Progreso general === */
+.tdu-progreso-general {
   background: #fff;
-  border-radius: 12px;
-  padding: 1.8rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
   margin-bottom: 2rem;
-  position: relative;
-  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.tdu-section-header {
+.tdu-progreso-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tdu-progreso-header h3 {
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+}
+
+.tdu-progreso-header span {
+  font-weight: 700;
+  color: #861542;
+}
+
+.tdu-progreso-barra-container {
+  width: 100%;
+  height: 12px;
+  background: #f1f3f4;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.tdu-progreso-barrra-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #861542, #a02a5e);
+  border-radius: 10px;
+  transition: width 0.8s ease;
+}
+
+.tdu-progreso-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.tdu-progreso-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  color: #000;
+}
+
+.tdu-conteo {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.tdu-conteo.completada { background: #28a745; }
+.tdu-conteo.progreso { background: #ffc107; }
+.tdu-conteo.pendiente { background: #dc3545; }
+
+
+.tdu-mis-proyectos {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.tdu-mis-proyectos-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f7fafc;
 }
 
-.tdu-section-header h2 {
+.tdu-mis-proyectos-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.tdu-mis-proyectos-titulo h2 {
   font-size: 1.5rem;
-  color: #000;
+  color: #2d3748;
   font-weight: 700;
   margin: 0;
 }
 
-.tdu-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.tdu-mis-proyectos-titulo-icon {
+  color: #861542;
+  font-size: 1.3rem;
 }
 
-.tdu-project-count {
-  background-color: #861542;
+.tdu-numero-proyectos {
+  background: linear-gradient(135deg, #861542, #a02a5e);
   color: white;
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
-/* ======== GRID DE PROYECTOS ======== */
-.tdu-projects-grid {
+/* === Grid de proyectos === */
+.tdu-proyectos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns:1fr;
   gap: 1.5rem;
 }
 
-.tdu-project-card {
+.tdu-proyectos-card {
   background: #fff;
-  border: 1px solid #eaeaea;
-  border-radius: 12px;
+  border: 2px solid #daeaff46;
+  border-radius: 16px;
   padding: 1.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
-.tdu-project-card:hover {
+.tdu-proyectos-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #861542, #a02a5e);
+}
+
+.tdu-proyectos-card:hover {
   transform: translateY(-5px);
   border-color: #861542;
-  box-shadow: 0 8px 15px rgba(134, 21, 66, 0.1);
+  box-shadow: 0 12px 30px rgba(134, 21, 66, 0.15);
 }
 
-/* ======== ENCABEZADO DEL PROYECTO ======== */
-.tdu-project-header {
+/* === Encabezado del proyecto mejorado === */
+.tdu-proyectos-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.8rem;
-  margin-bottom: 1.2rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.tdu-project-title {
-  font-weight: 700;
-  color: #000;
+.tdu-proyectos-title-section {
   flex: 1;
-  margin: 0;
-  font-size: 1.2rem;
+}
+
+.tdu-proyectos-title {
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
   line-height: 1.3;
   text-transform: uppercase;
 }
 
-.tdu-project-badge {
-  flex-shrink: 0;
+.tdu-proyectos-dates {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  color: #718096;
 }
 
-.tdu-total-tasks {
-  background-color: #f0f2f5;
-  color: #666;
-  padding: 0.3rem 0.6rem;
+.tdu-date-icon {
+  font-size: 0.8rem;
+}
+
+.tdu-proyectos-badge {
+  background: #f7fafc;
+  color: #4a5568;
+  padding: 0.4rem 0.8rem;
   border-radius: 12px;
   font-size: 0.8rem;
   font-weight: 600;
+  border: 1px solid #e2e8f0;
 }
 
-/* ======== PROGRESO ======== */
-.tdu-project-progress {
-  margin-bottom: 1.5rem;
-}
-
-.tdu-progress-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 0.5rem;
-}
-
-.tdu-progress-bar {
-  background: #e9ecef;
-  height: 8px;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.tdu-progress-fill {
-  background: linear-gradient(90deg, #861542, #a02a5e);
-  height: 8px;
-  transition: width 0.5s ease;
-  border-radius: 10px;
-}
-
-/* ======== RESUMEN DE TAREAS ======== */
-.tdu-project-tasks-summary {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-  padding: 1rem 0;
-  border-top: 1px solid #f0f0f0;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.tdu-task-indicator {
-  text-align: center;
-  flex: 1;
-  padding: 0 0.5rem;
-}
-
-.tdu-task-count {
-  display: block;
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 0.3rem;
-}
-
-.tdu-task-label {
-  font-size: 0.8rem;
-  color: #666;
-  font-weight: 500;
-}
-
-.tdu-completed .tdu-task-count {
-  color: #28a745;
-}
-
-.tdu-pending .tdu-task-count {
-  color: #ff0707;
-}
-
-.tdu-progress .tdu-task-count {
-  color: #ffc107;
-}
-
-/* ======== PIE DEL PROYECTO ======== */
-.tdu-project-footer {
-  margin-top: auto;
+/* === Contenido del proyecto === */
+.tdu-proyectos-content {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tdu-grafica {
+  flex-shrink: 0;
+}
+
+/* === Gráfica  === */
+.tdu-grafica-circular {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: relative;
+  background: conic-gradient(
+    #28a745 0% var(--pct-completadas),
+    #ffc107  var(--pct-completadas) calc(var(--pct-completadas) + var(--pct-en-proceso)),
+    #dc3545 calc(var(--pct-completadas) + var(--pct-en-proceso)) 100%
+  );
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tdu-circular-center {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.tdu-circular-porcentaje {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #2d3748;
+  line-height: 1;
+}
+
+.tdu-circular-label {
+  font-size: 0.6rem;
+  color: #718096;
+  margin-top: 2px;
+}
+
+.tdu-sin-tareas {
+  background: #f7fafc;
+}
+
+/* === Resumen de tareas === */
+.tdu-resumen-proyecto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.tdu-tarea-indicador {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f7fafc;
+}
+
+.tdu-tarea-indicador:last-child {
+  border-bottom: none;
+}
+
+.tdu-tarea-count {
+  font-size: 1.1rem;
+  font-weight: 700;
+  min-width: 30px;
+}
+
+.tdu-tarea-etiqueta {
+  font-size: 1rem;
+  color: #718096;
+  flex: 1;
+  margin-left: 0.5rem;
+}
+
+.tdu-completada .tdu-tarea-count { color: #28a745; }
+.tdu-progreso .tdu-tarea-count { color: #ffc107; }
+.tdu-pendiente .tdu-tarea-count { color: #dc3545; }
+
+/* === Descripción del proyecto === */
+.tdu-proyecto-description {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.tdu-proyecto-description p {
+  margin: 0;
+  font-size: 18px;
+  color: #4a5568;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* === FOOTER === */
+.tdu-proyecto-footer {
+  margin-top: auto;
 }
 
 .tdu-btn-primary {
-  background-color: #861542;
+  background: linear-gradient(135deg, #861542, #a02a5e);
   color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  padding: 0.8rem 3rem;
   font-size: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(134, 21, 66, 0.2);
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(134, 21, 66, 0.3);
+  width: auto;
+    gap: 0.5rem;
 }
 
 .tdu-btn-primary:hover {
-  background-color: #6a1035;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(134, 21, 66, 0.3);
+  box-shadow: 0 6px 20px rgba(134, 21, 66, 0.4);
+  background: linear-gradient(135deg, #6a1035, #861542);
 }
 
 .tdu-btn-icon {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
 }
 
-/* ======== ESTADO VACÍO ======== */
+.tdu-btn-primary:hover .tdu-btn-icon {
+  transform: translateX(3px);
+}
+/* Gradientes para tarjetas de métricas */
+.tdu-metrica-completadas {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.tdu-metrica-pendientes {
+  background: linear-gradient(135deg, #bb2937ff 0%, #bb2937ff 100%);
+}
+
+.tdu-metrica-en-progreso {
+  background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+}
+
+.tdu-metrica-total {
+  background: linear-gradient(135deg, #861542 0%, #a02a5e 100%);
+}
+
+/* === Estado vacío === */
 .tdu-empty-state {
   text-align: center;
-  padding: 3rem 1rem;
-  color: #666;
+  padding: 4rem 2rem;
+  color: #718096;
 }
 
 .tdu-empty-icon {
-  color: #861542;
-  opacity: 0.3;
+  color: #cbd5e0;
   margin-bottom: 1.5rem;
+  opacity: 0.5;
 }
 
 .tdu-empty-state h3 {
   font-size: 1.3rem;
   margin-bottom: 0.5rem;
-  color: #444;
+  color: #4a5568;
 }
 
 .tdu-empty-state p {
-  color: #777;
+  color: #718096;
   max-width: 400px;
   margin: 0 auto;
+  line-height: 1.5;
 }
 
-/* ======== RESPONSIVE ======== */
+
+/* === Responsivo === */
+@media (max-width: 1200px) {
+  .tdu-proyectos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .tdu-dashboard-content {
     padding: 1rem;
   }
+
+  .tdu-seccion-bienvenida {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
   
-  .tdu-metrics-grid {
+  .tdu-metrica-grid {
     grid-template-columns: 1fr;
   }
   
-  .tdu-projects-grid {
+  .tdu-proyectos-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .tdu-proyectos-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .tdu-progress-stats {
+    flex-direction: column;
+    gap: 1rem;
   }
   
   .tdu-section-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.8rem;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tdu-bienvenida-content h1 {
+    font-size: 1.4rem;
   }
   
-  .header-global {
-    padding: 0.8rem 1rem;
+  .tdu-proyectos-card {
+    padding: 1rem;
   }
   
-  .tdu-form-titulo h1 {
-    font-size: 1.6rem;
+  .tdu-proyectos-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .tdu-proyectos-badge {
+    align-self: flex-start;
   }
 }
-
-/* ======== ESTADOS DE CARGA ======== */
-.tdu-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 3rem;
-}
-
-.tdu-loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(134, 21, 66, 0.2);
-  border-left: 4px solid #861542;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-

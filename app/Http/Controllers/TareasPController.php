@@ -110,7 +110,7 @@ public function dashboardDepartamento(Request $request)
         return response()->json(['error' => 'ID de usuario no especificado'], 400);
     }
 
-    // Suponiendo que hay una tabla 'usuarios' con id_usuario y id_departamento
+    // Buscar el usuario y su departamento
     $usuario = \DB::table('c_usuario')->where('id_usuario', $usuarioId)->first();
 
     if (!$usuario) {
@@ -119,21 +119,32 @@ public function dashboardDepartamento(Request $request)
 
     $departamentoId = $usuario->id_departamento;
 
-    // Proyectos del departamento
+    // 🔹 Obtener proyectos del departamento con más información
     $proyectos = \DB::table('proyectos')
+        ->select(
+            'id_proyecto',
+            'p_nombre',
+            'descripcion',
+            'pf_inicio',
+            'pf_fin',
+            'id_departamento'
+        )
         ->where('id_departamento', $departamentoId)
         ->get();
 
     $proyectosIds = $proyectos->pluck('id_proyecto');
 
-    // Tareas de los proyectos del departamento
+    // 🔹 Obtener tareas de los proyectos
     $tareas = \DB::table('tareas')
         ->join('proyectos', 'tareas.id_proyecto', '=', 'proyectos.id_proyecto')
-        ->select('tareas.*', 'proyectos.p_nombre as nombre_proyecto')
+        ->select(
+            'tareas.*',
+            'proyectos.p_nombre as nombre_proyecto'
+        )
         ->whereIn('tareas.id_proyecto', $proyectosIds)
         ->get();
 
-    // Conteos por estatus
+    // 🔹 Conteos por estatus
     $conteos = [
         'completadas' => $tareas->where('t_estatus', 'finalizada')->count(),
         'pendientes' => $tareas->where('t_estatus', 'pendiente')->count(),
@@ -141,12 +152,26 @@ public function dashboardDepartamento(Request $request)
         'total' => $tareas->count(),
     ];
 
+    // 🔹 Calcular tareas totales y completadas por proyecto
+    $proyectos = $proyectos->map(function ($proyecto) use ($tareas) {
+        $tareasProyecto = $tareas->where('id_proyecto', $proyecto->id_proyecto);
+        $total = $tareasProyecto->count();
+        $completadas = $tareasProyecto->where('t_estatus', 'finalizada')->count();
+
+        $proyecto->total_tareas = $total;
+        $proyecto->tareas_completadas = $completadas;
+        $proyecto->porcentaje = $total > 0 ? round(($completadas / $total) * 100, 1) : 0;
+
+        return $proyecto;
+    });
+
     return response()->json([
         'proyectos' => $proyectos,
         'tareas' => $tareas,
         'conteos' => $conteos,
     ]);
 }
+
 
 
 }

@@ -129,7 +129,7 @@ function Usuario() {
             <FaBars className="icono-hamburguesa-global" />
           </div>
           <div className="barra-center">
-            <h2 className="titulo-barra-global">TAREAS POR REVISAR</h2>
+            <h2 className="titulo-barra-global">MIS PROYECTOS</h2>
           </div>
         </div>
 

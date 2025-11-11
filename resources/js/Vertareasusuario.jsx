@@ -22,7 +22,6 @@ useEffect(() => {
     if (!idProyecto) {
       idProyecto = sessionStorage.getItem("id_proyecto");
     } else {
-      // Guardar en sessionStorage para recargas
       sessionStorage.setItem("id_proyecto", idProyecto);
     }
 
@@ -133,7 +132,7 @@ useEffect(() => {
                   </div>
                   <div className="barra-center">
                     <span className="titulo-barra-global">
-                     TAREAS PENDIENTES
+                     TAREAS ASIGNADAS
                     </span>
                   </div>
                 </div>
