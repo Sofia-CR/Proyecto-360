@@ -132,7 +132,7 @@ function TareasUsuario() {
     const data = await res.json().catch(() => null);
 
     if (res.ok && data?.success) {
-      handleCancelar();     // limpia la selección de archivo
+      handleCancelar();     
       await fetchTareas();  // vuelve a traer las tareas con evidencias_count actualizado
     } else {
       alert(`Error al subir el archivo: ${data?.error || data?.message || "Intente nuevamente"}`);
@@ -166,58 +166,58 @@ function TareasUsuario() {
     );
 
     if (!proyectoActual) return (
-      <div className="empty-state">
-        <FaExclamationTriangle className="empty-icon" />
-        <h3 className="empty-title">Proyecto no encontrado</h3>
-        <p className="empty-message">No se pudo cargar la información del proyecto.</p>
+      <div className="tu-empty-state">
+        <FaExclamationTriangle className="tu-empty-icon" />
+        <h3 className="tu-empty-title">Proyecto no encontrado</h3>
+        <p className="tu-empty-message">No se pudo cargar la información del proyecto.</p>
       </div>
     );
 
     if (tareasFiltradas.length === 0) return (
-      <div className="empty-state">
-        <FaFileAlt className="empty-icon" />
-        <h3 className="empty-title">
+      <div className="tu-empty-state">
+        <FaFileAlt className="tu-empty-icon" />
+        <h3 className="tu-empty-title">
           {filtroEstado === "todas" ? "No hay tareas asignadas" : `No hay tareas ${filtroEstado.toLowerCase()}`}
         </h3>
-        <p className="empty-message">
+        <p className="tu-empty-message">
           {filtroEstado === "todas" ? "No tienes tareas asignadas en este proyecto." : "No hay tareas con este estado en el proyecto."}
         </p>
       </div>
     );
 
     return (
-      <div className="tareas-contenedor">
-        <div className="tareas-lista">
+      <div className="tu-tareas-contenedor">
+        <div className="tu-tareas-lista">
           {tareasFiltradas.map((tarea) => {
             const urgencia = getUrgenciaTarea(tarea.tf_fin);
             const estado = getEstadoTarea(tarea.t_estatus);
             return (
-              <div key={tarea.id_tarea} className={`tarea-card ${tarea.t_estatus.toLowerCase().replace(' ', '-')} ${urgencia.nivel === "vencida" ? "tarea-vencida" : ""}`}>
-                <div className="tarea-header">
-                  <div className="tarea-titulo-container">
-                    <h3 className="tarea-nombre">{tarea.t_nombre}</h3>
+              <div key={tarea.id_tarea} className={`tu-tarea-card ${tarea.t_estatus.toLowerCase().replace(' ', '-')} ${urgencia.nivel === "vencida" ? "tarea-vencida" : ""}`}>
+                <div className="tu-tarea-header">
+                  <div className="tu-tarea-titulo-container">
+                    <h3 className="tu-tarea-nombre">{tarea.t_nombre}</h3>
                       {tarea.descripcion && (
-                    <div className="detalle-item">
-                      <span className="detalle-texto"><strong>Descripción:</strong> {tarea.descripcion}</span>
+                    <div className="tu-detalle-item">
+                      <span className="tu-detalle-texto"><strong>Descripción:</strong> {tarea.descripcion}</span>
                     </div>
                   )}
-                    <div className="tarea-badges">
-                      <span className={`badge-estado ${estado.clase}`}>{estado.icono}{estado.texto}</span>
-                      <span className={`badge-urgencia ${urgencia.nivel}`}>{urgencia.icono}{urgencia.texto}</span>
+                    <div className="tu-tarea-badges">
+                      <span className={`tu-badge-estado ${estado.clase}`}>{estado.icono}{estado.texto}</span>
+                      <span className={`tu-badge-urgencia ${urgencia.nivel}`}>{urgencia.icono}{urgencia.texto}</span>
                     </div>
                   </div>
-                  <button className="btn-subir-evidencia" onClick={() => handleClickArchivo(tarea.id_tarea)} title="Subir evidencia">
-                    <FaUpload className="btn-icon" /> Subir
+                  <button className="tu-btn-subir-evidencia" onClick={() => handleClickArchivo(tarea.id_tarea)} title="Subir evidencia">
+                    <FaUpload className="tu-btn-icon" /> Subir
                   </button>
                 </div>
-                <div className="tarea-detalles">
-                  <div className="detalle-item">
-                    <FaCalendarDay className="detalle-icon" />
-                    <span className="detalle-texto">Vence: <strong>{new Date(tarea.tf_fin).toLocaleDateString('es-ES')}</strong></span>
+                <div className="tu-tarea-detalles">
+                  <div className="tu-detalle-item">
+                    <FaCalendarDay className="tu-detalle-icon" />
+                    <span className="tu-detalle-texto">Vence: <strong>{new Date(tarea.tf_fin).toLocaleDateString('es-ES')}</strong></span>
                   </div>
-                  <div className="detalle-item">
-                    <FaFileAlt className="detalle-icon" />
-                    <span className="detalle-texto">Evidencias: <strong>{tarea.evidencias_count || 0}</strong></span>
+                  <div className="tu-detalle-item">
+                    <FaFileAlt className="tu-detalle-icon" />
+                    <span className="tu-detalle-texto">Evidencias: <strong>{tarea.evidencias_count || 0}</strong></span>
                   </div>
                 </div>
                 <input type="file" ref={(el) => (refs.current[tarea.id_tarea] = { current: el })} style={{ display: "none" }} onChange={handleArchivoChange} accept="image/*" />
@@ -237,7 +237,7 @@ function TareasUsuario() {
           departamentoId={localStorage.getItem("last_depId")}
           departamentoNombre={localStorage.getItem("last_depNombre")}
           departamentoSlug={localStorage.getItem("last_depSlug")}
-          activeRoute="tareas-enproceso"
+          activeRoute="tareas-usuario"
         />
       </div>
 
@@ -252,12 +252,12 @@ function TareasUsuario() {
         <div className="container my-4">
           <div className="row justify-content-center">
             <div className="col-12 col-lg-10 col-xl-8">
-              <div className="proyecto-header-section"><h1 className="form-titulo">{nombreProyecto}</h1></div>
+              <div className="tu-proyecto-header-section"><h1 className="form-titulo">{nombreProyecto}</h1></div>
 
-              <div className="filtros-container">
-                <div className="filtros-inner">
-                  <div className="filtro-left">
-                    <label className="filtro-label-inline">Filtrar por estado:</label>
+              <div className="t-filtros-container">
+                <div className="tu-filtros-inner">
+                  <div className="tu-filtro-left">
+                    <label className="tu-filtro-label-inline">Filtrar por estado:</label>
                     <div className="custom-select-container-inline">
                       <div className="custom-select" onClick={() => setOpen(!open)}>
                         {filtroEstado === "todas" ? "Todas las tareas" :
@@ -275,7 +275,7 @@ function TareasUsuario() {
                       )}
                     </div>
                   </div>
-                  <div className="tareas-stats"><span className="stat-total">Total: {tareasFiltradas.length}</span></div>
+                  <div className="tu-tareas-stats"><span className="tu-stat-total">Total: {tareasFiltradas.length}</span></div>
                 </div>
               </div>
 
@@ -285,19 +285,19 @@ function TareasUsuario() {
         </div>
 
         {archivoSeleccionado && tareaSeleccionada && (
-          <div className="modal-preview">
-            <div className="modal-content-preview">
-              <div className="modal-header">
+          <div className="tu-modal-preview">
+            <div className="tu-modal-content-preview">
+              <div className="tu-modal-header">
                 <h2>Evidencia de: {tareaSeleccionada.t_nombre}</h2> 
                 <button className="modal-close" onClick={handleCancelar}>&times;</button>
               </div>
-              <div className="modal-body">
+              <div className="tu-modal-body">
                 <img src={archivoSeleccionado.url} alt={`Evidencia de ${tareaSeleccionada.t_nombre}`} />
               </div>
-              <div className="modal-description">{archivoSeleccionado.file.name} - Vista previa del archivo seleccionado.</div>
-              <div className="modal-footer">
-                <button className="btn-cancelar" onClick={handleCancelar}>Cancelar</button>
-                <button className="btn-subir" onClick={handleUpload} disabled={subiendo}>
+              <div className="tu-modal-description">{archivoSeleccionado.file.name} - Vista previa del archivo seleccionado.</div>
+              <div className="tu-modal-footer">
+                <button className="tu-btn-cancelar" onClick={handleCancelar}>Cancelar</button>
+                <button className="tu-btn-subir" onClick={handleUpload} disabled={subiendo}>
                   {subiendo ? (
                     <>
                       <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
