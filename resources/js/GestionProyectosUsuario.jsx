@@ -8,13 +8,13 @@ import {
   FaTasks,
   FaSearch,
   FaCalendarAlt,
-  FaUser,
   FaArrowRight,
   FaChartLine,
   FaLayerGroup
 } from "react-icons/fa";
 import "../css/formulario.css";
 import "../css/Gestionproyectosusuario.css";
+import Layout from "../components/Layout";
 import MenuDinamico from "../components/MenuDinamico";
 import logo3 from "../imagenes/logo3.png";
 
@@ -52,7 +52,7 @@ const TaskDonutChart = ({ completadas, pendientes, enProceso, total }) => {
   );
 };
 
-// === Componente de tarjeta de métricas mejorado ===
+// === Componente de tarjeta de métricas===
 const MetricCard = ({ icon, number, label, subtext, color, className }) => (
   <div className={`tdu-metrica-card ${className}`}>
     <div className="tdu-metrica-icono" style={{ color }}>
@@ -157,27 +157,14 @@ function GestionProyectosUsuario() {
   }
 
   return (
-    <div className="main-layout">
-      <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <MenuDinamico collapsed={sidebarCollapsed} activeRoute="gestion-proyectosusuario" />
-      </div>
-
-      <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <div className="logo-fondo"><img src={logo3} alt="Fondo" /></div>
-
-        <div className="header-global">
-          <div className="header-left" onClick={toggleSidebar}>
-            <FaBars className="icono-hamburguesa-global" />
-          </div>
-          <div className="barra-center">
-            <h2 className="titulo-barra-global">INICIO</h2>
-          </div>
-          
-        </div>
+           <Layout
+    titulo="INICIO"
+    sidebar={<MenuDinamico activeRoute="gestion-proyectosusuario" />}
+  >
         <div className="tdu-contenido">
           <div className="tdu-seccion-bienvenida">
             <div className="tdu-bienvenida-content">
-              <h1>Bienvenido, {usuario?.nombre || "Usuario"}!</h1>
+              <h1>¡HOLA, {usuario?.nombre || "Usuario"}!</h1>
               <p>Resumen de tus proyectos y tareas</p>
             </div>
             <div className="tdu-bienvenido-stats">
@@ -188,18 +175,6 @@ function GestionProyectosUsuario() {
                   <span className="tdu-stat-label">Proyectos Activos</span>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="barra-busqueda-global-container mb-4">
-            <div className="barra-busqueda-global-wrapper">
-              <FaSearch className="barra-busqueda-global-icon" />
-              <input
-                type="text"
-                placeholder="Buscar proyectos..."
-                className="barra-busqueda-global-input"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
             </div>
           </div>
           <div className="tdu-metrica-grid">
@@ -238,7 +213,6 @@ function GestionProyectosUsuario() {
   color="#fff"
   className="tdu-metrica-total"
 />
-
           </div>
           <div className="tdu-progreso-general">
             <div className="tdu-progreso-header">
@@ -264,6 +238,18 @@ function GestionProyectosUsuario() {
                 <span className="tdu-conteo pendiente"></span>
                 <span>Pendientes: {conteos.pendientes}</span>
               </div>
+            </div>
+          </div>
+           <div className="barra-busqueda-container mb-4">
+            <div className="barra-busqueda-wrapper">
+              <FaSearch className="barra-busqueda-icon" />
+              <input
+                type="text"
+                placeholder="Buscar proyectos..."
+                className="barra-busqueda-input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
           </div>
 
@@ -355,8 +341,7 @@ function GestionProyectosUsuario() {
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </Layout>
   );
 }
 

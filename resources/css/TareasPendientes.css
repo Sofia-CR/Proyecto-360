@@ -28,6 +28,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(134, 21, 66, 0.1);
+  z-index: 10;
 }
 
 .tareaspendientesj-proyectos-card::before {
@@ -112,19 +113,15 @@
   font-size: 1.6rem;
   color: #e53e3e;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-  animation: bounce 2s infinite;
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
 
 .tareaspendientesj-tarea-nombre-TP {
   font-weight: 600;
   font-size: 18px;
-  color: #2d3748;
+  color: #000;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .tareaspendientesj-tarea-footer {
@@ -154,94 +151,6 @@
   background: rgba(255, 255, 255, 0.7);
   padding: 4px 12px;
   border-radius: 12px;
-}
-
-.tareaspendientesj-buscador-contenedor {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto 30px auto;
-}
-
-.tareaspendientesj-buscador-inner {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.tareaspendientesj-buscador-input {
-  width: 100%;
-  padding: 15px 50px 15px 50px;
-  border: 2px solid rgba(134, 21, 66, 0.1);
-  border-radius: 50px;
-  background: #ffffff;
-  box-shadow: 0 5px 15px rgba(134, 21, 66, 0.08);
-  font-size: 16px;
-  transition: all 0.3s ease;
-  color: #2d3748;
-  font-family: 'Poppins', sans-serif;
-}
-
-.tareaspendientesj-buscador-input:focus {
-  outline: none;
-  box-shadow: 0 8px 25px rgba(134, 21, 66, 0.15);
-  transform: translateY(-2px);
-  border-color: #861542;
-}
-
-.tareaspendientesj-buscador-input::placeholder {
-  color: #a0a0a0;
-  font-weight: 400;
-}
-
-.tareaspendientesj-buscador-icono {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-  color: #a0a0a0;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.tareaspendientesj-buscador-clear {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: #888;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
-
-.tareaspendientesj-buscador-clear:hover {
-  color: #861542;
-  background: rgba(134, 21, 66, 0.1);
-}
-
-/* Información de resultados */
-.tareaspendientesj-buscador-resultados-info {
-  display: block;
-  width: fit-content;
-  text-align: center;
-  color: #861542;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin: -20px auto 25px auto;
-  background: rgba(134, 21, 66, 0.05);
-  padding: 8px 16px;
-  border-radius: 15px;
-  border: 1px solid rgba(134, 21, 66, 0.1);
 }
 
 /* Mensaje de no tareas */
@@ -326,12 +235,14 @@
     font-size: 16px;
   }
   
-  .tareaspendientesj-buscador-input {
-    padding: 12px 15px 12px 45px;
-    font-size: 14px;
-  }
 }
 
+.tareas-pendientes-filtros{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
 
 
 

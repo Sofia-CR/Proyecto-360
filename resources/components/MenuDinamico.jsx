@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { 
   FaHome, FaFileAlt, FaUsers, FaTasks, FaProjectDiagram, FaPlus, FaFolder, 
   FaEye, FaEdit, FaToggleOn, FaTrash, FaSpinner, FaHourglassHalf, 
-  FaCheckCircle, FaChartBar, FaDoorOpen, FaChevronDown, FaChevronRight 
+  FaCheckCircle, FaChevronDown, FaChevronRight 
 } from "react-icons/fa";
 
 import { useNavigate, useLocation } from "react-router-dom";
@@ -51,7 +51,7 @@ export default function MenuDinamico({
     {
       key: 'GestionProyectos',
       label: 'INICIO',
-      icon: FaPlus,
+      icon: FaHome,
       path: '/GestionProyectos'
     },
     {
@@ -71,24 +71,24 @@ export default function MenuDinamico({
       label: "TAREAS",
       icon: FaTasks,
       subMenu: [
-        { key: 'enproceso', label: "Tareas en proceso", path: "/TareasenProceso", icon: FaSpinner },
-        { key: 'pendientes', label: "Tareas pendientes por revisar", path: "/TareasPendientes", icon: FaHourglassHalf },
-        { key: 'completadas', label: "Tareas completadas", path: "/TareasCompletadasJefe", icon: FaCheckCircle },
+        { key: 'enproceso', label: "Tareas por revisar", path: "/TareasenProceso", icon: FaSpinner },
+        { key: 'pendientes', label: "Tareas pendientes", path: "/TareasPendientes", icon: FaHourglassHalf },
+        { key: 'completadas', label: "Tareas completadas", path: "/TareasCompletadasDepartamento", icon: FaCheckCircle },
         { key: 'agregar', label: "Agregar Tareas", path: "/AgregarT", icon: FaPlus },
         { key: 'modificarT', label: "Modificar tarea", path: "/ModificarTareas", icon: FaEdit },
         { key: 'eliminarT', label: "Eliminar tarea", path: "/InterfazEliminar", icon: FaTrash },
       ],
     },
-    { key: 'reportes', label: "REPORTES", path: "/reporte", icon: FaChartBar },
-    { key: 'logout', label: "CERRAR SESIÓN", path: "/logout", icon: FaDoorOpen, action: onLogout }
+    { key: 'reportes', label: "REPORTES", path: "/reporte", icon: FaFileAlt },
+    { key: 'logout', label: "CERRAR SESIÓN", path: "/logout", icon: FaUsers, action: onLogout }
   ]
 },
 Usuario: {
   principal: [
-    { key: 'inicio', label: "INICIO", path: "/GestionProyectosUsuario", icon: FaCheckCircle },
-    { key: 'tareas', label: "MIS TAREAS", path: "/Usuario", icon: FaHourglassHalf },
-    { key: 'reportes', label: "REPORTES", path: "/ReporteUsuario", icon: FaChartBar },
-    { key: 'logout', label: "CERRAR SESIÓN", icon: FaDoorOpen, action: onLogout },
+    { key: 'inicio', label: "INICIO", path: "/GestionProyectosUsuario", icon: FaHome },
+    { key: 'tareas', label: "MIS TAREAS", path: "/ListaDeProyectos", icon: FaHourglassHalf },
+    { key: 'reportes', label: "REPORTES", path: "/ReporteUsuario", icon: FaFileAlt },
+    { key: 'logout', label: "CERRAR SESIÓN", icon: FaUsers, action: onLogout },
   ],
 },
     };

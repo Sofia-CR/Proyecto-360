@@ -16,14 +16,15 @@
   font-size: 1.1rem;
 }
 
-/* =========================== Filtros con fondo gris ============================ */
+/* =========================== Filtros  ============================ */
+
 .tu-filtros-container {
-  background: #f8f9fa;  
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: center; 
+  background: #f8f9fa;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2.5rem;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .tu-filtros-inner {
@@ -31,78 +32,55 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 700px; 
-  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  gap: 2rem;
 }
 
 .tu-filtro-left {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.tu-filtro-label-inline {
-  display: inline-block;
-  font-weight: 600;
-  color: #222;
-}
-
-.tu-custom-select-container-inline {
-  position: relative;
-}
-
-.tu-custom-select {
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  background: white;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 180px;
-}
-
-.tu-custom-options-inline {
-  position: relative; 
-  margin-top: 0.5rem;
-  width: 100%;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  z-index: 1;
-}
-.tu-custom-options-inline div {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-}
-
-.tu-custom-options-inline div:hover {
-  background: #f1f1f1;
-}
-
-.tu-dropdown-icon {
-  margin-left: 0.5rem;
-  transition: transform 0.3s ease;
-}
-
-.tu-dropdown-icon.open {
-  transform: rotate(180deg);
+  gap: 1rem;
+  flex: 1;
 }
 
 .tu-tareas-stats {
   font-weight: 600;
   color: #861542;
+  flex-shrink: 0;
 }
 
 .tu-stat-total {
   background: #861542;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
   font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(134, 21, 66, 0.2);
 }
+.tu-filtro-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  position: relative; 
+}
+.tu-filtros-inner {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  gap: 2rem;
+}
+
+.tu-dropdown-space {
+  margin-top: 0.5rem; 
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+}
+
+
 
 /* =========================== Responsivo ============================ */
 @media (max-width: 768px) {
@@ -250,10 +228,10 @@
   border: none;
   transition: all 0.3s ease;
   font-size: 0.9rem;
-  display: flex;             /* para alinear spinner y texto */
-  align-items: center;       /* centrado vertical */
-  justify-content: center;   /* centrado horizontal */
-  min-width: 120px;          /* ancho mínimo fijo */
+  display: flex;             
+  align-items: center;      
+  justify-content: center;   
+  min-width: 120px;          
 }
 /* Urgencia de la tarea */
 .tu-badge-urgencia {
@@ -303,13 +281,22 @@
 .tu-detalle-icon {
   color: #861542;
   font-size: 0.9rem;
+  vertical-align: middle;
 }
 
+.tu-detalle-descripcion {
+  color: #000;
+  font-size: 1rem;
+  text-transform: uppercase;
+  text-align: justify;
+  margin-bottom: 10px;
+}
 .tu-detalle-texto {
   color: #000;
   font-size: 1rem;
+  text-transform: uppercase;
+  text-align: justify;
 }
-
 
 .tu-empty-state {
   text-align: center;
@@ -337,8 +324,12 @@
   max-width: 300px;
   margin: 0 auto;
 }
+.select-etiqueta-inline{
+  color: #000;
+  font-size: 1rem;
+}
 
-/* =========================== Modal Moderno y Minimal ============================ */
+/* =========================== Modal Moderno ============================ */
 .tu-modal-preview {
   position: fixed;
   top: 0;
@@ -369,20 +360,22 @@
 .tu-modal-header {
   position: relative;
   display: flex;
-  justify-content: center; /* centra el h2 */
+  justify-content: center; 
   align-items: center;
   padding: 1rem;
   border-bottom: 3px solid #ff6b9d;
 }
 
 .tu-modal-header h2 {
-  margin: 6;
+  margin: 0;
   font-size: 1.4rem;
   font-weight: 600;
   text-align: center;
   text-transform: uppercase;
+  max-width: calc(100% - 60px); 
+  word-break: break-word;       
+  overflow-wrap: break-word;   
 }
-
 .tu-modal-close {
   position: absolute;
   top: 50%;
@@ -397,14 +390,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #000;
+  color: #5f1742;
   font-size: 40px;
 }
 
 .tu-modal-close:hover {
   background: rgba(255, 255, 255, 0.35);
-  transform: translateY(-50%) rotate(90deg);
-  color: #ff6b9d;
+  color: #410f1f;
 }
 
 .tu-modal-body {
@@ -430,7 +422,7 @@
   padding: 0.5rem 1rem;
   background: #fefefe;
   font-size: 0.95rem;
-  color: #333;
+  color: #000;
 }
 
 .tu-modal-footer {
@@ -440,35 +432,50 @@
   padding: 1rem 1.5rem;
   background: #f8f9fa;
   flex-wrap: wrap;
+  
 }
 
-.tu-btn-cancelar, .btn-subir {
-  padding: 0.7rem 1.8rem;
+.tu-btn-cancelar, .tu-btn-subir {
+  width: 140px;            
+  padding: 0.7rem 1rem;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   border: none;
   transition: all 0.3s ease;
   font-size: 0.9rem;
-}
-
-.tu-btn-cancelar {
   background: #861542;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;            
 }
 
-.tu-btn-cancelar:hover {
+.tu-btn-cancelar:hover, .tu-btn-subir:hover {
   background: #6a1035;
 }
 
-.tu-btn-subir {
-  background: #861542;
-  color: white;
+.tu-btn-subir .spinner {
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
 }
 
-.tu-btn-subir:hover {
+
+.tu-btn-cancelar:hover, .tu-btn-subir:hover {
   background: #6a1035;
 }
+.tu-btn-subir:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  user-select: none;
+}
+
 .tu-btn-subir .spinner {
   border: 2px solid rgba(255,255,255,0.3);
   border-top: 2px solid #fff;
@@ -506,7 +513,7 @@
 @media (max-width: 480px) {
   .tu-modal-header h2 { font-size: 1.2rem; }
   .tu-modal-body img { max-height: 50vh; }
-  .tu-btn-cancelar, .btn-subir { width: 100%; justify-content: center; }
+  .tu-btn-cancelar, .tu-btn-subir { width: 100%; justify-content: center; }
 }
 
 
@@ -559,6 +566,21 @@
   margin-bottom: 5px;
   font-weight: 600;
   color: #222;
+}
+@media (max-width: 480px) {
+  .tu-btn-cancelar,
+  .tu-btn-subir {
+    width: auto;            /* no ocupar todo el ancho */
+    max-width: 90%;         /* que no se salgan de la pantalla */
+    margin: 0 auto;         /* centra el botón */
+    justify-content: center; /* íconos y texto centrados */
+  }
+
+  .tu-modal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;    /* centra todos los botones en la columna */
+  }
 }
 
 

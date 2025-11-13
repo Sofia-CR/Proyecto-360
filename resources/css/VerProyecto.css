@@ -27,6 +27,7 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  z-index: 10;
 }
 
 .verproyectos-card::before {

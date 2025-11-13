@@ -1,11 +1,9 @@
 .generar-reportes {
-  padding: 20px; /* separa los elementos de los bordes del layout */
+  padding: 20px; 
   text-align: center;
    width: 100%;
   max-width: 550px;
 }
-
-
 .fecha-item .form-label {
   display: block;
   font-size: 20px;
@@ -17,8 +15,8 @@
 /* Select (lista desplegable) */
 .fecha-item select.form-select {
   width: 100%;
-  max-width: 250px;  /* ancho máximo razonable */
-  padding: 10px 30px 10px 10px; /* espacio extra a la derecha para la flecha */
+  max-width: 250px;  
+  padding: 10px 30px 10px 10px; 
   font-size: 16px;
   box-sizing: border-box;
   white-space: normal;
@@ -33,7 +31,7 @@
   align-items: center;
   justify-content: center;
   gap: 15px;
-  margin-top: 5px; /* separación con el label */
+  margin-top: 5px; 
 }
 
 .fecha-selectores-container.tareas-proximas {
@@ -68,6 +66,7 @@
   padding: 8px;
   font-family: Arial;
   color: #999;
+   z-index: 1050; 
 }
 
 .react-datepicker__header {
@@ -79,17 +78,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+     z-index: 1050; 
+   position: relative;
 }
 
 .react-datepicker__day--selected {
   background-color: #861542;
   color: #fff;
+     z-index: 1050; 
+   position: relative;
 }
 
 .react-datepicker__day--today {
   background-color: #f8e6ef;
   color: #861542;
   font-weight: bold;
+     z-index: 1050; 
+   position: relative;
 }
 
 /* Barra de progreso */

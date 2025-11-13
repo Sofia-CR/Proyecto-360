@@ -220,54 +220,7 @@ public function completar($idProyecto)
         ], 500);
     }
 }
-//INFORMACIÓN DE PROYECTOS-PROYECTOS VER, TAREAS COMPLETADAS-NOOOO
-public function proyectosPorUsuario(Request $request)
-{
-    try {
-        $idUsuario = $request->query('usuario');
 
-        if (!$idUsuario) {
-            return response()->json([
-                'success' => false,
-                'mensaje' => 'No se recibió el ID de usuario'
-            ], 400);
-        }
-
-        $usuario = DB::table('c_usuario')->where('id_usuario', $idUsuario)->first();
-
-        if (!$usuario) {
-            return response()->json([
-                'success' => false,
-                'mensaje' => 'Usuario no encontrado'
-            ], 404);
-        }
-
-        $idDepartamento = $usuario->id_departamento;
-
-       $proyectos = DB::table('proyectos as p')
-    ->leftJoin('tareas as t', 'p.id_proyecto', '=', 't.id_proyecto')
-    ->select(
-        'p.*',
-        DB::raw('COUNT(t.id_tarea) as total_tareas'),
-        DB::raw("SUM(CASE WHEN t.t_estatus = 'En proceso' THEN 1 ELSE 0 END) as tareas_en_proceso"),
-        DB::raw("SUM(CASE WHEN t.t_estatus = 'Completado' THEN 1 ELSE 0 END) as tareas_completadas")
-    )
-    ->where('p.id_departamento', $idDepartamento)
-    ->where('p.p_estatus', 'EN PROCESO')
-    ->groupBy('p.id_proyecto')
-    ->get();
-        return response()->json([
-            'success' => true,
-            'proyectos' => $proyectos
-        ]);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage()
-        ], 500);
-    }
-}
 //EVIDENCIAS DE UN PROYECTO-NOOOO
 public function evidenciasPorProyecto($idProyecto)
 {
@@ -279,62 +232,6 @@ public function evidenciasPorProyecto($idProyecto)
             ->get();
 
         return response()->json($evidencias);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage()
-        ], 500);
-    }
-}
-//TAREAS PENDIENTES-INTERFAZ TAREAS PENDIENTES
-public function tareasPendientesUsuario(Request $request)
-{
-    try {
-        $idUsuario = $request->query('usuario');
-        if (!$idUsuario) {
-            return response()->json([
-                'success' => false,
-                'mensaje' => 'No se recibió el ID de usuario'
-            ], 400);
-        }
-        $usuario = DB::table('c_usuario')->where('id_usuario', $idUsuario)->first();
-        if (!$usuario) {
-            return response()->json([
-                'success' => false,
-                'mensaje' => 'Usuario no encontrado'
-            ], 404);
-        }
-        $idDepartamento = $usuario->id_departamento;
-        $proyectos = DB::table('proyectos as p')
-            ->join('tareas as t', 'p.id_proyecto', '=', 't.id_proyecto')
-            ->select(
-                'p.*',
-                DB::raw('COUNT(t.id_tarea) as total_tareas')
-            )
-            ->where('p.id_departamento', $idDepartamento)
-            ->where('p.p_estatus', 'EN PROCESO')
-            ->whereRaw("UPPER(TRIM(t.t_estatus)) = ?", ['PENDIENTE'])
-            ->groupBy('p.id_proyecto')
-            ->get();
-
-        $proyectosConTareas = [];
-        foreach ($proyectos as $proyecto) {
-            $tareas = DB::table('tareas')
-                ->where('id_proyecto', $proyecto->id_proyecto)
-                ->whereRaw("UPPER(TRIM(t_estatus)) = ?", ['PENDIENTE'])
-                ->get();
-
-            $proyectosConTareas[] = [
-                'proyecto' => $proyecto,
-                'tareas' => $tareas
-            ];
-        }
-
-        return response()->json([
-            'success' => true,
-            'proyectos' => $proyectosConTareas
-        ]);
-
     } catch (\Exception $e) {
         return response()->json([
             'success' => false,

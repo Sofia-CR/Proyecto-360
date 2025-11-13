@@ -14,6 +14,7 @@ use App\Http\Controllers\EvidenciaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\JefeController;
+use App\Http\Controllers\DirectorController;
 use App\Http\Controllers\TareasCompletadasController;
 use App\Http\Controllers\TareasPController;
 use App\Http\Controllers\ProyectoJefeController;
@@ -30,7 +31,6 @@ Route::post('/proyectos', [NuevoProyectoController::class, 'store']);
 Route::get('/CatalogoDepartamentos', [TareasCompletadasController::class, 'CatalogoDepartamentos']);
 Route::post('/tareas', [TareaController::class, 'store']);
 Route::get('tareasPendientes/jefe/{idUsuario}', [JefeController::class, 'ObtenerTareasPendientesJefe']);
-Route::get('tareasCompletadas/jefe/{idUsuario}', [JefeController::class, 'ObtenerTareasCompletadasUsuario']);
 Route::get('/tareas/departamento', [TareasCompletadasController::class, 'tareasEnProcesoDepartamento']);
 Route::put('/tareas/{id}/completar', [TareasCompletadasController::class, 'completarTarea']);
 Route::get('tareas-proyectos-jefe', [TareasPController::class, 'obtenerTareasProyectosJefe']);
@@ -48,8 +48,11 @@ Route::get('tareas/{idProyecto}/usuario/{idUsuario}', [JefeController::class, 'o
 Route::post('/evidencias', [JefeController::class, 'subirEvidencia']);
 Route::get('/usuario/tareas', [JefeController::class, 'tareasPorUsuario']);
 
-
+//DIRECTOR
+Route::get('tareasCompletadas/jefe/{idUsuario}', [DirectorController::class, 'ObtenerTareasCompletadasDepartamentoo']);
+Route::get('/proyectos/usuario', [DirectorController::class, 'proyectosDepartamento']);
 Route::get('/dashboard-departamento', [TareasPController::class, 'dashboardDepartamento']);
+Route::get('/tareaspendientesusuario', [DirectorController::class, 'tareasPendientesUsuario']);
 
 
 
@@ -68,11 +71,11 @@ Route::get('/proyectos/{idProyecto}/tareas-activas', [TareaController::class, 't
 Route::put('/proyectos/{id}/completar', [ProyectoController::class, 'completar']);
 Route::post('/realizar-copia', [BackupController::class, 'crearCopiaApi']);
 Route::get('/proyectos/usuario-tareas', [ProyectoController::class, 'proyectosUsuarioTareas']);
-Route::get('/proyectos/usuario', [ProyectoController::class, 'proyectosPorUsuario']);
+
 Route::get('/proyectos/{idProyecto}', [ProyectoController::class, 'show']);
 Route::get('/tareasPorDepartamento', [JefeController::class, 'tareasPorDepartamento']);
 //Route::get('proyectos/{idProyecto}/evidencias', [ProyectoController::class, 'evidenciasPorProyecto']);
-Route::get('/tareaspendientesusuario', [ProyectoController::class, 'tareasPendientesUsuario']);
+
 
 Route::get('/tareasPorProyecto', [ProyectoController::class, 'tareasPorProyecto']);
 

@@ -28,7 +28,7 @@
 </div>
 
 <!-- Contenido -->
-<div class="main-content">
+<div class="contenido-principal">
    <h2>
     @if($tipo === 'vencidas')
         Reporte de Tareas Vencidas

@@ -1,13 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-.app-global {
-  font-family: 'Poppins', sans-serif;
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-}
 
 .tcj-container {
   display: flex;
@@ -17,8 +9,14 @@
   max-width: 800px;
   margin: 0 auto;
 }
+.tcj-proyectos-filtros {
+  display: flex;
+  flex-direction: column; 
+  align-items: stretch;   
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
 
-/* Card de proyecto */
 .tcj-card {
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border: none;
@@ -31,6 +29,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(134, 21, 66, 0.1);
+  z-index: 1;
 }
 
 .tcj-card::before {
@@ -121,12 +120,12 @@
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-/* Nombre, estatus y fecha de tarea */
 .tcj-task-name {
   font-weight: 600;
   font-size: 18px;
-  color: #2d3748;
+  color: #000;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .tcj-task-footer {
@@ -232,22 +231,8 @@
   background: rgba(134, 21, 66, 0.1);
 }
 
-/* Información de resultados */
-.tcj-buscador-resultados-info {
-  display: block;
-  width: fit-content;
-  text-align: center;
-  color: #861542;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin: -20px auto 25px auto;
-  background: rgba(134, 21, 66, 0.05);
-  padding: 8px 16px;
-  border-radius: 15px;
-  border: 1px solid rgba(134, 21, 66, 0.1);
-}
 
-/* Mensaje de no tareas */
+
 .tcj-no-tasks {
   background: linear-gradient(135deg, #f0fff4, #c6f6d5);
   color: #2d3748;
@@ -265,6 +250,8 @@
   box-shadow: 0 10px 25px rgba(134, 21, 66, 0.1);
   border: 2px dashed #38a169;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 10;
 }
 
 .tcj-no-tasks:hover {

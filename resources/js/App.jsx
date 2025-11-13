@@ -15,7 +15,6 @@ import AgregarTareas from './AgregarTareas';
 import Proyectos from './Proyectos';
 import VerTareas from './Vertareas';
 import VerTareasusuario from './Vertareasusuario';
-import Usuario from './Usuario';
 import TareasUsuario from './Tareasusuario';
 import Reporte from './Reporte';
 import Header from './Header';
@@ -26,10 +25,14 @@ import TareasenProceso from "./TareasenProceso";
 import TareasPendientes from "./TareasPendientes";
 import TareasCompletadas from "./TareasCompletadas";
 import Backup from "./Backup";
-import VerProyecto from "./VerProyecto";
+import TareasProgreso from "./TareasProgreso";
+import DepProCompletados from "./DepProCompletados";
+
+
+
 import ModificarTareas from "./ModificarTareas";
-import TareasPendientesJefe from "./TareasPendientesJefe";
-import TareasCompletadasJefe from "./TareasCompletadasJefe";
+
+
 import AgregarT from "./AgregarT";
 import EditarTareas from "./EditarTareas";
 import EliminarProyectos from "./EliminarProyectos";
@@ -38,8 +41,11 @@ import DesbloquearProyectos from "./DesbloquearProyectos";
 import ReporteUsuario from "./ReporteUsuario";
 import GestionProyectos from "./GestionProyectos";
 import GestionProyectosUsuario from "./GestionProyectosUsuario";
-
-
+{/*DIRECTOR*/}
+import TareasCompletadasJefe from "./TareasCompletadasDeapartamento";
+import VerProyecto from "./VerProyecto";
+{/*USUARIO*/}
+import ListaDeProyectos from './ListaDeProyectos';
 function App() {
   return (
     <AuthProvider>
@@ -61,7 +67,6 @@ function App() {
         <Route path="/Vertareas" element={<VerTareas />} />
         <Route path="/Vertareasusuario" element={<VerTareasusuario />} />
         <Route path="/Vertareas/:accion" element={<VerTareas />} />
-        <Route path="/Usuario" element={<Usuario />} />
         <Route path="/tareasusuario" element={<TareasUsuario />} />
         <Route path="/Reporte" element={<Reporte />} />
         <Route path="/Header" element={<Header />} />
@@ -71,10 +76,10 @@ function App() {
   <Route path="/TareasPendientes" element={<TareasPendientes />} />
    <Route path="/TareasCompletadas" element={<TareasCompletadas />} />
    <Route path="/Backup" element={<Backup />} />
-   <Route path="/VerProyecto" element={<VerProyecto />} />
+   
    <Route path="/modificarTareas" element={<ModificarTareas />} />
-<Route path="/tareasPendientesJefe" element={<TareasPendientesJefe />} />
-<Route path="/tareasCompletadasJefe" element={<TareasCompletadasJefe />} />
+
+
   <Route path="/ModificarProyecto" element={<ModificarProyecto />} />
     <Route path="/AgregarT" element={<AgregarT />} />
      <Route path="/EditarTareas/:id" element={<EditarTareas />} />
@@ -84,7 +89,16 @@ function App() {
       <Route path="/ReporteUsuario" element={<ReporteUsuario />} />
     <Route path="/GestionProyectos" element={<GestionProyectos />} />
     <Route path="/GestionProyectosUsuario" element={<GestionProyectosUsuario />} />
+        <Route path="/TareasProgreso" element={<TareasProgreso />} />
+         <Route path="/DepProCompletados" element={<DepProCompletados />} />
    
+
+   {/* RUTAS DEL DIRECTOR*/}
+   <Route path="/tareasCompletadasDepartamento" element={<TareasCompletadasJefe />} />
+   <Route path="/VerProyecto" element={<VerProyecto />} />
+
+    {/* RUTAS DEL JEFE*/}
+           <Route path="/ListaDeProyectos" element={<ListaDeProyectos />} />
       </Routes>
     </Router>
   </ProyectosProvider>

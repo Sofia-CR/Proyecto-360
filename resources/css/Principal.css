@@ -1,0 +1,209 @@
+/* ================================
+   Contenedor principal
+================================= */
+.departamentos-app {
+  width: 90%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  position: relative;
+}
+
+/* ================================
+   Grid de áreas (botones)
+================================= */
+.areas-grid-departamentos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* siempre 2 columnas en escritorio */
+  gap: 10px;
+  justify-items: center;
+  padding: 20px 0;
+  margin-top: 10px;
+  position: relative;
+  z-index: 10;
+}
+
+.area-item-departamentos {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 80%;
+  max-width: 600px;
+  position: relative; /* necesario para dropdown */
+  margin-bottom: 10px;
+}
+
+/* Botón de cada área */
+.dropdown-btn-departamentos {
+  width: 90%;
+  padding: 13px 30px; 
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background-color: #f0f0f0;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  line-height: 1.3em;
+  word-break: break-word;
+}
+
+.dropdown-btn-departamentos::after {
+  content: '▼';
+  font-size: 10px;
+  color: #861542;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.dropdown-btn-departamentos:hover {
+  background-color: rgba(178,35,78,0.1);
+}
+
+/* Icono del área */
+.area-icono {
+  font-size: 30px;
+  color: #861542;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dropdown con scroll */
+.dropdown-options-departamentos {
+  display: grid;
+  grid-template-columns: 1fr; /* por defecto 1 columna */
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  z-index: 9999;
+}
+
+@media (min-width: 992px) {
+  .dropdown-options-departamentos {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en escritorio */
+  }
+}
+
+/* Scroll personalizado */
+.dropdown-options-departamentos::-webkit-scrollbar {
+  width: 12px;
+}
+
+.dropdown-options-departamentos::-webkit-scrollbar-thumb {
+  background-color: #861542;
+  border-radius: 8px;
+  border: 2px solid #fff;
+}
+
+.dropdown-options-departamentos::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 8px;
+}
+
+.dropdown-options-departamentos {
+  scrollbar-width: thin;
+  scrollbar-color: #861542 #f0f0f0;
+}
+
+/* Items del dropdown */
+.option-item-departamentos {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  background-color: #fafafa;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.option-item-departamentos:hover {
+  background-color: rgba(178,35,78,0.15);
+  color: #861542;
+  font-weight: 600;
+}
+
+/* ================================
+   Responsive tablet y móvil
+================================= */
+/* Tablet mediana */
+@media (max-width: 992px) {
+  .areas-grid-departamentos {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  }
+}
+
+/* Tablets pequeñas */
+@media (max-width: 768px) {
+  .areas-grid-departamentos {
+    grid-template-columns: 1fr; /* 1 columna */
+    padding: 10px;
+  }
+
+  .dropdown-btn-departamentos {
+    padding: 12px 20px;
+  }
+
+  .dropdown-options-departamentos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Móviles */
+@media (max-width: 576px) {
+  .areas-grid-departamentos {
+    padding: 5px;
+  }
+
+  .dropdown-btn-departamentos {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+
+  .option-item-departamentos {
+    font-size: 1rem;
+  }
+}
+
+
+/* ================================
+   Efecto de aparición suave
+================================= */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

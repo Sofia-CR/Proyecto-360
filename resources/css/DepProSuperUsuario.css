@@ -1,0 +1,159 @@
+/* =========================================================================
+   CONTENEDOR Y TARJETA DE PROYECTOS (ESTÉTICA COMPACTADA)
+   ========================================================================= */
+
+/* Contenedor general de proyectos */
+.proyectos-linea {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Reducido de 16px */
+    padding: 15px; /* Reducido de 20px */
+}
+
+/* Tarjeta de Proyecto (Item) */
+.proyecto-linea-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Reducido de 12px */
+    
+    background-color: #ffffff; 
+    padding: 12px 20px; /* ✅ REDUCIDO: Menos padding interno */
+    border-radius: 10px; /* Ligeramente menos redondeado */
+    
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Sombra más sutil */
+    
+    z-index: 2;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: .5px solid #861542; 
+}
+
+.proyecto-linea-item:hover {
+    transform: translateY(-2px); /* Movimiento de hover más sutil */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Fila 1: Nombre del proyecto (Título principal) */
+.proyecto-nombre {
+    margin-bottom: 5px;
+    padding-bottom: 5px; /* Menos espacio bajo el nombre */
+    border-bottom: 1px solid #f5f5f5; /* Línea separadora más sutil */
+}
+
+.proyecto-nombre .proyecto-label {
+    font-size: 0.8rem; /* Título label más pequeño */
+    margin-bottom: 2px;
+}
+
+.proyecto-nombre .proyecto-valor {
+    font-size: 1rem; /* Título un poco más pequeño */
+    font-weight: 1000; /* Se mantiene audaz */
+}
+
+/* Fila 2: Contenedor de datos cortos */
+.proyecto-columnas {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    justify-content: flex-start; 
+    gap: 10px 25px; 
+    margin-bottom: 5px; 
+    padding-bottom: 0;
+}
+
+.proyecto-linea-columna {
+    flex: 0 0 auto; 
+    min-width: 140px; 
+    display: flex;
+    flex-direction: column; 
+    gap: 1px; 
+    padding-right: 10px;
+}
+
+/* Fila 3: Barra de progreso */
+.proyecto-linea-progreso-container {
+    width: 100%;
+    padding-top: 10px; /* Reducido */
+    border-top: 1px solid #f0f0f0; 
+}
+
+/* Etiquetas y valores - JERARQUÍA CLARA */
+.proyecto-label {
+    font-family: 'Poppins', sans-serif; 
+    font-weight: 600; /* Ligeramente más ligero */
+    color: #600d2a; 
+    font-size: 0.75rem; /* ✅ Más pequeño y compacto */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.proyecto-valor {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: #000000; 
+    font-size: 0.9rem; /* ✅ Más pequeño y compacto */
+    line-height: 1.3;
+}
+
+/* Estilo específico para el valor de estatus */
+.proyecto-valor[style*="Finalizado"] {
+    font-weight: 700;
+    color: #28A745;
+}
+
+/* Mensaje si no hay proyectos */
+.proyecto-sin-tareas {
+    display: block;
+    font-style: italic;
+    color: #555;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================================
+   MEDIA QUERIES (RESPONSIVIDAD COMPACTA)
+   ========================================================================= */
+
+@media (max-width: 768px) {
+    .proyecto-linea-item {
+        padding: 10px 15px; /* Más compacto en tablet */
+    }
+    
+    .proyecto-columnas {
+        gap: 10px 15px; /* Más compacto */
+    }
+    
+    .proyecto-linea-columna {
+        flex: 1 1 calc(50% - 10px); 
+        min-width: 130px;
+    }
+}
+
+@media (max-width: 480px) {
+    .proyecto-linea-item {
+        padding: 10px 12px;
+    }
+    
+    .proyecto-nombre .proyecto-valor {
+        font-size: 1.05rem;
+    }
+    
+    /* En móvil estrecho, forzamos una columna completa */
+    .proyecto-columnas {
+        gap: 8px;
+    }
+
+    .proyecto-linea-columna {
+        flex: 1 1 100%; /* Una columna por fila */
+        min-width: 100%;
+    }
+
+    .proyecto-label {
+        font-size: 0.7rem;
+    }
+
+    .proyecto-valor {
+        font-size: 0.85rem;
+    }
+}

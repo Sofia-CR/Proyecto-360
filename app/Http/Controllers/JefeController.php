@@ -129,8 +129,6 @@ public function tareasPorUsuario(Request $request)
             'proyectos.pf_fin'
         )
         ->get();
-
-    // Totales generales del usuario
     $conteos = [
         'completadas' => $proyectos->sum('tareas_completadas'),
         'pendientes' => $proyectos->sum('tareas_pendientes'),
@@ -161,7 +159,7 @@ public function tareasPorUsuario(Request $request)
             'id_tarea' => 'required|integer',
             'id_departamento' => 'required|integer',
             'id_usuario' => 'required|integer',
-            'ruta_archivo' => 'required|file|mimes:jpg,jpeg,png,pdf,docx|max:5120'
+            'ruta_archivo' => 'required|file|mimes:jpg,jpeg,png|max:5120'
         ]);
 
         // Guardar archivo
@@ -250,6 +248,7 @@ public function ObtenerTareasEnProcesoJefe($idUsuario)
         ], 500);
     }
 }
+//SE UTILIZA EN LA INTERFAZ DE TAREAS COMPLETADAS
 public function ObtenerTareasCompletadasUsuario($idUsuario)
 {
     try {

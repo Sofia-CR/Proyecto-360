@@ -1,0 +1,390 @@
+/* =========================================================================
+   CONTENEDORES DE TAREAS (DISEÑO FINAL, OPTIMIZADO Y RESPONSIVO)
+   ========================================================================= */
+
+/* ==== CONTENEDOR GENERAL ==== */
+.tareas-acordeon {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px; 
+    font-family: "Poppins", "Segoe UI", sans-serif;
+    background-color: #ffffff; 
+    box-sizing: border-box;
+    position: relative; 
+    z-index: 2; 
+}
+
+/* ==== DESCRIPCIÓN DEL PROYECTO (DOBLE BORDE) ==== */
+.proyecto-descripcion-contenedor {
+    width: 100%;
+    max-width: 1000px;
+    padding: 16px 20px;
+    margin: 30px auto 15px auto;
+    border-radius: 12px;
+    border: 1px solid #861542;
+    border-left: 8px solid #861542; 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    font-size: 15px;
+    line-height: 1.5;
+    color: #000000;
+    background-color: #ffffff;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    font-family: "Poppins", "Segoe UI", sans-serif;
+
+}
+
+.proyecto-descripcion-contenedor strong {
+    display: block;
+    color: #861542; 
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+/* ==== TARJETA DE TAREA (ESTILO CLÁSICO + BORDE DE ESTADO) ==== */
+.tarea-item {
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    background-color: #ffffff; 
+    box-sizing: border-box;
+}
+
+/* ==== COLORES POR ESTATUS: BORDE GRUESO IZQUIERDO Y BORDE DELGADO COMPLETO ==== */
+.tarea-item.completada { 
+    border: 1px solid #28A745; 
+    border-left-width: 9px; 
+}
+
+.tarea-item.pendiente { 
+    border: 1px solid #DC3545; 
+    border-left-width: 9px; 
+}
+
+/* Fondo de hover y abierto - OPACIDAD SÓLIDA ORIGINAL */
+.tarea-item.completada .tarea-titulo:hover,
+.tarea-item.completada.tarea-abierta .tarea-titulo {
+    background-color: #E3F9E7; 
+}
+
+.tarea-item.pendiente .tarea-titulo:hover,
+.tarea-item.pendiente.tarea-abierta .tarea-titulo {
+    background-color: #FDE2E2; 
+}
+
+/* Efecto hover tarjeta - Movimiento sutil */
+.tarea-item:hover {
+    transform: translateY(-3px); 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* ==== CABECERA / TÍTULO (Refinado y Compactado) ==== */
+.tarea-titulo {
+    padding: 14px 20px;
+    font-weight: 700; 
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between;
+    align-items: center; 
+    font-size: 15px; 
+    letter-spacing: 0; 
+    border-bottom: 1px solid rgba(237, 240, 243, 0.6);
+    transition: background-color 0.3s ease;
+    color: #1a1a1a; 
+}
+
+.tarea-titulo-derecha {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0; 
+}
+
+/* Badge de estatus */
+.tarea-estatus {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700; 
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.tarea-estatus.completada { background-color: #28A745; }
+.tarea-estatus.pendiente { background-color: #DC3545; }
+
+/* Flecha acordeón */
+.flecha {
+    font-size: 16px;
+    color: #000;
+    transition: transform 0.3s ease, color 0.2s;
+    margin-left: 5px;
+}
+
+.flecha.abierta {
+    transform: rotate(90deg);
+    color: #861542;
+}
+
+/* ==== CONTENIDO / DETALLES (MÁS COMPACTO Y HORIZONTAL) ==== */
+.tarea-detalle {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding: 0 20px;
+    font-size: 14px;
+    color: #000000;
+    line-height: 1.5;
+    background-color: #fff; 
+}
+
+.tarea-detalle.abierta {
+    max-height: 400px;
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+}
+
+/* ✅ ESTÉTICA: Asegura que la descripción tenga un margen */
+.detalle-descripcion {
+    margin-bottom: 10px; 
+    padding-bottom: 5px;
+}
+
+/* ✅ Estilo base para que cada detalle ocupe su propia línea */
+.detalle-columna {
+    margin-bottom: 0; 
+    display: block; 
+}
+
+/* ✅ JERARQUÍA TIPOGRÁFICA REFINADA */
+.detalle-label {
+    display: block; 
+    font-weight: 700; 
+    font-size: 15px; 
+    color: #861542; 
+    margin-bottom: 3px; 
+}
+
+.detalle-valor {
+    color: #333333; 
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* 🌟 CLASE: Contenedor Grid (4 COLUMNAS HORIZONTALES) 🌟 */
+.tarea-datos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; 
+    gap: 10px 20px; 
+    margin-top: 15px; 
+    margin-bottom: 15px;
+    
+    border-top: 1px solid #eeeeee; 
+    padding-top: 15px; 
+}
+
+/* Asegura que la descripción use todo el ancho */
+.detalle-descripcion {
+    grid-column: 1 / -1; 
+}
+
+/* Ajuste específico para el contenedor de Evidencia */
+.detalle-evidencia-seccion {
+    grid-column: auto; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+    justify-content: flex-start; 
+}
+
+/* Contenedor del ícono de Evidencia */
+.detalle-Evidencia-galeria {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.detalle-Evidencia-galeria:hover {
+    transform: scale(1.05);
+}
+
+.evidencia-icono {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    margin-right: 5px;
+}
+
+/* =========================================================================
+   MODAL Y CARRUSEL DE EVIDENCIAS
+   ========================================================================= */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85); 
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content-carrusel {
+    position: relative;
+    max-width: 75vw;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff; 
+    padding: 15px; 
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.modal-img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(85vh - 30px);
+    object-fit: contain;
+    display: block;
+    border-radius: 4px;
+    background-color: #000; 
+}
+
+.modal-close {
+    position: fixed; 
+    top: 20px;       
+    right: 20px;     
+    left: auto;      
+    background: #DC3545; 
+    color: white;
+    border: 3px solid white; 
+    border-radius: 50%;
+    width: 40px; 
+    height: 40px; 
+    font-size: 20px; 
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.modal-close:hover {
+    background-color: #861542; 
+    transform: rotate(90deg);
+}
+.modal-nav-btn {
+    position: fixed; 
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(134, 21, 66, 0.9); 
+    color: white;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1006; 
+    width: 45px; 
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; 
+    transition: all 0.3s ease;
+    user-select: none;
+}
+.modal-nav-btn:hover {
+    background-color: #861542; 
+    transform: translateY(-50%) scale(1.1);
+}
+.modal-nav-btn.prev {
+    left: 20px; 
+}
+.modal-nav-btn.next {
+    right: 20px; 
+}
+.carrusel-index {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 8px 0;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    z-index: 1005;
+}
+
+
+/* =========================================================================
+   MEDIA QUERIES
+   ========================================================================= */
+
+@media (max-width: 768px) {
+    .proyecto-descripcion-contenedor { padding: 15px 20px; }
+    .tarea-titulo { 
+        padding: 14px 20px; 
+        font-size: 0.95rem; 
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 5px;
+    }
+    .tarea-titulo-derecha {
+        margin-top: 5px;
+    }
+    .tarea-detalle.abierta { 
+        padding-top: 10px; 
+        padding-bottom: 10px; 
+    }
+    .tarea-datos-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 15px; 
+        margin-bottom: 15px;
+        padding-top: 15px;
+    }
+    
+    /* Modal Mobile */
+    .modal-content-carrusel { max-width: 95vw; max-height: 85vh; padding: 10px; }
+    /* Botón de Cerrar (X) */
+    .modal-close { top: 10px; right: 10px; width: 32px; height: 32px; font-size: 14px; border: 2px solid white; }
+    /* Flechas de Navegación */
+    .modal-nav-btn { width: 38px; height: 38px; font-size: 22px; }
+    .modal-nav-btn.prev { left: 5px; } 
+    .modal-nav-btn.next { right: 5px; } 
+    .carrusel-index { font-size: 13px; padding: 6px 0; }
+}
+
+@media (max-width: 480px) {
+    .proyecto-descripcion-contenedor,
+    .tarea-item {
+        padding: 10px 12px;
+    }
+    .tarea-titulo { font-size: 0.9rem; padding: 12px; }
+    .detalle-label, .detalle-valor { font-size: 13px; }
+    .tarea-estatus { font-size: 10px; padding: 1px 5px; }
+}

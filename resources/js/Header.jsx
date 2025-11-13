@@ -18,7 +18,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import logo3 from "../imagenes/logo3.png";
-import "../css/global1.css";
+
 
 function Header({ children }) {
   const { usuario, logout } = useAuth();

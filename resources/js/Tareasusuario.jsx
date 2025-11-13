@@ -3,7 +3,9 @@ import { FaBars, FaUpload, FaClock, FaExclamationTriangle, FaFileAlt, FaCalendar
 import { useNavigate } from "react-router-dom";
 import logo3 from "../imagenes/logo3.png";
 import "../css/global.css";
+import "../css/formulario.css";
 import "../css/tareasusuario.css"; 
+import SelectDinamico from "../components/SelectDinamico";
 import MenuDinamico from "../components/MenuDinamico";
 
 function TareasUsuario() {
@@ -198,7 +200,7 @@ function TareasUsuario() {
                     <h3 className="tu-tarea-nombre">{tarea.t_nombre}</h3>
                       {tarea.descripcion && (
                     <div className="tu-detalle-item">
-                      <span className="tu-detalle-texto"><strong>Descripción:</strong> {tarea.descripcion}</span>
+                      <span className="tu-detalle-descripcion"><strong>Descripción:</strong> {tarea.descripcion}</span>
                     </div>
                   )}
                     <div className="tu-tarea-badges">
@@ -220,7 +222,14 @@ function TareasUsuario() {
                     <span className="tu-detalle-texto">Evidencias: <strong>{tarea.evidencias_count || 0}</strong></span>
                   </div>
                 </div>
-                <input type="file" ref={(el) => (refs.current[tarea.id_tarea] = { current: el })} style={{ display: "none" }} onChange={handleArchivoChange} accept="image/*" />
+                <input 
+  type="file" 
+  ref={(el) => (refs.current[tarea.id_tarea] = { current: el })}
+  style={{ display: "none" }} 
+  onChange={handleArchivoChange} 
+  accept=".jpg,.jpeg,.png"
+/>
+
               </div>
             );
           })}
@@ -253,31 +262,33 @@ function TareasUsuario() {
           <div className="row justify-content-center">
             <div className="col-12 col-lg-10 col-xl-8">
               <div className="tu-proyecto-header-section"><h1 className="form-titulo">{nombreProyecto}</h1></div>
+<div className="tu-filtros-container">
+  <div className="tu-filtros-inner">
+    <div className="tu-filtro-left">
+      <label className="select-etiqueta-inline">Filtrar por estado:</label>
+      <div className="tu-filtro-group">
+        <SelectDinamico
+          opciones={["Todas las tareas", "Retrasadas", "Urgentes (vence hoy)", "Próximas"]}
+          valor={filtroEstado === "todas" ? "Todas las tareas" :
+                 filtroEstado === "vencidas" ? "Retrasadas" :
+                 filtroEstado === "urgentes" ? "Urgentes (vence hoy)" : "Próximas"}
+          setValor={(valor) => {
+            if (valor === "Todas las tareas") setFiltroEstado("todas");
+            else if (valor === "Retrasadas") setFiltroEstado("vencidas");
+            else if (valor === "Urgentes (vence hoy)") setFiltroEstado("urgentes");
+            else setFiltroEstado("proximas");
+          }}
+        />
+      </div>
+    </div>
 
-              <div className="t-filtros-container">
-                <div className="tu-filtros-inner">
-                  <div className="tu-filtro-left">
-                    <label className="tu-filtro-label-inline">Filtrar por estado:</label>
-                    <div className="custom-select-container-inline">
-                      <div className="custom-select" onClick={() => setOpen(!open)}>
-                        {filtroEstado === "todas" ? "Todas las tareas" :
-                         filtroEstado === "vencidas" ? "Retrasadas" :
-                         filtroEstado === "urgentes" ? "Urgentes (vence hoy)" : "Próximas"}
-                        <FaAngleDown className={`dropdown-icon ${open ? "open" : ""}`} />
-                      </div>
-                      {open && (
-                        <div className="custom-options-inline open">
-                          <div onClick={() => { setFiltroEstado("todas"); setOpen(false); }}>Todas las tareas</div>
-                          <div onClick={() => { setFiltroEstado("vencidas"); setOpen(false); }}>Retrasadas</div>
-                          <div onClick={() => { setFiltroEstado("urgentes"); setOpen(false); }}>Urgentes (vence hoy)</div>
-                          <div onClick={() => { setFiltroEstado("proximas"); setOpen(false); }}>Próximas</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="tu-tareas-stats"><span className="tu-stat-total">Total: {tareasFiltradas.length}</span></div>
-                </div>
-              </div>
+    <div className="tu-tareas-stats">
+      <span className="tu-stat-total">Total: {tareasFiltradas.length}</span>
+    </div>
+  </div>
+</div>
+
+
 
               {renderContenido()}
             </div>
@@ -289,7 +300,7 @@ function TareasUsuario() {
             <div className="tu-modal-content-preview">
               <div className="tu-modal-header">
                 <h2>Evidencia de: {tareaSeleccionada.t_nombre}</h2> 
-                <button className="modal-close" onClick={handleCancelar}>&times;</button>
+                <button className="tu-modal-close" onClick={handleCancelar}>&times;</button>
               </div>
               <div className="tu-modal-body">
                 <img src={archivoSeleccionado.url} alt={`Evidencia de ${tareaSeleccionada.t_nombre}`} />

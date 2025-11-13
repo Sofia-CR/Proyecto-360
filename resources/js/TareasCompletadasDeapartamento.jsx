@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import '../css/global.css';
 import "../css/TareasCJ.css"; 
 import logo3 from "../imagenes/logo3.png";
-import { FaCheckCircle, FaInfoCircle, FaBars } from "react-icons/fa";
-import { FiSearch, FiX } from "react-icons/fi";
+import { FaCheckCircle, FaInfoCircle, FaBars, FaSearch } from "react-icons/fa";
+import { FiX } from "react-icons/fi";
 import MenuDinamico from "../components/MenuDinamico";
+import BarraBusquedaGlobal from "../components/BarraBusquedaGlobal";
 
 function TareasCompletadasJefe() {
   const [busqueda, setBusqueda] = useState("");
@@ -102,42 +103,19 @@ function TareasCompletadasJefe() {
                </div>
 
       <div className="container my-4">
-        <div className="text-center">
-          <h1 className="form-titulo">Tareas Completadas</h1>
-        </div>
+  <div className="text-center">
+    <h1 className="form-titulo">Tareas Completadas</h1>
+  </div>
+<BarraBusquedaGlobal
+  datos={proyectosAgrupados.map(p => p.p_nombre)}
+  onResultados={(res) => console.log("Resultados filtrados:", res)}
+/>
 
-        <div className="proyectos-filtros">
-          <div className="tcj-container">
-            {/* Buscador */}
-            <div className="tcj-search-container">
-              <div className="tcj-search-inner">
-                <FiSearch className="tcj-search-icon" />
-                <input
-                  type="text"
-                  placeholder="Buscar tareas o proyectos..."
-                  value={busqueda}
-                  onChange={(e) => setBusqueda(e.target.value)}
-                  className="tcj-search-input"
-                />
-                {busqueda && (
-                  <button
-                    className="tcj-search-clear"
-                    onClick={() => setBusqueda("")}
-                  >
-                    <FiX />
-                  </button>
-                )}
-              </div>
-            </div>
 
-            {/* Resultados de búsqueda */}
-            {busqueda && (
-              <div className="tcj-buscador-resultados-info">
-                {proyectosAgrupados.length} resultado(s) para "{busqueda}"
-              </div>
-            )}
 
-            {/* Contenido */}
+
+            <div className="tcj-proyectos-filtros">
+    <div className="tcj-container">
             {loading ? (
               <div className="loader-container">
                 <div className="loader-logo">
@@ -185,6 +163,9 @@ function TareasCompletadasJefe() {
 }
 
 export default TareasCompletadasJefe;
+
+
+
 
 
 

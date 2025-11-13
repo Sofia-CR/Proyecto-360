@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import '../css/global.css';
 import "../css/TareasPendientes.css";
 import logo3 from "../imagenes/logo3.png";
-import { FaExclamationCircle, FaBars } from "react-icons/fa";
-import { FiSearch, FiX } from "react-icons/fi";
+import { FaExclamationCircle, FaBars,FaSearch } from "react-icons/fa";
+import { FiX } from "react-icons/fi";
 import MenuDinamico from "../components/MenuDinamico";
 
 function TareasPendientes() {
@@ -85,47 +85,48 @@ function TareasPendientes() {
               </div>
               <div className="barra-center">
                 <span className="titulo-barra-global">
-                  TAREAS POR REVISAR 
+                  TAREAS PENDIENTES
                 </span>
               </div>
             </div>
 
       <div className="container my-4">
-        <div className="text-center">
-          <h1 className="form-titulo">Tareas Pendientes</h1>
-        </div>
+  <div className="text-center">
+    <h1 className="form-titulo">Tareas Pendientes</h1>
+  </div>
 
-        <div className="proyectos-filtros">
-          <div className="tareaspendientesj-contenedor-buscador-y-tarjetas">
-            {/* Buscador */}
-            <div className="tareaspendientesj-buscador-contenedor">
-              <div className="tareaspendientesj-buscador-inner">
-                <FiSearch className="buscador-verproyectos-icono" />
-                <input
-                  type="text"
-                  placeholder="Buscar proyectos por nombre..."
-                  value={busqueda}
-                  onChange={(e) => setBusqueda(e.target.value)}
-                  className="tareaspendientesj-buscador-input"
-                />
-                {busqueda && (
-                  <button
-                    className="tareaspendientesj-buscador-clear"
-                    onClick={() => setBusqueda("")}
-                  >
-                    <FiX />
-                  </button>
-                )}
-              </div>
-            </div>
-            {busqueda && (
-              <div className="tareaspendientesj-buscador-resultados-info">
-                {proyectos.filter((p) =>
-                  p.proyecto?.p_nombre?.toLowerCase().includes(busqueda.toLowerCase())
-                ).length} resultado(s) para "{busqueda}"
-              </div>
-             )}
+         {/* BARRA FUERA DEL CONTENEDOR RESTRICTIVO */}
+  <div className="barra-busqueda-global-container mb-4">
+    <div className="barra-busqueda-global-wrapper">
+      <FaSearch className="barra-busqueda-global-icon" />
+      <input
+        type="text"
+        placeholder="Buscar proyectos por nombre..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+        className="barra-busqueda-global-input"
+      />
+      {busqueda && (
+        <button
+          className="buscador-clear-global"
+          onClick={() => setBusqueda("")}
+        >
+          <FiX />
+        </button>
+      )}
+    </div>
+  </div>
 
+  {busqueda && (
+    <div className="buscador-resultados-global">
+      {proyectos.filter((p) =>
+        p.proyecto?.p_nombre?.toLowerCase().includes(busqueda.toLowerCase())
+      ).length} resultado(s) para "{busqueda}"
+    </div>
+  )}
+
+ <div className="tareas-pendientes-filtros">
+    <div className="tareaspendientesj-contenedor-buscador-y-tarjetas">
              {loading ? (
   <div className="loader-container">
     <div className="loader-logo">
