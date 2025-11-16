@@ -20,53 +20,52 @@ public function ProyectosDeUsuario(Request $request)
     try {
         $idUsuario = $request->query('usuario');
 
-        if (!$idUsuario) {
+        if (empty($idUsuario) || !is_numeric($idUsuario)) {
             return response()->json([
                 'success' => false,
-                'mensaje' => 'No se recibió el ID de usuario'
+                'mensaje' => 'No se recibió un ID de usuario válido.'
             ], 400);
         }
-        $proyectos = Proyecto::whereHas('tareas', function($q) use ($idUsuario) {
+
+        $proyectos = Proyecto::whereHas('tareas', fn($q) =>
             $q->where('id_usuario', $idUsuario)
-              ->whereIn(DB::raw('UPPER(t_estatus)'), ['PENDIENTE', 'EN PROCESO']);
-        })
-        ->with(['tareas' => function($q) use ($idUsuario) {
+              ->whereIn('t_estatus', ['Pendiente', 'En proceso'])
+        )
+        ->with(['tareas' => fn($q) =>
             $q->where('id_usuario', $idUsuario)
-              ->whereIn(DB::raw('UPPER(t_estatus)'), ['PENDIENTE', 'EN PROCESO']);
-        }])
-        ->orderBy('p_nombre', 'asc')
+              ->whereIn('t_estatus', ['Pendiente', 'En proceso'])
+        ])
+        ->orderBy('p_nombre')
         ->get()
-        ->map(function($proyecto) {
-            return [
-                'id_proyecto' => $proyecto->id_proyecto,
-                'p_nombre' => $proyecto->p_nombre,
-                'pf_fin' => $proyecto->pf_fin,
-                'p_estatus' => $proyecto->p_estatus,
-                'tareas' => $proyecto->tareas->map(function($tarea) {
-                    return [
-                        'id_tarea' => $tarea->id_tarea,
-                        't_nombre' => $tarea->t_nombre,
-                        't_estatus' => $tarea->t_estatus,
-                        'tf_inicio' => $tarea->tf_inicio,
-                        'tf_fin' => $tarea->tf_fin,
-                        'descripcion' => $tarea->descripcion,
-                    ];
-                })->toArray()
-            ];
-        });
+        ->map(fn($proyecto) => [
+            'id_proyecto' => $proyecto->id_proyecto,
+            'p_nombre' => $proyecto->p_nombre,
+            'pf_fin' => $proyecto->pf_fin,
+            'p_estatus' => $proyecto->p_estatus,
+            'total_tareas' => $proyecto->tareas->count(),
+            'tareas' => $proyecto->tareas->map(fn($tarea) => [
+                'id_tarea' => $tarea->id_tarea,
+                't_nombre' => $tarea->t_nombre,
+                't_estatus' => $tarea->t_estatus,
+                'tf_inicio' => $tarea->tf_inicio,
+                'tf_fin' => $tarea->tf_fin,
+                'descripcion' => $tarea->descripcion,
+            ]),
+        ]);
 
         return response()->json([
             'success' => true,
-            'proyectos' => $proyectos
+            'proyectos' => $proyectos,
         ]);
 
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         return response()->json([
             'success' => false,
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
         ], 500);
     }
 }
+
 
 //METODO QUE DEVUELVE LAS TAREAS PENDIENTES DE UN USUARIO Y PROYECTO ESPECIFICO, SE UTILIZA EN LA INTERFAZ DE TAREA USUARIO.JSX
 public function obtenerTareasPendientes($idProyecto, $idUsuario)

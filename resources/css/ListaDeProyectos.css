@@ -106,6 +106,8 @@
   border-radius: 16px;
   margin: 2rem 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 2;
+  position: relative;
 }
 
 .ldp-empty-icon {
@@ -158,6 +160,7 @@
   max-width: 700px;
   position: relative;
   overflow: hidden;
+  z-index: 2;
 }
 
 .ldp-proyecto-card-usuario::before {

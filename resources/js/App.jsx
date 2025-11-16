@@ -15,7 +15,7 @@ import AgregarTareas from './AgregarTareas';
 import Proyectos from './Proyectos';
 import VerTareas from './Vertareas';
 import VerTareasusuario from './Vertareasusuario';
-import TareasUsuario from './Tareasusuario';
+
 import Reporte from './Reporte';
 import Header from './Header';
 import ModificarProyecto from './ModificarProyecto';
@@ -38,12 +38,13 @@ import EditarTareas from "./EditarTareas";
 import EliminarProyectos from "./EliminarProyectos";
 import VerTareasPendientes from "./VerTareasPendientes";
 import DesbloquearProyectos from "./DesbloquearProyectos";
-import ReporteUsuario from "./ReporteUsuario";
+import ReportesTareasCompletadas from "./ReportesTareasCompletadas";
 import GestionProyectos from "./GestionProyectos";
 import GestionProyectosUsuario from "./GestionProyectosUsuario";
 {/*DIRECTOR*/}
 import TareasCompletadasJefe from "./TareasCompletadasDeapartamento";
 import VerProyecto from "./VerProyecto";
+import TareasAsignadas from './TareasAsignadas';
 {/*USUARIO*/}
 import ListaDeProyectos from './ListaDeProyectos';
 function App() {
@@ -67,7 +68,7 @@ function App() {
         <Route path="/Vertareas" element={<VerTareas />} />
         <Route path="/Vertareasusuario" element={<VerTareasusuario />} />
         <Route path="/Vertareas/:accion" element={<VerTareas />} />
-        <Route path="/tareasusuario" element={<TareasUsuario />} />
+       
         <Route path="/Reporte" element={<Reporte />} />
         <Route path="/Header" element={<Header />} />
         <Route path="/ProyectosM" element={<ProyectosM />} />
@@ -86,7 +87,7 @@ function App() {
       <Route path="/EliminarProyectos" element={<EliminarProyectos />} />
       <Route path="/VerTareasPendientes" element={<VerTareasPendientes />} />
       <Route path="/DesbloquearProyectos" element={<DesbloquearProyectos />} />
-      <Route path="/ReporteUsuario" element={<ReporteUsuario />} />
+      <Route path="/ReportesTareasCompletadas" element={<ReportesTareasCompletadas />} />
     <Route path="/GestionProyectos" element={<GestionProyectos />} />
     <Route path="/GestionProyectosUsuario" element={<GestionProyectosUsuario />} />
         <Route path="/TareasProgreso" element={<TareasProgreso />} />
@@ -99,6 +100,7 @@ function App() {
 
     {/* RUTAS DEL JEFE*/}
            <Route path="/ListaDeProyectos" element={<ListaDeProyectos />} />
+            <Route path="/TareasAsignadas" element={<TareasAsignadas />} />
       </Routes>
     </Router>
   </ProyectosProvider>

@@ -6,9 +6,10 @@ import "../css/global.css";
 import "../css/formulario.css";
 import "../css/tareasusuario.css"; 
 import SelectDinamico from "../components/SelectDinamico";
+import Layout from "../components/Layout";
 import MenuDinamico from "../components/MenuDinamico";
 
-function TareasUsuario() {
+function TareasAsignadas() {
   const [subiendo, setSubiendo] = useState(false);
   const [loading, setLoading] = useState(true);
   const [tareas, setTareas] = useState([]);
@@ -239,25 +240,10 @@ function TareasUsuario() {
   };
 
   return (
-    <div className="main-layout">
-      <div className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <MenuDinamico
-          collapsed={sidebarCollapsed}
-          departamentoId={localStorage.getItem("last_depId")}
-          departamentoNombre={localStorage.getItem("last_depNombre")}
-          departamentoSlug={localStorage.getItem("last_depSlug")}
-          activeRoute="tareas-usuario"
-        />
-      </div>
-
-      <div className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <div className="logo-fondo"><img src={logo3} alt="Fondo" /></div>
-
-        <div className="header-global">
-          <div className="header-left" onClick={toggleSidebar}><FaBars className="icono-hamburguesa-global" /></div>
-          <div className="barra-center"><h2 className="titulo-barra-global">TAREAS POR REVISAR</h2></div>
-        </div>
-
+     <Layout
+        titulo="TAREAS ASIGNADAS"
+        sidebar={<MenuDinamico activeRoute="tareas-asignadas" />}
+      >
         <div className="container my-4">
           <div className="row justify-content-center">
             <div className="col-12 col-lg-10 col-xl-8">
@@ -320,9 +306,8 @@ function TareasUsuario() {
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </Layout>  
   );
 }
 
-export default TareasUsuario;
+export default TareasAsignadas;

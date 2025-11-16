@@ -3,29 +3,14 @@
     font-family: Arial, sans-serif;
     color: #000000;
     margin: 0;
-    padding-bottom: 80px; /* respeta el espacio del footer */
+    padding-bottom: 80px; 
 }
 
-    /* Encabezado tipo membrete */
     .header {
         width: 100%;
         margin-bottom: 30px;
     }
 
-    .logos-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100px;
-    margin-bottom: 10px;
-}
-
-.logo-left,
-.logo-right,
-.logo-center {
-    height: 70px;
-    width: auto;
-}
     .header-center {
         text-align: center;
         margin-top: 5px;
@@ -51,7 +36,7 @@
 
     h2 {
         text-align: center;
-        font-size: 24px;
+        font-size: 20px;
         color: #861542;
         margin: 0 0 15px 0;
     }
@@ -61,16 +46,14 @@
     margin: 0 auto;
     border-collapse: collapse;
     font-size: 12px;
-    table-layout: fixed; /* importante para respetar los anchos de columna */
+    table-layout: fixed;
 }
 
-th, td {
-    border: 1px solid #861542;
-    padding: 6px;
-    text-align: center;
-    word-wrap: break-word;      /* permite saltos de línea en textos largos */
-    overflow-wrap: break-word;  /* soporte adicional */
+.logo-table td,
+.logo-table tr {
+  border: none !important;
 }
+
 
 
 /* Anchos específicos para cada columna */
@@ -114,17 +97,20 @@ tbody tr:nth-child(even) {
   width: 100%;
   table-layout: fixed;
   margin-bottom: 10px;
-  border-collapse: collapse; 
+  border-collapse: collapse;
 }
 
 .logo-cell {
   width: 33.33%;
   text-align: center;
   vertical-align: middle;
-  border: none; 
+  padding: 0; /* evita que empuje los logos */
 }
 
 .logo-img {
-  height: 70px;
-  width: auto;
+  max-height: 70px;   /* mantiene proporción uniforme */
+  max-width: 180px;   /* evita que uno se vea más grande */
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;     /* centra perfecto */
 }

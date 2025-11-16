@@ -165,14 +165,14 @@ function GestionProyectosUsuario() {
           <div className="tdu-seccion-bienvenida">
             <div className="tdu-bienvenida-content">
               <h1>¡HOLA, {usuario?.nombre || "Usuario"}!</h1>
-              <p>Resumen de tus proyectos y tareas</p>
+              <p>Resumen de proyectos y tareas</p>
             </div>
             <div className="tdu-bienvenido-stats">
               <div className="tdu-stat-item">
                 <FaChartLine className="tdu-stat-icono" />
                 <div className="tdu-stat-content">
                   <span className="tdu-stat-numero">{proyectos.length}</span>
-                  <span className="tdu-stat-label">Proyectos Activos</span>
+                  <span className="tdu-stat-label">Proyectos en los que participas</span>
                 </div>
               </div>
             </div>

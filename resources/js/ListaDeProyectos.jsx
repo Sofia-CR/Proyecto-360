@@ -5,7 +5,7 @@ import '../css/global.css';
 import '../css/ListaDeProyectos.css';
 import MenuDinamico from "../components/MenuDinamico";
 import Layout from "../components/Layout";
-import { FaFolderOpen, FaTasks, FaCalendarAlt, FaExclamationTriangle, FaSearch } from 'react-icons/fa';
+import { FaFolderOpen, FaTasks, FaCalendarAlt, FaExclamationTriangle, FaSearch, FaRegFolder } from 'react-icons/fa';
 
 function ListaDeProyectos() {
   const navigate = useNavigate(); 
@@ -13,46 +13,44 @@ function ListaDeProyectos() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('fecha');
+
+const formatFecha = (fecha) => {
+  if (!fecha) return '';
+  const f = new Date(fecha + "T00:00");
+  return f.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+};
+
+const getUrgencyInfo = (fecha) => {
   
-  const getUrgencyInfo = (fechaFin) => {
   const hoy = new Date();
-  hoy.setHours(0, 0, 0, 0); // poner hoy a 00:00
+  hoy.setHours(0, 0, 0, 0);
 
-  const fin = new Date(fechaFin);
-  fin.setHours(0, 0, 0, 0); // poner fecha fin a 00:00
+  const fin = new Date(fecha + "T00:00"); // interpreta la fecha en local
+  fin.setHours(0, 0, 0, 0);
 
-  const diffTime = fin - hoy;
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const diffDays = Math.ceil((fin - hoy) / (1000 * 60 * 60 * 24));
 
-  if (diffDays < 0) return { color: '#dc3545', label: 'Vencido', days: diffDays };
-  if (diffDays <= 3) return { color: '#ffc107', label: 'Urgente', days: diffDays };
-  if (diffDays <= 7) return { color: '#fd7e14', label: 'Próximo', days: diffDays };
-  return { color: '#28a745', label: 'En plazo', days: diffDays };
+if (diffDays < 0) return { color: '#dc3545', label: 'Vencido', days: diffDays };
+  return { color: '#e0a905ff', label: 'Próximo', days: diffDays };
 };
 
 
-  const contarTareas = (tareas) => {
-    const hoy = new Date();
-    return {
-      total: tareas?.length || 0,
-      vencidas: tareas?.filter(t => new Date(t.tf_fin) < hoy).length || 0,
-      pendientes: tareas?.filter(t => t.estado === 'pendiente').length || 0,
-      enProceso: tareas?.filter(t => t.estado === 'en_proceso').length || 0
-    };
-  };
 
-  const formatFecha = (fecha) => {
-    return new Date(fecha).toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+ const contarTareas = (tareas) => {
+  const hoy = new Date();
+  return {
+    total: tareas?.length || 0,
+    vencidas: tareas?.filter(t => new Date(t.tf_fin) < hoy).length || 0,
+    pendientes: tareas?.filter(t => t.t_estatus === 'Pendiente').length || 0,
+    enProceso: tareas?.filter(t => t.t_estatus === 'En proceso').length || 0
   };
+};
+
 
   const irATareas = (idProyecto, nombreProyecto) => {
     localStorage.setItem("id_proyecto", idProyecto);
     localStorage.setItem("nombre_proyecto", nombreProyecto);
-    navigate("/tareasusuario");
+    navigate("/TareasAsignadas");
   };
 
   useEffect(() => {
@@ -136,25 +134,24 @@ function ListaDeProyectos() {
     return (
       <div className="ldp-proyecto-card-container" key={proyecto.id_proyecto}>
         <div className="ldp-proyecto-card-usuario">
-          {/* Header */}
           <div className="ldp-proyecto-header">
             <div className="ldp-proyecto-icon-title">
               <h3 className="ldp-proyecto-nombre">{proyecto.p_nombre}</h3>
             </div>
-            <div className="ldp-header-badges">
-              <span 
-                className="ldp-urgency-badge"
-                style={{ backgroundColor: urgencia.color }}
-              >
-                {urgencia.label}
-              </span>
-              {proyecto.tieneVencidos && (
-                <FaExclamationTriangle 
-                  className="ldp-warning-icon" 
-                  title={`${tareasInfo.vencidas} tareas vencidas`}
-                />
-              )}
-            </div>
+           <div className="ldp-header-badges">
+  <span 
+    className="ldp-urgency-badge"
+    style={{ backgroundColor: urgencia.color }}
+  >
+    {urgencia.label}
+  </span>
+  <FaExclamationTriangle 
+    className="ldp-warning-icon" 
+    style={{ color: urgencia.color }} 
+    title={`${tareasInfo.vencidas} tareas vencidas`}
+  />
+</div>
+
           </div>
 
           {/* Estadísticas */}
@@ -173,25 +170,30 @@ function ListaDeProyectos() {
           {/* Footer */}
           <div className="ldp-proyecto-footer">
             <div className="ldp-fecha-info">
-              <FaCalendarAlt className="ldp-calendar-icon" />
-              <div>
-                <span 
-                  className="ldp-fecha-text"
-                  style={{ color: urgencia.color }}
-                >
-                  Vence: {formatFecha(proyecto.pf_fin)}
-                </span>
-                <span
-                  className="ldp-dias-restantes"
-                  style={{ color: urgencia.color }}
-                >
-                  {urgencia.days < 0
-                    ? `${Math.abs(urgencia.days)} días de retraso`
-                    : urgencia.days === 0
-                      ? 'Vence hoy'
-                      : `${urgencia.days} días restantes`
-                  }
-                </span>
+  <FaCalendarAlt className="ldp-calendar-icon" />
+  <div>
+    <span 
+      className="ldp-fecha-text"
+      style={{ color: urgencia.color }}
+    >
+      Vence: {formatFecha(proyecto.pf_fin)}
+    </span>
+    <span
+      className="ldp-dias-restantes"
+      style={{ color: urgencia.color }}
+    >
+      {urgencia.days < 0
+        ? `${Math.abs(urgencia.days)} ${Math.abs(urgencia.days) === 1 ? 'día' : 'días'} de retraso`
+        : urgencia.days === 0
+          ? 'Vence hoy'
+          : urgencia.days === 1
+            ? '1 día restante'
+            : `${urgencia.days} días restantes`
+      }
+    </span>
+  
+
+
               </div>
             </div>
 
@@ -211,46 +213,45 @@ function ListaDeProyectos() {
 
   return (
     <Layout
-      titulo="MIS PROYECTOS"
+      titulo="TAREAS ASIGNADAS"
       sidebar={<MenuDinamico activeRoute="gestion-proyectosusuario" />}
     >
       <div className="ldp-container">
-        <h1 className="ldp-main-title">Proyectos Asignados</h1>
+        <h1 className="ldp-main-title">PROYECTOS</h1>
         
-        {/* Barra de búsqueda */}
-        <div className="barra-busqueda-global-container mb-4">
-                    <div className="barra-busqueda-global-wrapper">
-                      <FaSearch className="barra-busqueda-global-icon" />
-                      <input
-                        type="text"
-                        placeholder="Buscar proyectos..."
-                        className="barra-busqueda-global-input"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-        {/* Contenido principal */}
+{proyectos.length > 0 && (
+  <div className="barra-busqueda-global-container mb-4">
+    <div className="barra-busqueda-global-wrapper">
+      <FaSearch className="barra-busqueda-global-icon" />
+      <input
+        type="text"
+        placeholder="Buscar proyectos..."
+        className="barra-busqueda-global-input"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+  </div>
+)}
         <div className="ldp-content">
           {loading ? (
             <div className="loader-container">
-              <div className="loader-logo">
-                <img src={logo3} alt="Cargando proyectos" />
-              </div>
-              <div className="loader-text">CARGANDO PROYECTOS ASIGNADOS...</div>
-              <div className="loader-spinner"></div>
-            </div>
+                       <div className="loader-logo">
+                         <img src={logo3} alt="Cargando" />
+                       </div>
+                       <div className="loader-texto">CARGANDO PROYECTOS ASIGNADOS...</div>
+                       <div className="loader-spinner"></div>
+                     </div>
           ) : filteredAndSortedProyectos.length === 0 ? (
             <div className="ldp-empty">
-              <FaFolderOpen className="ldp-empty-icon" />
+              <FaRegFolder className="ldp-empty-icon" />
               <h3 className="ldp-empty-title">
-                {searchTerm ? 'No se encontraron proyectos' : 'No tienes proyectos activos'}
+                {searchTerm ? 'No se encontraron proyectos' : 'No tienes proyectos asignados'}
               </h3>
               <p className="ldp-empty-message">
                 {searchTerm 
                   ? 'Intenta con otros términos de búsqueda'
-                  : 'Todos tus proyectos están completados o no tienes tareas pendientes'
+                  : 'Todos tus proyectos están completados o no tienes tareas pendientes por completar'
                 }
               </p>
             </div>

@@ -87,7 +87,7 @@ Usuario: {
   principal: [
     { key: 'inicio', label: "INICIO", path: "/GestionProyectosUsuario", icon: FaHome },
     { key: 'tareas', label: "MIS TAREAS", path: "/ListaDeProyectos", icon: FaHourglassHalf },
-    { key: 'reportes', label: "REPORTES", path: "/ReporteUsuario", icon: FaFileAlt },
+    { key: 'reportes_tareas_completadas', label: "REPORTES", path: "/ReportesTareasCompletadas", icon: FaFileAlt },
     { key: 'logout', label: "CERRAR SESIÓN", icon: FaUsers, action: onLogout },
   ],
 },

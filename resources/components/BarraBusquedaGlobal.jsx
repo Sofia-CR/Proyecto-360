@@ -1,47 +1,46 @@
-import "../css/Formulario.css"; 
-import React, { useState } from "react";
+// BarraBusquedaGlobal.js
+import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
+import "../css/Formulario.css"; // Asegúrate que la ruta es correcta
 
-const BarraBusquedaGlobal = ({ datos = [], onResultados }) => {
-  const [busqueda, setBusqueda] = useState("");
+// Este componente ahora es 100% reutilizable y no sabe nada
+// sobre "proyectos" o "tareas". Solo maneja el input.
 
-  // Filtra los datos si se pasan y ejecuta callback opcional
-  const resultadosFiltrados = datos.filter(item =>
-    item.toLowerCase().includes(busqueda.toLowerCase())
-  );
-
-  if (onResultados) onResultados(resultadosFiltrados);
-
+const BarraBusquedaGlobal = ({ valor, onChange, placeholder = "Buscar..." }) => {
   return (
     <div className="barra-busqueda-global-container mb-4">
       <div className="barra-busqueda-global-wrapper">
         <FaSearch className="barra-busqueda-global-icon" />
         <input
           type="text"
-          placeholder="Buscar tareas o proyectos..."
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
+          placeholder={placeholder}
+          value={valor}
+          onChange={(e) => onChange(e.target.value)}
           className="barra-busqueda-global-input"
         />
-        {busqueda && (
+        {valor && (
           <button
             className="buscador-clear-global"
-            onClick={() => setBusqueda("")}
+            onClick={() => onChange("")}
           >
             <FiX />
           </button>
         )}
       </div>
-
-      {busqueda && (
-        <div className="buscador-resultados-global">
-          {resultadosFiltrados.length} resultado(s) para "{busqueda}"
-        </div>
-      )}
+      {/* HEMOS QUITADO ESTO:
+        {valor && (
+          <div className="buscador-resultados-global">
+            Buscando: "{valor}"
+          </div>
+        )}
+        Porque esta lógica le pertenece al componente padre.
+      */}
     </div>
   );
 };
 
 export default BarraBusquedaGlobal;
+
+
 
